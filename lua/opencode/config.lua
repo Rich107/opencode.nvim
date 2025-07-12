@@ -1,5 +1,5 @@
 ---@class opencode.Config: snacks.terminal.Opts
----@field auto_reload? boolean Automatically reload buffers changed by Aider (requires vim.o.autoread = true)
+---@field auto_reload? boolean Automatically reload buffers changed by opencode
 ---@field opencode_cmd? string
 ---@field args? string[]
 ---@field win? snacks.win.Config
