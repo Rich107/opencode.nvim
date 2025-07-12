@@ -13,7 +13,6 @@ M.defaults = {
   opencode_cmd = "opencode",
   args = {},
   win = {
-    wo = { winbar = "opencode" },
     style = "opencode",
     position = "right",
   },
