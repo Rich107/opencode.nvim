@@ -22,7 +22,7 @@ function M.ask(text, opts)
     vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip):" }, function(input)
       if input ~= nil then
         if input ~= "" then
-          selected_text = selected_text .. "\n> " .. input
+          selected_text = selected_text .. "\n\n" .. input
         end
         terminal.send(selected_text, opts or {}, true)
       end
@@ -45,6 +45,19 @@ end
 
 function M.send(text, opts)
   terminal.send(text, opts or {}, false)
+end
+
+function M.send_current_filepath(opts)
+  local file_path = vim.fn.expand("%:.")
+  if file_path == "" then
+    vim.notify("No file is currently open.", vim.log.levels.WARN)
+    return
+  end
+
+  -- prefix with '@' per opencode syntax
+  local prefixed_path = "@" .. file_path
+
+  terminal.send(prefixed_path, opts or {}, false)
 end
 
 return M
