@@ -23,6 +23,7 @@ function M.toggle(opts)
   return snacks.toggle(cmd, opts)
 end
 
+-- TODO: Open terminal if not already open?
 ---Send text to terminal
 ---@param text string Text to send
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
