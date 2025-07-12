@@ -30,10 +30,23 @@ function M.ask(text, opts)
   else
     -- Normal mode handling
     if selected_text == "" then
-      vim.ui.input({ prompt = "Send to opencode: " }, function(input)
+      vim.ui.input({ prompt = "Ask opencode: " }, function(input)
         if input then
-          -- TODO: Replace `@file` with the actual file path if needed
-          -- (or separate fn/option for that...?)
+          if input:match("@file") then
+            -- If the input contains '@file', replace it with the current file path
+            -- TODO: Handle when nvim and opencode have different working directories?
+            local relative_path = vim.fn.expand("%:.")
+            if relative_path == "" then
+              vim.notify("No file is currently open.", vim.log.levels.WARN)
+              return
+            end
+
+            -- Prefix with '@' per opencode syntax
+            local prefixed_relative_path = "@" .. relative_path
+
+            input = input:gsub("@file", prefixed_relative_path)
+          end
+
           terminal.send(input, opts or {})
         end
       end)
@@ -45,19 +58,6 @@ end
 
 function M.send(text, opts)
   terminal.send(text, opts or {}, false)
-end
-
-function M.send_current_filepath(opts)
-  local file_path = vim.fn.expand("%:.")
-  if file_path == "" then
-    vim.notify("No file is currently open.", vim.log.levels.WARN)
-    return
-  end
-
-  -- prefix with '@' per opencode syntax
-  local prefixed_path = "@" .. file_path
-
-  terminal.send(prefixed_path, opts or {}, false)
 end
 
 return M
