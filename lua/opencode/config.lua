@@ -9,6 +9,10 @@ local M = {}
 M.defaults = {
   -- TODO:
   -- sync_theme = true,
+  -- TODO: User can add things like all harpoon files, etc.
+  -- ask_placeholders = {
+  --   "@file" = require("opencode.placeholders.file"),
+  -- }
   auto_reload = true,
   opencode_cmd = "opencode",
   args = {},
