@@ -55,8 +55,6 @@ function M.send(text, opts)
   terminal.send(text, opts or {})
 end
 
--- TODO: How to press "enter" after?
--- I don't understand why it works fine with `ask`
 function M.command(command, opts)
   terminal.command(command, opts or {})
 end
