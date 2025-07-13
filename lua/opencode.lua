@@ -2,7 +2,6 @@ local M = {}
 
 local config = require("opencode.config")
 local terminal = require("opencode.terminal")
-local utils = require("opencode.utils")
 
 --@param opts opencode.Config
 function M.setup(opts)
@@ -16,6 +15,19 @@ end
 function M.ask(opts)
   local mode = vim.fn.mode()
 
+  local function replace_file_placeholder(input)
+    -- Replace @file with the current file path
+    if input:find("@file") then
+      local relative_path = vim.fn.expand("%:.")
+      if relative_path == "" then
+        vim.notify("No file is currently open.", vim.log.levels.WARN)
+        return input
+      end
+      return input:gsub("@file", "@" .. relative_path)
+    end
+    return input
+  end
+
   -- Visual mode handling
   if vim.tbl_contains({ "v", "V", "" }, mode) then
     local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
@@ -24,9 +36,7 @@ function M.ask(opts)
     vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip):" }, function(input)
       if input ~= nil then
         if input ~= "" then
-          selected_text = selected_text
-            .. "\n\n"
-            .. utils.replace_ask_placeholders(input, config.options.ask_placeholders)
+          selected_text = selected_text .. "\n\n" .. replace_file_placeholder(input)
         end
         terminal.send(selected_text, opts or {}, true)
       end
@@ -35,7 +45,7 @@ function M.ask(opts)
     -- Normal mode handling
     vim.ui.input({ prompt = "Ask opencode: " }, function(input)
       if input then
-        terminal.send(utils.replace_ask_placeholders(input, config.options.ask_placeholders), opts or {})
+        terminal.send(replace_file_placeholder(input), opts or {})
       end
     end)
   end

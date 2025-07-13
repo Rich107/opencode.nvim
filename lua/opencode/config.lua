@@ -3,7 +3,6 @@
 ---@field opencode_cmd string
 ---@field args string[]
 ---@field win snacks.win.Config
----@field ask_placeholders table<string, fun(): string> A map of placeholders to functions that return a string to replace the placeholder with
 ---@field auto_focus boolean Whether to focus the terminal after sending text
 local M = {}
 
@@ -14,18 +13,6 @@ M.defaults = {
   auto_focus = false,
   opencode_cmd = "opencode",
   args = {},
-  ask_placeholders = {
-    -- If the input contains '@file', replace it with the current file path
-    ["@file"] = function()
-      local relative_path = vim.fn.expand("%:.")
-      if relative_path == "" then
-        vim.notify("No file is currently open.", vim.log.levels.WARN)
-        return "@file"
-      end
-      -- Prefix with '@' per opencode syntax
-      return "@" .. relative_path
-    end,
-  },
   win = {
     style = "opencode",
     position = "right",
