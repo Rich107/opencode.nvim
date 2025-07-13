@@ -3,25 +3,31 @@
 ---@field opencode_cmd? string
 ---@field args? string[]
 ---@field win? snacks.win.Config
----@field picker_cfg? snacks.picker.layout.Config
+---@field ask_placeholders? table<string, fun(): string> A map of placeholders to functions that return a string to replace the placeholder with
 local M = {}
 
 M.defaults = {
   -- TODO:
   -- sync_theme = true,
-  -- TODO: User can add things like all harpoon files, etc.
-  -- ask_placeholders = {
-  --   "@file" = require("opencode.placeholders.file"),
-  -- }
   auto_reload = true,
   opencode_cmd = "opencode",
   args = {},
+  ask_placeholders = {
+    -- If the input contains '@file', replace it with the current file path
+    ["@file"] = function()
+      local relative_path = vim.fn.expand("%:.")
+      if relative_path == "" then
+        vim.notify("No file is currently open.", vim.log.levels.WARN)
+        return "@file"
+      end
+      -- Prefix with '@' per opencode syntax
+      return "@" .. relative_path
+    end,
+  },
+  -- snacks.terminal defaults
   win = {
     style = "opencode",
     position = "right",
-  },
-  picker_cfg = {
-    preset = "vscode",
   },
 }
 

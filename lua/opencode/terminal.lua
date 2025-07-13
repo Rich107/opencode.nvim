@@ -24,6 +24,7 @@ function M.toggle(opts)
 end
 
 -- TODO: Open terminal if not already open?
+-- Will we get race condition, trying to open it and then send?
 ---Send text to terminal
 ---@param text string Text to send
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
@@ -34,6 +35,7 @@ function M.send(text, opts, multi_line)
 
   local cmd = create_cmd(opts)
   local term = require("snacks.terminal").get(cmd, opts)
+  -- Usually won't happen - snacks.terminal.get() defaults to creating a terminal if it doesn't exist
   if not term then
     vim.notify("Please open an opencode terminal first.", vim.log.levels.INFO)
     return
@@ -61,14 +63,10 @@ function M.send(text, opts, multi_line)
 end
 
 ---Send a command to the terminal
----@param command string opencode command (e.g. "/add")
----@param text? string Text to send after the command
+---@param command string opencode command (e.g. "/new")
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
-function M.command(command, text, opts)
-  text = text or ""
-
-  -- NOTE: For opencode commands that shouldn't get a newline (e.g. `/add file`)
-  M.send(command .. " " .. text, opts, false)
+function M.command(command, opts)
+  M.send(command, opts, false)
 end
 
 return M
