@@ -23,7 +23,6 @@ function M.toggle(opts)
   return snacks.toggle(cmd, opts)
 end
 
--- TODO: Open terminal if not already open?
 -- Will we get race condition, trying to open it and then send?
 ---Send text to terminal
 ---@param text string Text to send
@@ -39,6 +38,10 @@ function M.send(text, opts, multi_line)
   if not term then
     vim.notify("Please open an opencode terminal first.", vim.log.levels.INFO)
     return
+  end
+
+  if opts.auto_focus then
+    term:focus()
   end
 
   if term and term:buf_valid() then

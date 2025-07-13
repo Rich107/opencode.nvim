@@ -1,15 +1,17 @@
 ---@class opencode.Config: snacks.terminal.Opts
----@field auto_reload? boolean Automatically reload buffers changed by opencode
----@field opencode_cmd? string
----@field args? string[]
----@field win? snacks.win.Config
----@field ask_placeholders? table<string, fun(): string> A map of placeholders to functions that return a string to replace the placeholder with
+---@field auto_reload boolean Automatically reload buffers changed by opencode
+---@field opencode_cmd string
+---@field args string[]
+---@field win snacks.win.Config
+---@field ask_placeholders table<string, fun(): string> A map of placeholders to functions that return a string to replace the placeholder with
+---@field auto_focus boolean Whether to focus the terminal after sending text
 local M = {}
 
 M.defaults = {
   -- TODO:
   -- sync_theme = true,
   auto_reload = true,
+  auto_focus = false,
   opencode_cmd = "opencode",
   args = {},
   ask_placeholders = {
@@ -24,7 +26,6 @@ M.defaults = {
       return "@" .. relative_path
     end,
   },
-  -- snacks.terminal defaults
   win = {
     style = "opencode",
     position = "right",
