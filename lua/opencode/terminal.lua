@@ -23,7 +23,6 @@ function M.toggle(opts)
   return snacks.toggle(cmd, opts)
 end
 
--- Will we get race condition, trying to open it and then send?
 ---Send text to terminal
 ---@param text string Text to send
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
@@ -33,18 +32,15 @@ function M.send(text, opts, multi_line)
   opts = vim.tbl_deep_extend("force", config.options, opts or {})
 
   local cmd = create_cmd(opts)
+  -- NOTE: snacks.terminal.get() defaults to creating a terminal if it doesn't exist
+  -- TODO: Race condition when it's not created yet and we try to send too quickly (I guess)?
   local term = require("snacks.terminal").get(cmd, opts)
-  -- Usually won't happen - snacks.terminal.get() defaults to creating a terminal if it doesn't exist
-  if not term then
-    vim.notify("Please open an opencode terminal first.", vim.log.levels.INFO)
-    return
-  end
-
-  if opts.auto_focus then
-    term:focus()
-  end
 
   if term and term:buf_valid() then
+    if opts.auto_focus then
+      term:focus()
+    end
+
     local chan = vim.api.nvim_buf_get_var(term.buf, "terminal_job_id")
     if chan then
       if multi_line then
