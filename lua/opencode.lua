@@ -13,11 +13,7 @@ function M.toggle(opts)
   return terminal.toggle(opts)
 end
 
-function M.ask(text, opts)
-  if text ~= nil then
-    terminal.send(text, opts or {}, true)
-  end
-
+function M.ask(opts)
   local mode = vim.fn.mode()
 
   -- Visual mode handling
