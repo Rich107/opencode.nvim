@@ -22,7 +22,7 @@ end
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.ask(prompt, opts)
   local mode = vim.fn.mode()
-  local is_visual = vim.tbl_contains({ "v", "V", "" }, mode)
+  local is_visual = vim.fn.mode():match("[vV\22]")
   local selected_text
 
   if is_visual then

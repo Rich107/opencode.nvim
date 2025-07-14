@@ -24,10 +24,6 @@ function M.send(text, opts, multi_line)
   local term = require("snacks.terminal").get(opts.command, opts)
 
   if term and term:buf_valid() then
-    if opts.auto_focus then
-      term:focus()
-    end
-
     local chan = vim.api.nvim_buf_get_var(term.buf, "terminal_job_id")
     if chan then
       if multi_line then
@@ -39,6 +35,14 @@ function M.send(text, opts, multi_line)
       else
         text = text:gsub("\n", " ") .. "\n"
         vim.api.nvim_chan_send(chan, text)
+      end
+
+      if opts.auto_focus then
+        term:focus()
+        -- Exit visual mode if applicable
+        if vim.fn.mode():match("[vV\22]") then
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+        end
       end
     else
       vim.notify("No opencode terminal job found!", vim.log.levels.ERROR)
