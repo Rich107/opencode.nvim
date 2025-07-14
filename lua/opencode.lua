@@ -22,37 +22,41 @@ end
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.ask(prompt, opts)
   local mode = vim.fn.mode()
+  local is_visual = vim.tbl_contains({ "v", "V", "" }, mode)
+  local selected_text
 
-  -- Visual mode
-  if vim.tbl_contains({ "v", "V", "" }, mode) then
+  if is_visual then
     local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
-    local selected_text = table.concat(lines, "\n")
+    selected_text = table.concat(lines, "\n")
+  end
 
-    if prompt then
-      terminal.send(selected_text .. "\n\n" .. placeholders.replace_file(prompt), opts or {})
+  local function send(text)
+    terminal.send(placeholders.replace_file(text), opts or {})
+  end
+
+  if prompt then
+    if is_visual then
+      send(selected_text .. "\n\n" .. prompt)
     else
-      vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip): " }, function(input)
-        if input ~= nil then
-          if input ~= "" then
-            selected_text = selected_text .. "\n\n" .. placeholders.replace_file(input)
-          end
-          -- FIX: If auto_focus, it's still in visual mode
-          terminal.send(selected_text, opts or {}, true)
-        end
-      end)
+      send(prompt)
     end
+    return
+  end
+
+  if is_visual then
+    vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip): " }, function(input)
+      local text = selected_text
+      if input and input ~= "" then
+        text = text .. "\n\n" .. input
+      end
+      send(text)
+    end)
   else
-    if prompt then
-      terminal.send(placeholders.replace_file(prompt), opts or {})
-      return
-    else
-      -- Normal mode
-      vim.ui.input({ prompt = "Ask opencode: " }, function(input)
-        if input then
-          terminal.send(placeholders.replace_file(input), opts or {})
-        end
-      end)
-    end
+    vim.ui.input({ prompt = "Ask opencode: " }, function(input)
+      if input and input ~= "" then
+        send(input)
+      end
+    end)
   end
 end
 
