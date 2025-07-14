@@ -8,9 +8,10 @@ Neovim plugin to conveniently interact with [opencode](https://github.com/sst/op
 ## ✨ Features
 
 - Toggle an `opencode` terminal window within Neovim
-- Send prompts and commands to `opencode`
+- Send prompts to the window
+- Map re-usable prompts
+- Send selected visual mode text
 - Prompt placeholders - `@file` to reference the current file
-- Visual mode support: send selected text
 - Auto-reload buffers edited by `opencode`
 - Configurable terminal behavior and window style
 
@@ -75,7 +76,7 @@ Default options:
 {
   auto_reload = true,   -- Automatically reload buffers changed by opencode
   auto_focus = true,    -- Focus the terminal after sending text
-  command = "opencode",     -- Command to launch opencode
+  command = "opencode", -- Command to launch opencode
   win = {
     position = "right", -- Window position
   },
