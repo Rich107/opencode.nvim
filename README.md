@@ -1,47 +1,77 @@
-# A Neovim Plugin Template
+# opencode.nvim
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/ellisonleao/nvim-plugin-template/lint-test.yml?branch=main&style=for-the-badge)
-![Lua](https://img.shields.io/badge/Made%20with%20Lua-blueviolet.svg?style=for-the-badge&logo=lua)
+Neovim plugin for convenient interaction with [opencode](https://github.com/sst/opencode). Send prompts and code directly from your editor, with support for visual selections, placeholders, and automatic buffer reloading.
 
-A template repository for Neovim plugins.
+> [!WARNING]  
+> This plugin is in initial development. Expect breaking changes and rough edges. 
 
-## Using it
+## ✨ Features
 
-Via `gh`:
+- Toggle an `opencode` terminal window within Neovim
+- Send prompts and commands to `opencode`
+- Prompt placeholders - `@file` to reference the current file
+- Visual mode support: send selected text
+- Auto-reload buffers edited by `opencode`
+- Configurable terminal behavior and window style
 
+## 📦 Setup
+
+[lazy.nvim](https://github.com/folke/lazy.nvim):
+
+```lua
+{
+  "NickvanDyke/opencode.nvim",
+  dependencies = {
+    'folke/snacks.nvim',
+  },
+  opts = {
+    -- Configuration, if any
+  },
+  -- Example keymaps
+  keys = {
+    {
+      '<leader>ot',
+      function()
+        require('opencode').toggle()
+      end,
+      desc = 'Toggle opencode',
+    },
+    {
+      '<leader>oa',
+      function()
+        require('opencode').ask()
+      end,
+      desc = 'Ask opencode',
+      mode = { 'n', 'v' },
+    },
+  },
+}
 ```
-$ gh repo create my-plugin -p ellisonleao/nvim-plugin-template
+
+> [!IMPORTANT]
+> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` - other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
+
+## ⚙️ Configuration
+
+Default options:
+
+```lua
+{
+  auto_reload = true,   -- Automatically reload buffers changed by opencode
+  auto_focus = true,    -- Focus the terminal after sending text
+  cmd = "opencode",     -- Command to launch opencode
+  win = {
+    position = "right", -- Window position
+  },
+}
 ```
 
-Via github web page:
+The config object extends [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md) options, including [snacks.win](https://github.com/folke/snacks.nvim/blob/main/docs/win.md) - use those to customize behavior and appearance.
 
-Click on `Use this template`
+## 📚 API
 
-![](https://docs.github.com/assets/cb-36544/images/help/repository/use-this-template-button.png)
-
-## Features and structure
-
-- 100% Lua
-- Github actions for:
-  - running tests using [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) and [busted](https://olivinelabs.com/busted/)
-  - check for formatting errors (Stylua)
-  - vimdocs autogeneration from README.md file
-  - luarocks release (LUAROCKS_API_KEY secret configuration required)
-
-### Plugin structure
-
-```
-.
-├── lua
-│   ├── plugin_name
-│   │   └── module.lua
-│   └── plugin_name.lua
-├── Makefile
-├── plugin
-│   └── plugin_name.lua
-├── README.md
-├── tests
-│   ├── minimal_init.lua
-│   └── plugin_name
-│       └── plugin_name_spec.lua
-```
+- `require("opencode").toggle()`: Toggle the `opencode` terminal window.
+- `require("opencode").ask()`: Prompt for input and send to `opencode`. Includes visual mode selection. Replaces `@file` with current file's path.
+- `require("opencode").send("your text")`: Send arbitrary text to the `opencode` terminal.
+- `require("opencode").command("/your_command")`: Send a command (e.g., `/new`) to `opencode`.
+    * **WIP**

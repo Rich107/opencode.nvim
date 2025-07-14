@@ -15,8 +15,9 @@ function M.toggle(opts)
   return terminal.toggle(opts)
 end
 
----Send a prompt to opencode. Supports visual mode selection.
----You can reference the current file with @file.
+---Prompt for input and send to opencode.
+---Includes visual mode selection.
+---Replaces `@file` with current file's path.
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.ask(opts)
   local mode = vim.fn.mode()
