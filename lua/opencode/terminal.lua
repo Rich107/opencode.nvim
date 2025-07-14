@@ -19,9 +19,14 @@ function M.send(text, opts, multi_line)
   multi_line = multi_line == nil and true or multi_line
   opts = vim.tbl_deep_extend("force", config.options, opts or {})
 
-  -- NOTE: snacks.terminal.get() defaults to creating a terminal if it doesn't exist
-  -- TODO: Race condition when it's not created yet and we try to send too quickly (I guess)?
-  local term = require("snacks.terminal").get(opts.command, opts)
+  local term, created = require("snacks.terminal").get(opts.command, opts)
+
+  if created then
+    -- Wait for opencode to be ready before sending text.
+    -- Would prefer to use a callback or event, but not sure what...
+    ---@diagnostic disable-next-line: missing-return
+    vim.wait(1000, function() end)
+  end
 
   if term and term:buf_valid() then
     local chan = vim.api.nvim_buf_get_var(term.buf, "terminal_job_id")
@@ -49,6 +54,7 @@ function M.send(text, opts, multi_line)
       vim.notify("No opencode terminal job found!", vim.log.levels.ERROR)
     end
   else
+    -- Can still happen if they configure snacks.terminal with create = false
     vim.notify("Please open an opencode terminal first.", vim.log.levels.INFO)
   end
 end
