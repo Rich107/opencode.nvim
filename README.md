@@ -16,7 +16,7 @@ Neovim plugin to conveniently interact with [opencode](https://github.com/sst/op
 
 ## 📦 Setup
 
-[lazy.nvim](https://github.com/folke/lazy.nvim):
+Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
