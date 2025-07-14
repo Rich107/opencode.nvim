@@ -25,7 +25,7 @@ function M.send(text, opts, multi_line)
     -- Wait for opencode to be ready before sending text.
     -- Would prefer to use a callback or event, but not sure what...
     ---@diagnostic disable-next-line: missing-return
-    vim.wait(1000, function() end)
+    vim.wait(2000, function() end)
   end
 
   if not term or not term:buf_valid() then
