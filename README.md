@@ -76,7 +76,7 @@ Default options:
 {
   auto_reload = true,   -- Automatically reload buffers changed by opencode
   auto_focus = true,    -- Focus the terminal after sending text
-  cmd = "opencode",     -- Command to launch opencode
+  command = "opencode",     -- Command to launch opencode
   win = {
     position = "right", -- Window position
   },

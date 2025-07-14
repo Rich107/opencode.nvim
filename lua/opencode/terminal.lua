@@ -8,7 +8,7 @@ local config = require("opencode.config")
 function M.toggle(opts)
   local snacks = require("snacks.terminal")
   opts = vim.tbl_deep_extend("force", config.options, opts or {})
-  return snacks.toggle(opts.cmd, opts)
+  return snacks.toggle(opts.command, opts)
 end
 
 ---Send text to terminal
@@ -21,7 +21,7 @@ function M.send(text, opts, multi_line)
 
   -- NOTE: snacks.terminal.get() defaults to creating a terminal if it doesn't exist
   -- TODO: Race condition when it's not created yet and we try to send too quickly (I guess)?
-  local term = require("snacks.terminal").get(opts.cmd, opts)
+  local term = require("snacks.terminal").get(opts.command, opts)
 
   if term and term:buf_valid() then
     if opts.auto_focus then
