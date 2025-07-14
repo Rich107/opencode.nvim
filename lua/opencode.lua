@@ -9,10 +9,15 @@ function M.setup(opts)
   config.setup(opts)
 end
 
+---Toggle the opencode window.
+---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.toggle(opts)
   return terminal.toggle(opts)
 end
 
+---Send a prompt to opencode. Supports visual mode selection.
+---You can reference the current file with @file.
+---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.ask(opts)
   local mode = vim.fn.mode()
 
@@ -31,7 +36,7 @@ function M.ask(opts)
     end)
   else
     -- Normal mode handling
-    vim.ui.input({ prompt = "Ask opencode: " }, function(input)
+    vim.ui.input({ prompt = "Ask opencode:" }, function(input)
       if input then
         terminal.send(placeholders.replace_file(input), opts or {})
       end
@@ -39,12 +44,24 @@ function M.ask(opts)
   end
 end
 
+---Send text to opencode.
+---@param text string Text to send to opencode
+---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.send(text, opts)
   terminal.send(text, opts or {})
 end
 
+---Send a command to opencode.
+---@param command string opencode command (e.g. "/new")
+---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.command(command, opts)
-  terminal.command(command, opts or {})
+  -- FIX: How to press "enter" after?
+  -- I don't understand why it works fine with `ask`.
+  -- That uses multi-line, which ends with \r.
+  -- But single line uses \n.
+  -- I tried sending commands with multi-line but it just sends the actual text - doesn't select the command.
+  -- Maybe we need to send the text, wait a moment for the menu to appear, and then send the enter key?
+  terminal.send(command, opts, false)
 end
 
 return M

@@ -61,17 +61,4 @@ function M.send(text, opts, multi_line)
   end
 end
 
----Send a command to the terminal
----@param command string opencode command (e.g. "/new")
----@param opts? opencode.Config Optional config that will override the base config for this call only
--- FIX: How to press "enter" after?
--- I don't understand why it works fine with `ask`.
--- That uses multi-line, which ends with \r.
--- But single line uses \n.
--- I tried sending commands with multi-line but it just sends the actual text - doesn't select the command.
--- Maybe we need to send the text, wait a moment for the menu to appear, and then send the enter key?
-function M.command(command, opts)
-  M.send(command, opts, false)
-end
-
 return M
