@@ -5,7 +5,7 @@
 local M = {}
 
 M.defaults = {
-  auto_reload = true,
+  auto_reload = false,
   auto_focus = true,
   command = "opencode",
   win = {
@@ -18,7 +18,7 @@ M.options = vim.deepcopy(M.defaults)
 
 local function setup_auto_reload()
   if not vim.o.autoread then
-    vim.notify("Please enable autoread to use opencode auto_reload", vim.log.levels.WARN)
+    vim.notify("Please enable autoread to use opencode.nvim auto_reload", vim.log.levels.WARN)
     return
   end
 

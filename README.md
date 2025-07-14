@@ -74,7 +74,7 @@ Default options:
 
 ```lua
 {
-  auto_reload = true,   -- Automatically reload buffers changed by opencode
+  auto_reload = false,  -- Automatically reload buffers changed by opencode
   auto_focus = true,    -- Focus the terminal after sending text
   command = "opencode", -- Command to launch opencode
   win = {
