@@ -18,33 +18,41 @@ end
 ---Prompt for input and send to opencode.
 ---Includes visual mode selection.
 ---Replaces `@file` with current file's path.
----@param text? string Optional text to send instead of prompting for input
+---@param prompt? string Optional text to send instead of prompting for input
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
-function M.ask(text, opts)
+function M.ask(prompt, opts)
   local mode = vim.fn.mode()
 
-  --TODO: Prefer `text` over prompting if provided
-
-  -- Visual mode handling
+  -- Visual mode
   if vim.tbl_contains({ "v", "V", "" }, mode) then
     local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
     local selected_text = table.concat(lines, "\n")
 
-    vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip): " }, function(input)
-      if input ~= nil then
-        if input ~= "" then
-          selected_text = selected_text .. "\n\n" .. placeholders.replace_file(input)
+    if prompt then
+      terminal.send(selected_text .. "\n\n" .. placeholders.replace_file(prompt), opts or {})
+    else
+      vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip): " }, function(input)
+        if input ~= nil then
+          if input ~= "" then
+            selected_text = selected_text .. "\n\n" .. placeholders.replace_file(input)
+          end
+          -- FIX: If auto_focus, it's still in visual mode
+          terminal.send(selected_text, opts or {}, true)
         end
-        terminal.send(selected_text, opts or {}, true)
-      end
-    end)
+      end)
+    end
   else
-    -- Normal mode handling
-    vim.ui.input({ prompt = "Ask opencode: " }, function(input)
-      if input then
-        terminal.send(placeholders.replace_file(input), opts or {})
-      end
-    end)
+    if prompt then
+      terminal.send(placeholders.replace_file(prompt), opts or {})
+      return
+    else
+      -- Normal mode
+      vim.ui.input({ prompt = "Ask opencode: " }, function(input)
+        if input then
+          terminal.send(placeholders.replace_file(input), opts or {})
+        end
+      end)
+    end
   end
 end
 

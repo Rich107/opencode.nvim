@@ -44,7 +44,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
       desc = 'Ask opencode',
       mode = { 'n', 'v' },
     },
-    -- Example re-usable prompts (WIP)
+    -- Example re-usable prompts
     {
       '<leader>oe',
       function()
@@ -59,7 +59,6 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
         require('opencode').ask('Critique @file for correctness and readability')
       end,
       desc = 'Critique current file',
-      mode = 'n',
     },
   },
 }
