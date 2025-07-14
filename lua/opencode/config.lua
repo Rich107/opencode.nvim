@@ -1,18 +1,14 @@
 ---@class opencode.Config: snacks.terminal.Opts
----@field auto_reload boolean Automatically reload buffers changed by opencode
----@field opencode_cmd string
----@field args string[]
----@field win snacks.win.Config
+e--@field auto_reload boolean Automatically reload buffers changed by opencode
 ---@field auto_focus boolean Whether to focus the terminal after sending text
+---@field cmd string Command to open opencode
 local M = {}
 
 M.defaults = {
   auto_reload = true,
-  auto_focus = false,
-  opencode_cmd = "opencode",
-  args = {},
+  auto_focus = true,
+  cmd = "opencode",
   win = {
-    style = "opencode",
     position = "right",
   },
 }
@@ -43,7 +39,7 @@ end
 ---@param opts? opencode.Config
 function M.setup(opts)
   M.options = vim.tbl_deep_extend("force", M.options, opts or {})
-  Snacks.config.style("opencode", {})
+
   if M.options.auto_reload then
     setup_auto_reload()
   end

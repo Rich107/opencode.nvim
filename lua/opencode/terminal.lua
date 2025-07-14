@@ -2,25 +2,13 @@ local M = {}
 
 local config = require("opencode.config")
 
----@param opts opencode.Config
----@return string
-local function create_cmd(opts)
-  local cmd = { opts.opencode_cmd }
-  vim.list_extend(cmd, opts.args or {})
-
-  return table.concat(cmd, " ")
-end
-
 ---Toggle terminal visibility
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 ---@return snacks.win?
 function M.toggle(opts)
   local snacks = require("snacks.terminal")
-
   opts = vim.tbl_deep_extend("force", config.options, opts or {})
-
-  local cmd = create_cmd(opts)
-  return snacks.toggle(cmd, opts)
+  return snacks.toggle(opts.cmd, opts)
 end
 
 ---Send text to terminal
@@ -31,10 +19,9 @@ function M.send(text, opts, multi_line)
   multi_line = multi_line == nil and true or multi_line
   opts = vim.tbl_deep_extend("force", config.options, opts or {})
 
-  local cmd = create_cmd(opts)
   -- NOTE: snacks.terminal.get() defaults to creating a terminal if it doesn't exist
   -- TODO: Race condition when it's not created yet and we try to send too quickly (I guess)?
-  local term = require("snacks.terminal").get(cmd, opts)
+  local term = require("snacks.terminal").get(opts.cmd, opts)
 
   if term and term:buf_valid() then
     if opts.auto_focus then
