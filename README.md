@@ -28,8 +28,8 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   opts = {
     -- Configuration, if any
   },
-  -- Example keymaps
   keys = {
+    -- Example keymaps
     {
       '<leader>ot',
       function()
