@@ -7,8 +7,6 @@
 local M = {}
 
 M.defaults = {
-  -- TODO:
-  -- sync_theme = true,
   auto_reload = true,
   auto_focus = false,
   opencode_cmd = "opencode",
