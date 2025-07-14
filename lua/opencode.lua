@@ -18,7 +18,7 @@ end
 ---Prompt for input and send to opencode.
 ---Includes visual mode selection.
 ---Replaces `@file` with current file's path.
----@param text? string Optional text to send instead of prompting
+---@param text? string Optional text to send instead of prompting for input
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.ask(text, opts)
   local mode = vim.fn.mode()
