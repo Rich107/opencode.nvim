@@ -2,6 +2,8 @@
 
 Neovim plugin to conveniently interface with [opencode](https://github.com/sst/opencode).
 
+<img alt="opencode.nvim in action" src="https://github.com/user-attachments/assets/aa0dcddb-aa85-433f-9e49-7721b5a74948" />
+
 > [!WARNING]  
 > This plugin is in initial development. Expect breaking changes and rough edges. 
 
