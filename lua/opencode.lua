@@ -42,7 +42,7 @@ end
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.ask(text, opts)
   local mode = vim.fn.mode()
-  local is_visual = vim.fn.mode():match("[vV\22]")
+  local is_visual = mode:match("[vV\22]")
 
   local function send(prompt)
     if is_visual then
