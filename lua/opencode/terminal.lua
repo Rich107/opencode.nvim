@@ -38,6 +38,7 @@ function M.send(text, opts, multi_line)
       end
 
       if opts.auto_focus then
+        term:show()
         term:focus()
         -- Exit visual mode if applicable
         if vim.fn.mode():match("[vV\22]") then
