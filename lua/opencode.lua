@@ -15,56 +15,11 @@ function M.toggle(opts)
   return terminal.toggle(opts)
 end
 
----Send a prompt to opencode.
----Includes visual mode selection.
----Replaces `@file` with current file's path.
----@param prompt? string Optional text to send. Will prompt for input if not provided.
----@param opts? opencode.Config Optional config that will override the base config for this call only
-function M.ask(prompt, opts)
-  local mode = vim.fn.mode()
-  local is_visual = vim.fn.mode():match("[vV\22]")
-  local selected_text
-
-  if is_visual then
-    local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
-    selected_text = table.concat(lines, "\n")
-  end
-
-  local function send(text)
-    terminal.send(placeholders.replace_file(text), opts or {})
-  end
-
-  if prompt then
-    if is_visual then
-      send(selected_text .. "\n\n" .. prompt)
-    else
-      send(prompt)
-    end
-    return
-  end
-
-  if is_visual then
-    vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip): " }, function(input)
-      local text = selected_text
-      if input and input ~= "" then
-        text = text .. "\n\n" .. input
-      end
-      send(text)
-    end)
-  else
-    vim.ui.input({ prompt = "Ask opencode: " }, function(input)
-      if input and input ~= "" then
-        send(input)
-      end
-    end)
-  end
-end
-
 ---Send arbitrary text to opencode.
 ---@param text string Text to send to opencode
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.send(text, opts)
-  terminal.send(text, opts or {})
+  terminal.send(text, opts)
 end
 
 ---Send a command to opencode.
@@ -79,5 +34,38 @@ end
 -- function M.command(command, opts)
 --   terminal.send(command, opts, false)
 -- end
+
+---Send a prompt to opencode.
+---Includes visual mode selection.
+---Replaces `@file` with current file's path.
+---@param text? string Optional text to send; will prompt for input if not provided
+---@param opts? opencode.Config Optional config that will override the base config for this call only
+function M.ask(text, opts)
+  local mode = vim.fn.mode()
+  local is_visual = vim.fn.mode():match("[vV\22]")
+
+  local function send(prompt)
+    if is_visual then
+      local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
+      local selected_text = table.concat(lines, "\n")
+      terminal.send(selected_text .. "\n\n" .. placeholders.replace_file(prompt), opts)
+    else
+      terminal.send(placeholders.replace_file(prompt), opts)
+    end
+  end
+
+  if text then
+    send(text)
+  else
+    vim.ui.input(
+      { prompt = is_visual and "Add a prompt to your selection (empty to skip): " or "Ask opencode: " },
+      function(input)
+        if input and input ~= "" then
+          send(input)
+        end
+      end
+    )
+  end
+end
 
 return M
