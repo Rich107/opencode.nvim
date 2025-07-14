@@ -1,6 +1,6 @@
 # opencode.nvim
 
-Neovim plugin for convenient interaction with [opencode](https://github.com/sst/opencode). Send prompts and code directly from your editor, with support for visual selections, placeholders, and automatic buffer reloading.
+Neovim plugin to conveniently interact with [opencode](https://github.com/sst/opencode). Send prompts and code directly from your editor, with support for visual selections, placeholders, and automatic buffer reloading.
 
 > [!WARNING]  
 > This plugin is in initial development. Expect breaking changes and rough edges. 
