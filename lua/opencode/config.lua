@@ -1,7 +1,7 @@
 ---@class opencode.Config: snacks.terminal.Opts
 ---@field auto_reload boolean Automatically reload buffers changed by opencode
----@field auto_focus boolean Whether to focus the terminal after sending text
----@field command string Command to open opencode
+---@field auto_focus boolean Show and focus the terminal after sending text
+---@field command string Command to launch opencode
 local M = {}
 
 M.defaults = {

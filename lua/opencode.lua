@@ -22,18 +22,12 @@ function M.send(text, opts)
   terminal.send(text, opts)
 end
 
--- TODO: How to press "enter" after?
--- I don't understand why it works fine with `ask`.
--- That uses multi-line, which ends with \r.
--- But single line uses \n.
--- I tried sending commands with multi-line but it just sends the actual text - doesn't select the command.
--- Maybe we need to send the text, wait a moment for the menu to appear, and then send the enter key?
 ---Send a command to opencode.
 ---@param command string opencode command (e.g. "/new")
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
--- function M.command(command, opts)
---   terminal.send(command, opts, false)
--- end
+function M.command(command, opts)
+  terminal.send(command, opts, false)
+end
 
 ---Send a prompt to opencode.
 ---Includes visual mode selection.
