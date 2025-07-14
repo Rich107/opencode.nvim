@@ -1,5 +1,5 @@
 ---@class opencode.Config: snacks.terminal.Opts
-e--@field auto_reload boolean Automatically reload buffers changed by opencode
+---@field auto_reload boolean Automatically reload buffers changed by opencode
 ---@field auto_focus boolean Whether to focus the terminal after sending text
 ---@field cmd string Command to open opencode
 local M = {}
@@ -17,7 +17,10 @@ M.defaults = {
 M.options = vim.deepcopy(M.defaults)
 
 local function setup_auto_reload()
-  vim.o.autoread = true
+  if not vim.o.autoread then
+    vim.notify("Please enable autoread to use opencode auto_reload", vim.log.levels.WARN)
+    return
+  end
 
   -- Autocommand group to avoid stacking duplicates on reload
   local group = vim.api.nvim_create_augroup("OpencodeAutoReload", { clear = true })
