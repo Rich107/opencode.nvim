@@ -26,7 +26,7 @@ function M.ask(opts)
     local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
     local selected_text = table.concat(lines, "\n")
 
-    vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip):" }, function(input)
+    vim.ui.input({ prompt = "Add a prompt to your selection (empty to skip): " }, function(input)
       if input ~= nil then
         if input ~= "" then
           selected_text = selected_text .. "\n\n" .. placeholders.replace_file(input)
@@ -36,7 +36,7 @@ function M.ask(opts)
     end)
   else
     -- Normal mode handling
-    vim.ui.input({ prompt = "Ask opencode:" }, function(input)
+    vim.ui.input({ prompt = "Ask opencode: " }, function(input)
       if input then
         terminal.send(placeholders.replace_file(input), opts or {})
       end
