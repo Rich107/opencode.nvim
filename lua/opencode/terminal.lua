@@ -28,34 +28,36 @@ function M.send(text, opts, multi_line)
     vim.wait(1000, function() end)
   end
 
-  if term and term:buf_valid() then
-    local chan = vim.api.nvim_buf_get_var(term.buf, "terminal_job_id")
-    if chan then
-      if multi_line then
-        -- Use bracketed paste sequences
-        local bracket_start = "\27[200~"
-        local bracket_end = "\27[201~\r"
-        local bracketed_text = bracket_start .. text .. bracket_end
-        vim.api.nvim_chan_send(chan, bracketed_text)
-      else
-        text = text:gsub("\n", " ") .. "\n"
-        vim.api.nvim_chan_send(chan, text)
-      end
-
-      if opts.auto_focus then
-        term:show()
-        term:focus()
-        -- Exit visual mode if applicable
-        if vim.fn.mode():match("[vV\22]") then
-          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
-        end
-      end
-    else
-      vim.notify("No opencode terminal job found!", vim.log.levels.ERROR)
-    end
-  else
+  if not term or not term:buf_valid() then
     -- Can still happen if they configure snacks.terminal with create = false
     vim.notify("Please open an opencode terminal first.", vim.log.levels.INFO)
+    return
+  end
+
+  local chan = vim.api.nvim_buf_get_var(term.buf, "terminal_job_id")
+  if not chan then
+    vim.notify("No opencode terminal job found!", vim.log.levels.ERROR)
+    return
+  end
+
+  if multi_line then
+    -- Use bracketed paste sequences
+    local bracket_start = "\27[200~"
+    local bracket_end = "\27[201~\r"
+    local bracketed_text = bracket_start .. text .. bracket_end
+    vim.api.nvim_chan_send(chan, bracketed_text)
+  else
+    text = text:gsub("\n", " ") .. "\n"
+    vim.api.nvim_chan_send(chan, text)
+  end
+
+  if opts.auto_focus then
+    term:show()
+    term:focus()
+    -- Exit visual mode if applicable
+    if vim.fn.mode():match("[vV\22]") then
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+    end
   end
 end
 
