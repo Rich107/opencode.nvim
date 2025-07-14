@@ -70,6 +70,7 @@ The config object extends [snacks.terminal](https://github.com/folke/snacks.nvim
 
 ## 📚 API
 
+- `require("opencode").setup(opts)`: Set up the plugin.
 - `require("opencode").toggle()`: Toggle the `opencode` terminal window.
 - `require("opencode").ask()`: Prompt for input and send to `opencode`. Includes visual mode selection. Replaces `@file` with current file's path.
 - `require("opencode").send("your text")`: Send arbitrary text to the `opencode` terminal.
