@@ -29,9 +29,12 @@ function M.send(prompt, opts)
   local mode = vim.fn.mode()
   local is_visual = mode:match("[vV\22]")
   if is_visual then
+    -- Prepend visual mode selection
     local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
     local selected_text = table.concat(lines, "\n")
     prompt = prompt .. "\n\n" .. selected_text
+    -- Exit visual mode now that we've "consumed" the selection
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
   end
 
   -- Expand placeholders

@@ -61,12 +61,9 @@ function M.send(text, opts, multi_line)
 
   -- NOTE: Seems snacks.terminal will always focus a just-created terminal.
   -- No opt to disable...?
+  -- I guess we could manually re-focus the previous window.
   if opts.auto_focus then
     term:focus()
-    -- Exit visual mode if applicable
-    if vim.fn.mode():match("[vV\22]") then
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
-    end
   end
 end
 
