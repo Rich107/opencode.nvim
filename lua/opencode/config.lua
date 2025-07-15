@@ -13,6 +13,9 @@ local M = {
       position = "right",
     },
     expansions = {
+      -- WARNING: Hmm, seems files - like commands - need to be "selected" in the menu that appears when they're typed.
+      -- We can't just send the text. But usually uses the `read` tool anyway so it's fine.
+      -- TODO: Open an issue in sst/opencode for this and commands?
       ["@file"] = function()
         return "@" .. vim.fn.expand("%:.")
       end,
