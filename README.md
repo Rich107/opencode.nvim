@@ -55,9 +55,9 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   opts = {
     -- Default configuration — only include any that you wish to change
     auto_reload = false,  -- Automatically reload buffers changed by opencode
-    auto_focus = true,    -- Focus the opencode window after sending text
+    auto_focus = false,   -- Focus the opencode window after prompting 
     command = "opencode", -- Command to launch opencode
-    context = {           -- Context added to every prompt
+    context = {           -- Context added to prompts
       file = require('opencode.context').file,
       cursor = require("opencode.context").cursor_position,
       selection = require("opencode.context").visual_selection,

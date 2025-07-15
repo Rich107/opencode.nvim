@@ -2,12 +2,12 @@ local M = {}
 
 ---@class opencode.Config: snacks.terminal.Opts
 ---@field auto_reload boolean Automatically reload buffers changed by opencode
----@field auto_focus boolean Show and focus the terminal after sending text
+---@field auto_focus boolean Focus the opencode window after prompting
 ---@field command string Command to launch opencode
----@field context table<string, fun(): string> Context added to every prompt
+---@field context table<string, fun(): string> Context added to prompts
 local defaults = {
   auto_reload = false,
-  auto_focus = true,
+  auto_focus = false,
   -- TODO: default to system theme https://github.com/sst/opencode/issues/445#issuecomment-3071197414
   command = "opencode",
   win = {
