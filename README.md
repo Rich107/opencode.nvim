@@ -91,15 +91,15 @@ Default options:
   auto_reload = false,  -- Automatically reload buffers changed by opencode
   auto_focus = true,    -- Focus the terminal after sending text
   command = "opencode", -- Command to launch opencode
-  win = {               -- Terminal window options
+  win = {
     position = "right",
+    -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
   },
   expansions = {        -- Prompt placeholder expansions
     ["@file"] = function()
       return "@" .. vim.fn.expand("%:.")
     end,
   },
+  -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
 }
 ```
-
-The config object extends [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md) options, including [snacks.win](https://github.com/folke/snacks.nvim/blob/main/docs/win.md) - use those to customize behavior and appearance.
