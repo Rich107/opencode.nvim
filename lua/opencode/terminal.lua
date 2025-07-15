@@ -59,6 +59,8 @@ function M.send(text, opts, multi_line)
 
   term:show()
 
+  -- NOTE: Seems snacks.terminal will always focus a just-created terminal.
+  -- No opt to disable...?
   if opts.auto_focus then
     term:focus()
     -- Exit visual mode if applicable
