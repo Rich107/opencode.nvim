@@ -1,6 +1,6 @@
 # opencode.nvim
 
-Neovim plugin to conveniently interface with the [opencode](https://github.com/sst/opencode) AI assistant.
+This plugin provides a simple, convenient bridge between Neovim and the [opencode](https://github.com/sst/opencode) AI assistant.
 
 <table>
   <tr>
