@@ -7,6 +7,7 @@ local M = {
   defaults = {
     auto_reload = false,
     auto_focus = true,
+    -- TODO: default to system theme https://github.com/sst/opencode/issues/445#issuecomment-3071197414
     command = "opencode",
     win = {
       position = "right",
