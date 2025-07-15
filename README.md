@@ -8,6 +8,9 @@ Neovim plugin to conveniently interface with the [opencode](https://github.com/s
       <img alt="prompting" src="https://github.com/user-attachments/assets/ce1b97e4-225d-4813-b576-88858c5f554b" />
     </td>
     <td>
+      ➡️
+    </td>
+    <td>
       <img alt="result" src="https://github.com/user-attachments/assets/7613551a-0b53-43c6-ad11-a49d9669b694" />
     </td>
   </tr>
