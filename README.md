@@ -13,7 +13,6 @@ Neovim plugin to conveniently interface with the [opencode](https://github.com/s
   </tr>
 </table>
 
-
 > [!WARNING]  
 > This plugin is in initial development. Expect breaking changes and rough edges. 
 
@@ -56,47 +55,16 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     },
     -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
   },
+  -- stylua: ignore
   keys = {
     -- Example keymaps
-    {
-      '<leader>ot',
-      function()
-        require('opencode').toggle()
-      end,
-      desc = 'Toggle opencode',
-    },
-    {
-      '<leader>oa',
-      function()
-        require('opencode').ask()
-      end,
-      desc = 'Ask opencode',
-      mode = { 'n', 'v' },
-    },
+    { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle opencode', },
+    { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
     -- Example commands
-    {
-      '<leader>on',
-      function()
-        require('opencode').command('/new')
-      end,
-      desc = 'New opencode session',
-    },
+    { '<leader>on', function() require('opencode').command('/new') end, desc = 'New opencode session', },
     -- Example prompts
-    {
-      '<leader>oe',
-      function()
-        require('opencode').send('Explain this code')
-      end,
-      desc = 'Explain selected code',
-      mode = 'v'
-    },
-    {
-      '<leader>oc',
-      function()
-        require('opencode').send('Critique @file for correctness and readability')
-      end,
-      desc = 'Critique current file',
-    },
+    { '<leader>oe', function() require('opencode').send('Explain this code') end, desc = 'Explain selected code', mode = 'v', },
+    { '<leader>oc', function() require('opencode').send('Critique @file for correctness and readability') end, desc = 'Critique current file', },
   },
 }
 ```
