@@ -34,7 +34,7 @@ function M.send(prompt, opts)
     -- Probably not - annoying to add the placeholder to every prompt, especially when it's conditional
     local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
     local selected_text = table.concat(lines, "\n")
-    prompt = prompt .. "\n\n" .. selected_text
+    prompt = selected_text .. "\n\n" .. prompt
     -- Exit visual mode now that we've "consumed" the selection
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
   end
