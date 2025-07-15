@@ -23,7 +23,7 @@ This plugin provides a simple, convenient bridge between Neovim and the [opencod
 
 - Toggle an `opencode` terminal window within Neovim
 - Send prompts and commands to the window
-- Automatically adds editor context
+- Automatically include editor context
 - Auto-reload edited buffers
 - Configurable terminal behavior and window style
 
@@ -34,6 +34,8 @@ The following editor context is automatically captured and included in each prom
 - Current file
 - Cursor position
 - Visual mode selection
+
+You can disable these and/or add your own contexts via the `context` option.
 
 ## 📦 Setup
 

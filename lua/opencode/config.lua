@@ -4,7 +4,7 @@ local M = {}
 ---@field auto_reload boolean Automatically reload buffers changed by opencode
 ---@field auto_focus boolean Show and focus the terminal after sending text
 ---@field command string Command to launch opencode
----@field context table<string, fun(): string> Context to add to every prompt
+---@field context table<string, fun(): string> Context added to every prompt
 local defaults = {
   auto_reload = false,
   auto_focus = true,
