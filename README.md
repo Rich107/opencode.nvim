@@ -71,3 +71,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   },
 }
 ```
+
+## 🙏 Acknowledgments
+
+This plugin borrowed inspiration (and some code) from https://github.com/GeorgesAlkhouri/nvim-aider.
