@@ -32,37 +32,30 @@ end
 ---Send a prompt to opencode.
 ---Includes visual mode selection.
 ---Replaces `@file` with current file's path.
----@param text? string Optional text to send; will prompt for input if not provided
+---@param prompt? string Optional text to send; will prompt for input if not provided
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
-function M.ask(text, opts)
-  local mode = vim.fn.mode()
-  local is_visual = mode:match("[vV\22]")
-
-  local function send(prompt)
+function M.ask(prompt, opts)
+  local function send(input)
+    local mode = vim.fn.mode()
+    local is_visual = mode:match("[vV\22]")
     if is_visual then
+      -- Prepend selection
       local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
       local selected_text = table.concat(lines, "\n")
-      if prompt == "" then
-        terminal.send(selected_text, opts)
-      else
-        terminal.send(selected_text .. "\n\n" .. placeholders.replace_file(prompt), opts)
-      end
-    else
-      terminal.send(placeholders.replace_file(prompt), opts)
+      input = input .. "\n\n" .. selected_text
     end
+
+    terminal.send(placeholders.replace_file(input), opts)
   end
 
-  if text then
-    send(text)
+  if prompt then
+    send(prompt)
   else
-    vim.ui.input(
-      { prompt = is_visual and "Add a prompt to your selection (empty to skip): " or "Ask opencode: " },
-      function(input)
-        if input ~= nil then
-          send(input)
-        end
+    vim.ui.input({ prompt = "Ask opencode: " }, function(input)
+      if input ~= nil then
+        send(input)
       end
-    )
+    end)
   end
 end
 
