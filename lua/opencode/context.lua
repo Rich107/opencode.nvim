@@ -53,9 +53,8 @@ function M.diagnostics()
     local end_col = diagnostic.end_col + 1
     local short_message = diagnostic.message:gsub("%s+", " "):gsub("^%s", ""):gsub("%s$", "")
 
-    -- TODO: Maybe the higher-level code should allow returning string[] and then it formats it as a sublist itself?
     message = string.format(
-      "%s\n  - %s:L%d:C%d-L%d:C%d: (%s) %s",
+      "%s\n%s:L%d:C%d-L%d:C%d: (%s) %s",
       message,
       file_path,
       start_line,
