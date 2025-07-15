@@ -59,7 +59,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     {
       '<leader>oe',
       function()
-        require('opencode').ask('Explain this code')
+        require('opencode').send('Explain this code')
       end,
       desc = 'Explain selected code',
       mode = 'v'
@@ -67,7 +67,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     {
       '<leader>oc',
       function()
-        require('opencode').ask('Critique @file for correctness and readability')
+        require('opencode').send('Critique @file for correctness and readability')
       end,
       desc = 'Critique current file',
     },

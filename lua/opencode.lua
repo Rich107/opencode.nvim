@@ -15,13 +15,6 @@ function M.toggle(opts)
   return terminal.toggle(opts)
 end
 
----Send arbitrary text to opencode.
----@param text string Text to send to opencode
----@param opts? opencode.Config Optional config that will override the base config for this call only
-function M.send(text, opts)
-  terminal.send(text, opts)
-end
-
 ---Send a command to opencode.
 ---@param command string opencode command (e.g. "/new")
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
@@ -30,33 +23,31 @@ function M.command(command, opts)
 end
 
 ---Send a prompt to opencode.
----Includes visual mode selection.
+---Prepends visual mode selection if available.
 ---Replaces `@file` with current file's path.
----@param prompt? string Optional text to send; will prompt for input if not provided
+---@param prompt string The prompt to send
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
-function M.ask(prompt, opts)
-  local function send(input)
-    local mode = vim.fn.mode()
-    local is_visual = mode:match("[vV\22]")
-    if is_visual then
-      -- Prepend selection
-      local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
-      local selected_text = table.concat(lines, "\n")
-      input = input .. "\n\n" .. selected_text
+function M.send(prompt, opts)
+  local mode = vim.fn.mode()
+  local is_visual = mode:match("[vV\22]")
+  if is_visual then
+    local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
+    local selected_text = table.concat(lines, "\n")
+    prompt = prompt .. "\n\n" .. selected_text
+  end
+
+  terminal.send(placeholders.replace_file(prompt), opts)
+end
+
+---Input a prompt to send to opencode.
+---Convenience function that calls `send` internally.
+---@param opts? opencode.Config Optional config that will override the base config for this call only
+function M.ask(opts)
+  vim.ui.input({ prompt = "Ask opencode: " }, function(input)
+    if input ~= nil then
+      M.send(input, opts)
     end
-
-    terminal.send(placeholders.replace_file(input), opts)
-  end
-
-  if prompt then
-    send(prompt)
-  else
-    vim.ui.input({ prompt = "Ask opencode: " }, function(input)
-      if input ~= nil then
-        send(input)
-      end
-    end)
-  end
+  end)
 end
 
 return M
