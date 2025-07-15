@@ -19,6 +19,7 @@ function M.send(text, opts, multi_line)
   multi_line = multi_line == nil and true or multi_line
   opts = vim.tbl_deep_extend("force", config.options, opts or {})
 
+  local prev_win = vim.api.nvim_get_current_win()
   local term, created = require("snacks.terminal").get(opts.command, opts)
 
   if created then
@@ -59,11 +60,14 @@ function M.send(text, opts, multi_line)
 
   term:show()
 
-  -- NOTE: Seems snacks.terminal will always focus a just-created terminal.
-  -- No opt to disable...?
-  -- I guess we could manually re-focus the previous window.
   if opts.auto_focus then
     term:focus()
+  elseif created then
+    -- Manually re-focus the previous window.
+    -- snacks.terminal does not seem to have an option to prevent focusing the new terminal.
+    vim.api.nvim_set_current_win(prev_win)
+    -- Seems we otherwise return in insert mode?
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
   end
 end
 
