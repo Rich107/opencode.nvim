@@ -32,7 +32,20 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   },
   ---@type opencode.Config
   opts = {
-    -- Configuration, if any
+    -- Default configuration -- only copy any that you wish to change
+    auto_reload = false,  -- Automatically reload buffers changed by opencode
+    auto_focus = true,    -- Focus the terminal after sending text
+    command = "opencode", -- Command to launch opencode
+    expansions = {        -- Prompt placeholder expansions
+      ["@file"] = function()
+        return "@" .. vim.fn.expand("%:.")
+      end,
+    },
+    win = {
+      position = "right",
+      -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
+    },
+    -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
   },
   keys = {
     -- Example keymaps
@@ -80,26 +93,5 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 ```
 
 > [!IMPORTANT]
-> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` - other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
-
-## ⚙️ Configuration
-
-Default options:
-
-```lua
-{
-  auto_reload = false,  -- Automatically reload buffers changed by opencode
-  auto_focus = true,    -- Focus the terminal after sending text
-  command = "opencode", -- Command to launch opencode
-  win = {
-    position = "right",
-    -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
-  },
-  expansions = {        -- Prompt placeholder expansions
-    ["@file"] = function()
-      return "@" .. vim.fn.expand("%:.")
-    end,
-  },
-  -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
-}
+> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` -- other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
 ```
