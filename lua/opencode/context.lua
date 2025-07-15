@@ -1,9 +1,18 @@
 local M = {}
 
+local function current_file_path()
+  -- Relative paths are prettier and more readable.
+  -- But may be less reliable...?
+  -- Probably only if they pass a different `cwd` to the terminal config.
+  return vim.fn.expand("%:.")
+  -- Absolute path
+  -- return vim.api.nvim_buf_get_name(0)
+end
+
 -- NOTE: Seems files - like commands - need to be "selected" in the menu that appears when they're typed.
 -- We can't just send the text. But opencode will usually use the `read` tool anyway so it's fine.
 function M.file()
-  return vim.api.nvim_buf_get_name(0)
+  return current_file_path()
 end
 
 function M.visual_selection()
@@ -19,9 +28,10 @@ function M.visual_selection()
   local start_line = start_pos[2]
   local end_line = end_pos[2]
   if start_line > end_line then
+    -- Handle "backwards" selection
     start_line, end_line = end_line, start_line
   end
-  local file_path = vim.api.nvim_buf_get_name(0)
+  local file_path = current_file_path()
 
   -- Exit visual mode now that we've "consumed" the selection
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
@@ -38,7 +48,7 @@ function M.cursor_position()
   local pos = vim.api.nvim_win_get_cursor(0)
   local line = pos[1]
   local col = pos[2] + 1 -- Convert to 1-based index
-  local file_path = vim.api.nvim_buf_get_name(0)
+  local file_path = current_file_path()
 
   return string.format("%s:L%d:C%d", file_path, line, col)
 end
