@@ -9,8 +9,6 @@ local function current_file_path()
   -- return vim.api.nvim_buf_get_name(0)
 end
 
--- NOTE: Seems files - like commands - need to be "selected" in the menu that appears when they're typed.
--- We can't just send the text. But opencode will usually use the `read` tool anyway so it's fine.
 function M.file()
   return current_file_path()
 end
@@ -75,6 +73,10 @@ function M.cursor_position()
   local pos = vim.api.nvim_win_get_cursor(0)
   local line = pos[1]
   local col = pos[2] + 1 -- Convert to 1-based index
+
+  -- Include file path so we don't depend on `file` context.
+  -- We don't replace `file` with `cursor_position` because the LLM can over-index on the cursor position.
+  -- e.g. "Analyze this file" will pay special attention to the code surrounding the cursor.
   local file_path = current_file_path()
 
   return string.format("%s:L%d:C%d", file_path, line, col)
