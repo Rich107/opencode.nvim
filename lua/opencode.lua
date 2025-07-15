@@ -42,7 +42,11 @@ function M.ask(text, opts)
     if is_visual then
       local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
       local selected_text = table.concat(lines, "\n")
-      terminal.send(selected_text .. "\n\n" .. placeholders.replace_file(prompt), opts)
+      if prompt == "" then
+        terminal.send(selected_text, opts)
+      else
+        terminal.send(selected_text .. "\n\n" .. placeholders.replace_file(prompt), opts)
+      end
     else
       terminal.send(placeholders.replace_file(prompt), opts)
     end
@@ -54,7 +58,7 @@ function M.ask(text, opts)
     vim.ui.input(
       { prompt = is_visual and "Add a prompt to your selection (empty to skip): " or "Ask opencode: " },
       function(input)
-        if input and input ~= "" then
+        if input ~= nil then
           send(input)
         end
       end
