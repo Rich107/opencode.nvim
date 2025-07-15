@@ -1,7 +1,5 @@
 local M = {}
 
-local context = require("opencode.context")
-
 ---@class opencode.Config: snacks.terminal.Opts
 ---@field auto_reload boolean Automatically reload buffers changed by opencode
 ---@field auto_focus boolean Show and focus the terminal after sending text
@@ -16,7 +14,7 @@ local defaults = {
     position = "right",
   },
   context = {
-    file = context.file,
+    file = require('opencode.context').file,
   },
 }
 

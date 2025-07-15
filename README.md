@@ -37,7 +37,7 @@ The following editor context is automatically captured and included in each prom
 ## 📦 Setup
 
 > [!IMPORTANT]
-> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` – other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
+> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` — other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
 
 Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
@@ -49,9 +49,9 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   },
   ---@type opencode.Config
   opts = {
-    -- Default configuration -- only copy any that you wish to change
+    -- Default configuration — only include any that you wish to change
     auto_reload = false,  -- Automatically reload buffers changed by opencode
-    auto_focus = true,    -- Focus the terminal after sending text
+    auto_focus = true,    -- Focus the opencode window after sending text
     command = "opencode", -- Command to launch opencode
     context = {           -- Context added to every prompt
       file = require('opencode.context').file,
