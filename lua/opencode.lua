@@ -22,7 +22,7 @@ function M.command(command, opts)
 end
 
 ---Send a prompt to opencode.
----Prepends visual selection and contexts before sending.
+---Prepends context before sending.
 ---@param prompt string The prompt to send
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.send(prompt, opts)
