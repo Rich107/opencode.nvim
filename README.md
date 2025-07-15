@@ -31,7 +31,7 @@ This plugin provides a simple, convenient bridge between Neovim and the [opencod
 ## 📦 Setup
 
 > [!IMPORTANT]
-> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` -- other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
+> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` – other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
 
 Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
