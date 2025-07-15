@@ -2,6 +2,7 @@
 ---@field auto_reload boolean Automatically reload buffers changed by opencode
 ---@field auto_focus boolean Show and focus the terminal after sending text
 ---@field command string Command to launch opencode
+---@field expansions table<string, fun(): string> Prompt placeholder expansions
 local M = {
   defaults = {
     auto_reload = false,
@@ -9,6 +10,11 @@ local M = {
     command = "opencode",
     win = {
       position = "right",
+    },
+    expansions = {
+      ["@file"] = function()
+        return "@" .. vim.fn.expand("%:.")
+      end,
     },
   },
 }

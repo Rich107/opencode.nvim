@@ -2,7 +2,6 @@ local M = {}
 
 local config = require("opencode.config")
 local terminal = require("opencode.terminal")
-local placeholders = require("opencode.placeholders")
 
 --@param opts opencode.Config
 function M.setup(opts)
@@ -23,8 +22,7 @@ function M.command(command, opts)
 end
 
 ---Send a prompt to opencode.
----Prepends visual mode selection if available.
----Replaces `@file` with current file's path.
+---Prepends visual selection and expands placeholders before sending.
 ---@param prompt string The prompt to send
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.send(prompt, opts)
@@ -36,7 +34,12 @@ function M.send(prompt, opts)
     prompt = prompt .. "\n\n" .. selected_text
   end
 
-  terminal.send(placeholders.replace_file(prompt), opts)
+  -- Expand placeholders
+  for placeholder, replace_func in pairs(config.options.expansions) do
+    prompt = prompt:gsub(placeholder, replace_func())
+  end
+
+  terminal.send(prompt, opts)
 end
 
 ---Input a prompt to send to opencode.

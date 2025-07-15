@@ -12,7 +12,7 @@ Neovim plugin to conveniently interface with the [opencode](https://github.com/s
 - Toggle an `opencode` terminal window within Neovim
 - Send prompts, commands and selected text to the window
 - Map re-usable and dynamic prompts
-- Prompt placeholders - `@file` to reference the current file
+- Flexible prompt placeholders - e.g. `@file` to reference the current file
 - Auto-reload buffers edited by `opencode`
 - Configurable terminal behavior and window style
 
@@ -89,6 +89,11 @@ Default options:
   command = "opencode", -- Command to launch opencode
   win = {
     position = "right", -- Window position
+  },
+  expansions = {
+    ["@file"] = function()
+      return "@" .. vim.fn.expand("%:.")
+    end,
   },
 }
 ```
