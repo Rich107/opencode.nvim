@@ -29,4 +29,18 @@ function M.visual_selection()
   return string.format("%s:L%d-%d", file_path, start_line, end_line)
 end
 
+function M.diagnostics()
+  -- TODO:
+  return nil
+end
+
+function M.cursor_position()
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local line = pos[1]
+  local col = pos[2] + 1 -- Convert to 1-based index
+  local file_path = vim.api.nvim_buf_get_name(0)
+
+  return string.format("%s:L%d:C%d", file_path, line, col)
+end
+
 return M

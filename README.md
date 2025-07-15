@@ -32,7 +32,8 @@ This plugin provides a simple, convenient bridge between Neovim and the [opencod
 The following editor context is automatically captured and included in each prompt for your convenience.
 
 - Current file
-- Selected text (in visual mode)
+- Cursor position
+- Visual mode selection
 
 ## 📦 Setup
 
@@ -55,6 +56,8 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     command = "opencode", -- Command to launch opencode
     context = {           -- Context added to every prompt
       file = require('opencode.context').file,
+      cursor_position = require("opencode.context").cursor_position,
+      selection = require("opencode.context").visual_selection,
     },
     win = {
       position = "right",
