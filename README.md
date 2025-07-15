@@ -58,7 +58,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     command = "opencode", -- Command to launch opencode
     context = {           -- Context added to every prompt
       file = require('opencode.context').file,
-      cursor_position = require("opencode.context").cursor_position,
+      cursor = require("opencode.context").cursor_position,
       selection = require("opencode.context").visual_selection,
     },
     win = {
