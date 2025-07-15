@@ -79,21 +79,27 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     -- Example prompts
     { '<leader>oe', function() require('opencode').send('Explain this code') end, desc = 'Explain selected code', mode = 'v', },
     { '<leader>oc', function() require('opencode').send('Critique this file for correctness and readability') end, desc = 'Critique current file', },
-    -- Example integration (untested)
+    -- Example integration with custom context
     {
-      '<leader>oh',
-      function()
-        require('opencode').send(
-          "Here are my Harpooned files that I'm actively working on",
-          {
-            context = {
-              harpoon = require('harpoon'):list,
-            }
-          }
-        )
-      end,
-      desc = 'Send Harpooned files to opencode'
-    }
+       '<leader>og',
+       function()
+         require('opencode').send(
+           "Analyze my grappled files in regard to our current discussion",
+           {
+             context = {
+               grapple = function()
+                 local paths = {}
+                 for _, tag in ipairs(require('grapple').tags() or {}) do
+                   table.insert(paths, tag.path)
+                 end
+                 return table.concat(paths, '\n')
+               end
+             }
+           }
+         )
+       end,
+       desc = 'Analyze grappled files'
+     }
   },
 }
 ```
