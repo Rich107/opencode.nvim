@@ -1,30 +1,30 @@
+local M = {}
+
 ---@class opencode.Config: snacks.terminal.Opts
 ---@field auto_reload boolean Automatically reload buffers changed by opencode
 ---@field auto_focus boolean Show and focus the terminal after sending text
 ---@field command string Command to launch opencode
 ---@field expansions table<string, fun(): string> Prompt placeholder expansions
-local M = {
-  defaults = {
-    auto_reload = false,
-    auto_focus = true,
-    -- TODO: default to system theme https://github.com/sst/opencode/issues/445#issuecomment-3071197414
-    command = "opencode",
-    win = {
-      position = "right",
-    },
-    expansions = {
-      -- WARNING: Hmm, seems files - like commands - need to be "selected" in the menu that appears when they're typed.
-      -- We can't just send the text. But it usually uses the `read` tool anyway so it's fine.
-      -- TODO: Open an issue in sst/opencode for this and commands?
-      ["@file"] = function()
-        return vim.api.nvim_buf_get_name(0)
-      end,
-    },
+local defaults = {
+  auto_reload = false,
+  auto_focus = true,
+  -- TODO: default to system theme https://github.com/sst/opencode/issues/445#issuecomment-3071197414
+  command = "opencode",
+  win = {
+    position = "right",
+  },
+  expansions = {
+    -- WARNING: Hmm, seems files - like commands - need to be "selected" in the menu that appears when they're typed.
+    -- We can't just send the text. But it usually uses the `read` tool anyway so it's fine.
+    -- TODO: Open an issue in sst/opencode for this and commands?
+    ["@file"] = function()
+      return vim.api.nvim_buf_get_name(0)
+    end,
   },
 }
 
 ---@type opencode.Config
-M.options = vim.deepcopy(M.defaults)
+M.options = vim.deepcopy(defaults)
 
 local function setup_auto_reload()
   if not vim.o.autoread then
@@ -56,6 +56,7 @@ function M.setup(opts)
   if M.options.auto_reload then
     setup_auto_reload()
   end
+
   return M.options
 end
 
