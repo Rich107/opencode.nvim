@@ -13,4 +13,8 @@ function M.replace_file(input)
   return input
 end
 
+-- TODO: @diagnostics
+
+-- TODO: Maybe make placeholders configurable again
+
 return M
