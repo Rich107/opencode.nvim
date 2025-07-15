@@ -49,7 +49,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     command = "opencode", -- Command to launch opencode
     expansions = {        -- Prompt placeholder expansions
       ["@file"] = function()
-        return "@" .. vim.fn.expand("%:.")
+        return vim.api.nvim_buf_get_name(0)
       end,
     },
     win = {
