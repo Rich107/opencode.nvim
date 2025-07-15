@@ -2,7 +2,11 @@
 
 Neovim plugin to conveniently interface with the [opencode](https://github.com/sst/opencode) AI assistant.
 
-<img alt="opencode.nvim in action" src="https://github.com/user-attachments/assets/aa0dcddb-aa85-433f-9e49-7721b5a74948" />
+<p>
+  <img width="500" alt="prompting" src="https://github.com/user-attachments/assets/ce1b97e4-225d-4813-b576-88858c5f554b" />
+  <img width="500" alt="result" src="https://github.com/user-attachments/assets/7613551a-0b53-43c6-ad11-a49d9669b694" />
+</p>
+
 
 > [!WARNING]  
 > This plugin is in initial development. Expect breaking changes and rough edges. 
