@@ -32,6 +32,7 @@ function M.send(prompt, opts)
     -- Prepend visual mode selection
     -- Would this be better as an @selection placeholder...?
     -- Probably not - annoying to add the placeholder to every prompt, especially when it's conditional
+    -- TODO: include the file name and line numbers in the prompt? So opencode doesn't have to grep for it.
     local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
     local selected_text = table.concat(lines, "\n")
     prompt = selected_text .. "\n\n" .. prompt
