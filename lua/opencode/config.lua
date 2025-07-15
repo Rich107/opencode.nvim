@@ -1,10 +1,12 @@
 local M = {}
 
+local context = require("opencode.context")
+
 ---@class opencode.Config: snacks.terminal.Opts
 ---@field auto_reload boolean Automatically reload buffers changed by opencode
 ---@field auto_focus boolean Show and focus the terminal after sending text
 ---@field command string Command to launch opencode
----@field expansions table<string, fun(): string> Prompt placeholder expansions
+---@field context table<string, fun(): string> Context to add to every prompt
 local defaults = {
   auto_reload = false,
   auto_focus = true,
@@ -13,13 +15,8 @@ local defaults = {
   win = {
     position = "right",
   },
-  expansions = {
-    -- WARNING: Hmm, seems files - like commands - need to be "selected" in the menu that appears when they're typed.
-    -- We can't just send the text. But it usually uses the `read` tool anyway so it's fine.
-    -- TODO: Open an issue in sst/opencode for this and commands?
-    ["@file"] = function()
-      return vim.api.nvim_buf_get_name(0)
-    end,
+  context = {
+    file = context.file,
   },
 }
 

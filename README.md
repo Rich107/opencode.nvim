@@ -22,11 +22,17 @@ This plugin provides a simple, convenient bridge between Neovim and the [opencod
 ## ✨ Features
 
 - Toggle an `opencode` terminal window within Neovim
-- Send prompts, commands, and selected text to the window
-- Map re-usable and dynamic prompts
-- Flexible prompt expansions - e.g. `@file` to reference the current file
+- Send prompts and commands to the window
+- Automatically adds editor context
 - Auto-reload edited buffers
 - Configurable terminal behavior and window style
+
+## 🕵️‍♂️ Context
+
+The following editor context is automatically captured and included in each prompt for your convenience.
+
+- Current file
+- Selected text (in visual mode)
 
 ## 📦 Setup
 
@@ -47,10 +53,8 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     auto_reload = false,  -- Automatically reload buffers changed by opencode
     auto_focus = true,    -- Focus the terminal after sending text
     command = "opencode", -- Command to launch opencode
-    expansions = {        -- Prompt placeholder expansions
-      ["@file"] = function()
-        return vim.api.nvim_buf_get_name(0)
-      end,
+    context = {           -- Context added to every prompt
+      file = require('opencode.context').file,
     },
     win = {
       position = "right",
@@ -67,7 +71,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     { '<leader>on', function() require('opencode').command('/new') end, desc = 'New opencode session', },
     -- Example prompts
     { '<leader>oe', function() require('opencode').send('Explain this code') end, desc = 'Explain selected code', mode = 'v', },
-    { '<leader>oc', function() require('opencode').send('Critique @file for correctness and readability') end, desc = 'Critique current file', },
+    { '<leader>oc', function() require('opencode').send('Critique this file for correctness and readability') end, desc = 'Critique current file', },
   },
 }
 ```

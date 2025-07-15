@@ -22,7 +22,7 @@ function M.command(command, opts)
 end
 
 ---Send a prompt to opencode.
----Prepends visual selection and expands placeholders before sending.
+---Prepends visual selection and contexts before sending.
 ---@param prompt string The prompt to send
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.send(prompt, opts)
@@ -30,8 +30,8 @@ function M.send(prompt, opts)
   local is_visual = mode:match("[vV\22]")
   if is_visual then
     -- Prepend file path and selected line range
-    local start_pos = vim.fn.getpos('v')
-    local end_pos = vim.fn.getpos('.')
+    local start_pos = vim.fn.getpos("v")
+    local end_pos = vim.fn.getpos(".")
     local start_line = start_pos[2]
     local end_line = end_pos[2]
     if start_line > end_line then
@@ -43,9 +43,10 @@ function M.send(prompt, opts)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
   end
 
-  -- Expand placeholders
-  for placeholder, replace_func in pairs(config.options.expansions) do
-    prompt = prompt:gsub(placeholder, replace_func())
+  -- Add context
+  -- TODO: Allow overriding context in opts
+  for name, fun in pairs(config.options.context) do
+    prompt = name .. ": " .. fun() .. "\n" .. prompt
   end
 
   terminal.send(prompt, opts)
