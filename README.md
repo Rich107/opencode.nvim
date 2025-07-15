@@ -12,8 +12,8 @@ Neovim plugin to conveniently interface with the [opencode](https://github.com/s
 - Toggle an `opencode` terminal window within Neovim
 - Send prompts, commands and selected text to the window
 - Map re-usable and dynamic prompts
-- Flexible prompt placeholders - e.g. `@file` to reference the current file
-- Auto-reload buffers edited by `opencode`
+- Flexible prompt expansions - e.g. `@file` to reference the current file
+- Auto-reload edited buffers
 - Configurable terminal behavior and window style
 
 ## 📦 Setup
@@ -55,7 +55,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
       end,
       desc = 'New opencode session',
     },
-    -- Example re-usable prompts
+    -- Example prompts
     {
       '<leader>oe',
       function()
@@ -87,8 +87,8 @@ Default options:
   auto_reload = false,  -- Automatically reload buffers changed by opencode
   auto_focus = true,    -- Focus the terminal after sending text
   command = "opencode", -- Command to launch opencode
-  win = {
-    position = "right", -- Window position
+  win = {               -- Terminal window options
+    position = "right",
   },
   expansions = {        -- Prompt placeholder expansions
     ["@file"] = function()
