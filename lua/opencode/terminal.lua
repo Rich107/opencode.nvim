@@ -47,8 +47,10 @@ function M.send(text, opts, multi_line)
     local bracketed_text = bracket_start .. text .. bracket_end
     vim.api.nvim_chan_send(chan, bracketed_text)
   else
-    vim.api.nvim_chan_send(chan, text:gsub("\n", " "))
-    -- Wait for opencode to show the command menu - it's not enough to simply send the exact command text
+    text = text:gsub("\n", " ")
+    vim.api.nvim_chan_send(chan, text)
+    -- Wait for opencode to show the command menu - it's not
+    -- enough to simply send the exact command text
     ---@diagnostic disable-next-line: missing-return
     vim.wait(200, function() end)
     -- Select the command menu item
