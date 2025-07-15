@@ -1,6 +1,6 @@
 # opencode.nvim
 
-Neovim plugin to conveniently interface with [opencode](https://github.com/sst/opencode).
+Neovim plugin to conveniently interface with the [opencode](https://github.com/sst/opencode) AI assistant.
 
 <img alt="opencode.nvim in action" src="https://github.com/user-attachments/assets/aa0dcddb-aa85-433f-9e49-7721b5a74948" />
 
@@ -22,7 +22,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-  "NickvanDyke/opencode.nvim",
+  'NickvanDyke/opencode.nvim',
   dependencies = {
     'folke/snacks.nvim',
   },
@@ -85,7 +85,7 @@ Default options:
 ```lua
 {
   auto_reload = false,  -- Automatically reload buffers changed by opencode
-  auto_focus = true,    -- Show and focus the terminal after sending text
+  auto_focus = true,    -- Focus the terminal after sending text
   command = "opencode", -- Command to launch opencode
   win = {
     position = "right", -- Window position
