@@ -83,5 +83,5 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ## 🙏 Acknowledgments
 
-- This plugin borrowed inspiration (and some code) from https://github.com/GeorgesAlkhouri/nvim-aider
-- For a more powerful integration, you may prefer https://github.com/sudo-tee/opencode.nvim, which my Google-fu failed to find until after I wrote this plugin. This plugin leverages opencode's familiar interface, whereas that one creates a native Neovim UI over `opencode run`.
+- Inspired by (and partially based on) [nvim-aider](https://github.com/GeorgesAlkhouri/nvim-aider)
+- This plugin uses opencode's familiar interface to minimize cognitive load across tools. For advanced features and a native Neovim UI, see [sudo-tee/opencode.nvim](https://github.com/sudo-tee/opencode.nvim).
