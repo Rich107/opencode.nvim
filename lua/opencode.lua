@@ -27,9 +27,10 @@ end
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.send(prompt, opts)
   -- Add context
-  -- TODO: Allow overriding context in opts
+  -- Replace options, not merge - more convenient interface
+  local contexts = opts and opts.context or config.options.context
   local context = ""
-  for name, fun in pairs(config.options.context) do
+  for name, fun in pairs(contexts) do
     local context_value = fun()
     if context_value ~= nil and context_value ~= "" then
       context = context .. name .. ": " .. context_value .. "\n"
