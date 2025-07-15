@@ -2,14 +2,14 @@
 ---@field auto_reload boolean Automatically reload buffers changed by opencode
 ---@field auto_focus boolean Show and focus the terminal after sending text
 ---@field command string Command to launch opencode
-local M = {}
-
-M.defaults = {
-  auto_reload = false,
-  auto_focus = true,
-  command = "opencode",
-  win = {
-    position = "right",
+local M = {
+  defaults = {
+    auto_reload = false,
+    auto_focus = true,
+    command = "opencode",
+    win = {
+      position = "right",
+    },
   },
 }
 

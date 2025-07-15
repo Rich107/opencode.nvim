@@ -26,6 +26,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   dependencies = {
     'folke/snacks.nvim',
   },
+  ---@type opencode.Config
   opts = {
     -- Configuration, if any
   },
