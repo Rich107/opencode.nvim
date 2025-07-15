@@ -14,7 +14,7 @@ Neovim plugin to conveniently interface with the [opencode](https://github.com/s
 ## ✨ Features
 
 - Toggle an `opencode` terminal window within Neovim
-- Send prompts, commands and selected text to the window
+- Send prompts, commands, and selected text to the window
 - Map re-usable and dynamic prompts
 - Flexible prompt expansions - e.g. `@file` to reference the current file
 - Auto-reload edited buffers
