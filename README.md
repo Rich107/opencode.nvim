@@ -28,6 +28,9 @@ Neovim plugin to conveniently interface with the [opencode](https://github.com/s
 
 ## 📦 Setup
 
+> [!IMPORTANT]
+> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` -- other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
+
 Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
@@ -97,6 +100,3 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   },
 }
 ```
-
-> [!IMPORTANT]
-> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` -- other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
