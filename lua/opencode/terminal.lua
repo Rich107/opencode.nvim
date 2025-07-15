@@ -57,8 +57,9 @@ function M.send(text, opts, multi_line)
     vim.api.nvim_chan_send(chan, "\r")
   end
 
+  term:show()
+
   if opts.auto_focus then
-    term:show()
     term:focus()
     -- Exit visual mode if applicable
     if vim.fn.mode():match("[vV\22]") then
