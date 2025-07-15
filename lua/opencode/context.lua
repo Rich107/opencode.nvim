@@ -40,8 +40,35 @@ function M.visual_selection()
 end
 
 function M.diagnostics()
-  -- TODO:
-  return nil
+  local diagnostics = vim.diagnostic.get(0)
+  if #diagnostics == 0 then
+    return nil
+  end
+
+  local file_path = current_file_path()
+  local message = #diagnostics .. " error" .. (#diagnostics > 1 and "s" or "") .. ":"
+
+  for _, diagnostic in ipairs(diagnostics) do
+    local start_line = diagnostic.lnum + 1 -- Convert to 1-based line numbers
+    local start_col = diagnostic.col + 1
+    local end_line = diagnostic.end_lnum + 1
+    local end_col = diagnostic.end_col + 1
+    local short_message = diagnostic.message:gsub("%s+", " "):gsub("^%s", ""):gsub("%s$", "")
+
+    message = string.format(
+      "%s\n%s:L%d:C%d-L%d:C%d: (%s) %s",
+      message,
+      file_path,
+      start_line,
+      start_col,
+      end_line,
+      end_col,
+      diagnostic.source or "unknown source",
+      short_message
+    )
+  end
+
+  return message
 end
 
 function M.cursor_position()

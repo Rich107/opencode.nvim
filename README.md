@@ -34,6 +34,7 @@ The following editor context is automatically captured and included in each prom
 - Current file
 - Cursor position
 - Visual mode selection
+- Current buffer diagnostics
 
 You can disable these and/or add your own contexts via the `context` option.
 
@@ -60,6 +61,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
       file = require('opencode.context').file,
       cursor = require("opencode.context").cursor_position,
       selection = require("opencode.context").visual_selection,
+      diagnostics = require("opencode.context").diagnostics,
     },
     win = {
       position = "right",
