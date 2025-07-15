@@ -26,27 +26,18 @@ end
 ---@param prompt string The prompt to send
 ---@param opts? opencode.Config Optional config that will override the base config for this call only
 function M.send(prompt, opts)
-  local mode = vim.fn.mode()
-  local is_visual = mode:match("[vV\22]")
-  if is_visual then
-    -- Prepend file path and selected line range
-    local start_pos = vim.fn.getpos("v")
-    local end_pos = vim.fn.getpos(".")
-    local start_line = start_pos[2]
-    local end_line = end_pos[2]
-    if start_line > end_line then
-      start_line, end_line = end_line, start_line
-    end
-    local file_path = vim.api.nvim_buf_get_name(0)
-    prompt = string.format("%s:L%d-%d\n\n%s", file_path, start_line, end_line, prompt)
-    -- Exit visual mode now that we've "consumed" the selection
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
-  end
-
   -- Add context
   -- TODO: Allow overriding context in opts
+  local context = ""
   for name, fun in pairs(config.options.context) do
-    prompt = name .. ": " .. fun() .. "\n" .. prompt
+    local context_value = fun()
+    if context_value ~= nil and context_value ~= "" then
+      context = context .. name .. ": " .. context_value .. "\n"
+    end
+  end
+
+  if context ~= "" then
+    prompt = context .. "\n" .. prompt
   end
 
   terminal.send(prompt, opts)

@@ -15,6 +15,7 @@ local defaults = {
   },
   context = {
     file = require('opencode.context').file,
+    selection = require('opencode.context').visual_selection,
   },
 }
 
