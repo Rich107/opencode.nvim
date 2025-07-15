@@ -56,7 +56,7 @@ function M.diagnostics()
     local short_message = diagnostic.message:gsub("%s+", " "):gsub("^%s", ""):gsub("%s$", "")
 
     message = string.format(
-      "%s\n%s:L%d:C%d-L%d:C%d: (%s) %s",
+      "%s\n  - %s:L%d:C%d-L%d:C%d: (%s) %s",
       message,
       file_path,
       start_line,

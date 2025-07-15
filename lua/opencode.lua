@@ -33,7 +33,7 @@ function M.send(prompt, opts)
   for name, fun in pairs(contexts) do
     local context_value = fun()
     if context_value ~= nil and context_value ~= "" then
-      context = context .. name .. ": " .. context_value .. "\n"
+      context = context .. "- " .. name .. ": " .. context_value .. "\n"
     end
   end
 
