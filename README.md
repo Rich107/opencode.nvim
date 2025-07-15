@@ -90,7 +90,7 @@ Default options:
   win = {
     position = "right", -- Window position
   },
-  expansions = {
+  expansions = {        -- Prompt placeholder expansions
     ["@file"] = function()
       return "@" .. vim.fn.expand("%:.")
     end,

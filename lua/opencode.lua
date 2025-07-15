@@ -30,6 +30,8 @@ function M.send(prompt, opts)
   local is_visual = mode:match("[vV\22]")
   if is_visual then
     -- Prepend visual mode selection
+    -- Would this be better as an @selection placeholder...?
+    -- Probably not - annoying to add the placeholder to every prompt, especially when it's conditional
     local lines = vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = mode })
     local selected_text = table.concat(lines, "\n")
     prompt = prompt .. "\n\n" .. selected_text
