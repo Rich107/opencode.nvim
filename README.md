@@ -68,11 +68,11 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     -- Commands
     { '<leader>on', function() require('opencode').command('/new') end, desc = 'New session', },
     -- Prompts
-    { '<leader>oe', function() require('opencode').send('Explain this code') end, desc = 'Explain selection', mode = 'v', },
-    { '<leader>oo', function() require('opencode').send('Optimize this code for performance and readability') end, desc = 'Optimize selection', mode = 'v', },
-    { '<leader>od', function() require('opencode').send('Add documentation comments to this code') end, desc = 'Document selection', mode = 'v', },
-    { '<leader>or', function() require('opencode').send('Review @file for correctness and readability') end, desc = 'Review file', },
-    { '<leader>of', function() require('opencode').send('Fix these @diagnostics') end, desc = 'Fix errors in file', },
+    { '<leader>oe', function() require('opencode').prompt('Explain this code') end, desc = 'Explain selection', mode = 'v', },
+    { '<leader>oo', function() require('opencode').prompt('Optimize this code for performance and readability') end, desc = 'Optimize selection', mode = 'v', },
+    { '<leader>od', function() require('opencode').prompt('Add documentation comments to this code') end, desc = 'Document selection', mode = 'v', },
+    { '<leader>or', function() require('opencode').prompt('Review @file for correctness and readability') end, desc = 'Review file', },
+    { '<leader>of', function() require('opencode').prompt('Fix these @diagnostics') end, desc = 'Fix errors in file', },
   },
 }
 ```

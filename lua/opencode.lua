@@ -25,7 +25,7 @@ end
 ---Inserts `opts.context` before sending.
 ---@param prompt string
 ---@param opts? opencode.Config
-function M.send(prompt, opts)
+function M.prompt(prompt, opts)
   -- Add context
   local context = ""
   for name, fun in pairs(config.options.context) do
@@ -49,7 +49,7 @@ end
 function M.ask(prefill, opts)
   vim.ui.input({ prompt = "Ask opencode: ", default = prefill }, function(input)
     if input ~= nil then
-      M.send(input, opts)
+      M.prompt(input, opts)
     end
   end)
 end
