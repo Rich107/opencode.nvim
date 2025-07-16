@@ -79,10 +79,10 @@ When triggered, various contexts will be inserted into the prompt before sending
 
 | Context | Trigger |
 | - | - |
-| Current file path (relative) | Prompt contains `@file` |
-| Cursor position (file and location) | Prompt contains `@cursor` |
+| Current file path | Prompt contains `@file` |
+| Cursor position | Prompt contains `@cursor` |
 | Current buffer diagnostics | Prompt contains `@diagnostics` |
-| Selected text (file and location) | In visual mode |
+| Selected text | In visual mode |
 
 You can add custom contexts via the `context` option. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
 
