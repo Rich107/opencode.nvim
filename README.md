@@ -1,6 +1,6 @@
 # opencode.nvim
 
-This plugin provides a simple, convenient bridge between Neovim and the [opencode](https://github.com/sst/opencode) AI assistant.
+This plugin provides a simple, convenient bridge between Neovim and the powerful [opencode](https://github.com/sst/opencode) AI assistant. No new tools to learn — just effective, contextualized research, reviews, refactors, and documentation, right inside your editor.
 
 <table>
   <tr>
@@ -22,10 +22,9 @@ This plugin provides a simple, convenient bridge between Neovim and the [opencod
 ## ✨ Features
 
 - Toggle an `opencode` terminal window within Neovim
-- Send prompts and commands to the window
-- Insert customizable editor context
+- Send prompts and commands
+- Insert editor context
 - Auto-reload edited buffers
-- Configure terminal behavior and window style
 
 ## 📦 Setup
 
@@ -113,5 +112,5 @@ You can add custom contexts via `opts.context`. This example inserts all files t
 ## 🙏 Acknowledgments
 
 - Inspired by (and partially based on) [nvim-aider](https://github.com/GeorgesAlkhouri/nvim-aider)
-- This plugin uses opencode's familiar interface to minimize cognitive load across tools. For advanced features and a native Neovim UI, see [sudo-tee/opencode.nvim](https://github.com/sudo-tee/opencode.nvim).
+- This plugin uses opencode's familiar interface to minimize cognitive load across tools. For advanced Neovim integration, see [sudo-tee/opencode.nvim](https://github.com/sudo-tee/opencode.nvim).
 - [mcp-neovim-server](https://github.com/bigcodegen/mcp-neovim-server) may better suit your workflow, but tool calls are slow and context customization is limited.
