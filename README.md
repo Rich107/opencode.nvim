@@ -1,6 +1,6 @@
 # opencode.nvim
 
-This plugin provides a simple, convenient bridge between Neovim and the powerful [opencode](https://github.com/sst/opencode) AI assistant. No new tools to learn — just effective, contextualized research, reviews, refactors, and documentation, right inside your editor.
+This plugin provides a convenient, customizable bridge between Neovim and the powerful [opencode](https://github.com/sst/opencode) AI assistant. No new tools to learn — just effective, contextualized research, reviews, refactors, and documentation, right inside your editor.
 
 <table>
   <tr>
