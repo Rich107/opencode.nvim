@@ -1,19 +1,51 @@
 local M = {}
 
-local function current_file_path()
+---Given a buffer number, returns the relative file path, or nil if not associated with a file.
+---@param bufnr number
+---@return string|nil
+local function file_path(bufnr)
   -- Relative paths are prettier and more readable.
   -- But may be less reliable...?
   -- Probably only if they pass a different `cwd` to the terminal config.
-  return vim.fn.expand("%:.")
-  -- Absolute path
-  -- return vim.api.nvim_buf_get_name(0)
+  -- TODO: Includes terminal buffers (and other non-file buffers?)
+  local name = vim.api.nvim_buf_get_name(bufnr)
+  local relname = vim.fn.fnamemodify(name, ":.")
+  return relname ~= "" and relname or nil
 end
 
 ---When `prompt` contains `@file`, returns the current file path.
 ---@param prompt string
 ---@return string|nil
 function M.file(prompt)
-  return prompt:match("@file") and current_file_path() or nil
+  -- TODO: Generically ignore when the trigger is part of a larger word.
+  -- Frontiers seem to not work when it's at the start or end of the prompt...
+  return (prompt:match("@file") and not prompt:match("@files")) and file_path(0) or nil
+end
+
+---When prompt contains `@files`, returns a list of open files.
+---@param prompt string
+---@return string|nil
+function M.files(prompt)
+  if not prompt:match("@files") then
+    return nil
+  end
+
+  local file_list = {}
+
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) then
+      local rel_path = file_path(buf)
+      if rel_path then
+        table.insert(file_list, rel_path)
+      end
+    end
+  end
+
+  if #file_list == 0 then
+    return "No open files."
+  end
+
+  return table.concat(file_list, "\n")
 end
 
 ---When `prompt` contains `@cursor`, returns the current cursor position in the format `file_path:Lline:Ccol`.
@@ -31,7 +63,7 @@ function M.cursor_position(prompt)
   -- Include file path so we don't depend on `file` context.
   -- We don't replace `file` with `cursor_position` because the LLM can over-index on the cursor position.
   -- e.g. "Analyze this file" will pay special attention to the code surrounding the cursor.
-  local file_path = current_file_path()
+  local file_path = file_path(0)
 
   return string.format("%s:L%d:C%d", file_path, line, col)
 end
@@ -55,7 +87,7 @@ function M.visual_selection(prompt)
     -- Handle "backwards" selection
     start_line, end_line = end_line, start_line
   end
-  local file_path = current_file_path()
+  local file_path = file_path(0)
 
   -- Exit visual mode now that we've "consumed" the selection
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
@@ -76,7 +108,7 @@ function M.diagnostics(prompt)
     return nil
   end
 
-  local file_path = current_file_path()
+  local file_path = file_path(0)
   local message = #diagnostics .. " error" .. (#diagnostics > 1 and "s" or "") .. ":"
 
   for _, diagnostic in ipairs(diagnostics) do

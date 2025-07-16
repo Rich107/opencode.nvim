@@ -16,6 +16,7 @@ local defaults = {
   },
   context = {
     file = require("opencode.context").file,
+    files = require("opencode.context").files,
     cursor = require("opencode.context").cursor_position,
     selection = require("opencode.context").visual_selection,
     diagnostics = require("opencode.context").diagnostics,

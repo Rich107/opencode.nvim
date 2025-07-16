@@ -62,6 +62,7 @@ Default settings:
   command = "opencode", -- Command to launch opencode
   context = {           -- Context to add to prompts
     file = require("opencode.context").file,
+    files = require("opencode.context").files,
     cursor = require("opencode.context").cursor_position,
     selection = require("opencode.context").visual_selection,
     diagnostics = require("opencode.context").diagnostics,
@@ -80,7 +81,8 @@ When triggered, the plugin will insert various contexts into the prompt before s
 
 | Context | Trigger |
 | - | - |
-| Current file path | Prompt contains `@file` |
+| Current file | Prompt contains `@file` |
+| Open files | Prompt contains `@files` |
 | Cursor position | Prompt contains `@cursor` |
 | Current buffer diagnostics | Prompt contains `@diagnostics` |
 | Selected text | In visual mode |
