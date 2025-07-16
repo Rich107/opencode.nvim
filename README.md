@@ -25,7 +25,7 @@ This plugin provides a simple, convenient bridge between Neovim and the [opencod
 - Send prompts and commands to the window
 - Insert customizable editor context
 - Auto-reload edited buffers
-- Configurable terminal behavior and window style
+- Configure terminal behavior and window style
 
 ## 🕵️‍♂️ Context
 
