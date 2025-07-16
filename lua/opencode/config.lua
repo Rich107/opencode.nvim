@@ -37,6 +37,8 @@ local function setup_auto_reload()
   local group = vim.api.nvim_create_augroup("OpencodeAutoReload", { clear = true })
 
   -- Trigger :checktime on the events that matter
+  -- TODO: Possible to trigger immediately, i.e. without user interactions?
+  -- Maybe we occasionally :checktime for some period after sending a prompt.
   vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermClose" }, {
     group = group,
     pattern = "*",
