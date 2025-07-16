@@ -64,6 +64,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     -- But here are some examples to get you started :)
     { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle opencode', },
     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
+    { '<leader>oA', function() require('opencode').ask('@file ') end, desc = 'Ask opencode about current file', mode = { 'n', 'v' }, },
     -- Commands
     { '<leader>on', function() require('opencode').command('/new') end, desc = 'New session', },
     -- Prompts

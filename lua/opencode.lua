@@ -44,9 +44,10 @@ end
 
 ---Input a prompt to send to opencode.
 ---Convenience function that calls `send` internally.
+---@param prefill? string Text to prefill the input with.
 ---@param opts? opencode.Config
-function M.ask(opts)
-  vim.ui.input({ prompt = "Ask opencode: " }, function(input)
+function M.ask(prefill, opts)
+  vim.ui.input({ prompt = "Ask opencode: ", default = prefill }, function(input)
     if input ~= nil then
       M.send(input, opts)
     end
