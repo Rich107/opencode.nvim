@@ -75,7 +75,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ## 🕵️‍♂️ Context
 
-When triggered, various contexts will be inserted into the prompt before sending:
+When triggered, the plugin will insert various contexts into the prompt before sending:
 
 | Context | Trigger |
 | - | - |
