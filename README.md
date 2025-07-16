@@ -60,15 +60,18 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   },
   -- stylua: ignore
   keys = {
-    -- Example keymaps
+    -- opencode.nvim exposes a general, flexible API — customize it to your workflow!
+    -- But here are some examples to get you started :)
     { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle opencode', },
     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
-    -- Example commands
-    { '<leader>on', function() require('opencode').command('/new') end, desc = 'New opencode session', },
-    -- Example prompts
-    { '<leader>oe', function() require('opencode').send('Explain this code') end, desc = 'Explain selected code', mode = 'v', },
-    { '<leader>oc', function() require('opencode').send('Critique @file for correctness and readability') end, desc = 'Critique current file', },
-    { '<leader>od', function() require('opencode').send('Fix these @diagnostics') end, desc = 'Fix current file errors', },
+    -- Commands
+    { '<leader>on', function() require('opencode').command('/new') end, desc = 'New session', },
+    -- Prompts
+    { '<leader>oe', function() require('opencode').send('Explain this code') end, desc = 'Explain selection', mode = 'v', },
+    { '<leader>oo', function() require('opencode').send('Optimize this code for performance and readability') end, desc = 'Optimize selection', mode = 'v', },
+    { '<leader>od', function() require('opencode').send('Add documentation comments to this code') end, desc = 'Document selection', mode = 'v', },
+    { '<leader>or', function() require('opencode').send('Review @file for correctness and readability') end, desc = 'Review file', },
+    { '<leader>of', function() require('opencode').send('Fix these @diagnostics') end, desc = 'Fix errors in file', },
   },
 }
 ```
