@@ -84,7 +84,7 @@ When triggered, various contexts will be inserted into the prompt before sending
 | Current buffer diagnostics | Prompt contains `@diagnostics` |
 | Selected text | In visual mode |
 
-You can add custom contexts via the `context` option. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
+You can add custom contexts via `opts.context`. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
 
 ```lua
 ---@type opencode.Config

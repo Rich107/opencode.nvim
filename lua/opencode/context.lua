@@ -9,14 +9,14 @@ local function current_file_path()
   -- return vim.api.nvim_buf_get_name(0)
 end
 
----When `prompt` contains `@file`, return the current file path.
+---When `prompt` contains `@file`, returns the current file path.
 ---@param prompt string
 ---@return string|nil
 function M.file(prompt)
   return prompt:match("@file") and current_file_path() or nil
 end
 
----When `prompt` contains `@cursor`, return the current cursor position in the format `file_path:Lline:Ccol`.
+---When `prompt` contains `@cursor`, returns the current cursor position in the format `file_path:Lline:Ccol`.
 ---@param prompt string
 ---@return string|nil
 function M.cursor_position(prompt)
@@ -36,7 +36,7 @@ function M.cursor_position(prompt)
   return string.format("%s:L%d:C%d", file_path, line, col)
 end
 
----When in visual mode, return the selected lines in the format `file_path:Lstart-end`.
+---When in visual mode, returns the selected lines in the format `file_path:Lstart-end`.
 ---@param prompt string
 ---@return string|nil
 function M.visual_selection(prompt)
@@ -63,7 +63,7 @@ function M.visual_selection(prompt)
   return string.format("%s:L%d-%d", file_path, start_line, end_line)
 end
 
----When `prompt` contains `@diagnostics`, return the diagnostics for the current buffer.
+---When `prompt` contains `@diagnostics`, returns formatted diagnostics for the current buffer.
 ---@param prompt string
 ---@return string|nil
 function M.diagnostics(prompt)

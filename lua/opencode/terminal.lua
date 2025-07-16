@@ -3,7 +3,7 @@ local M = {}
 local config = require("opencode.config")
 
 ---Toggle terminal visibility
----@param opts? opencode.Config Optional config that will override the base config for this call only
+---@param opts? opencode.Config
 ---@return snacks.win?
 function M.toggle(opts)
   local snacks = require("snacks.terminal")
@@ -11,9 +11,9 @@ function M.toggle(opts)
   return snacks.toggle(opts.command, opts)
 end
 
----Send text to terminal
----@param text string Text to send
----@param opts? opencode.Config Optional config that will override the base config for this call only
+---Send text to terminal.
+---@param text string
+---@param opts? opencode.Config
 ---@param multi_line? boolean Whether to send as multi-line text (default: true)
 function M.send(text, opts, multi_line)
   multi_line = multi_line == nil and true or multi_line
