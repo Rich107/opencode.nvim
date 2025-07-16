@@ -2,8 +2,8 @@
 
 `opencode.nvim` provides a convenient, customizable bridge between Neovim and the powerful [opencode](https://github.com/sst/opencode) AI assistant. No new tools to learn — just effective, contextualized research, reviews, refactors, and documentation, right inside your editor.
 
-<img alt="prompting" src="https://github.com/user-attachments/assets/ce1b97e4-225d-4813-b576-88858c5f554b" />
-<img alt="result" src="https://github.com/user-attachments/assets/7613551a-0b53-43c6-ad11-a49d9669b694" />
+<img alt="prompting" src="https://github.com/user-attachments/assets/694e3ec6-6237-49ab-a600-c22ee2664ab7" />
+<img alt="result" src="https://github.com/user-attachments/assets/c760b1ce-e36a-48d8-95d9-2417e157eef9" />
 
 > [!WARNING]  
 > This plugin is in initial development. Expect breaking changes and rough edges. 
