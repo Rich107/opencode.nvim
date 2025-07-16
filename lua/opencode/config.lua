@@ -1,7 +1,7 @@
 local M = {}
 
 ---@class opencode.Config: snacks.terminal.Opts
----@field auto_reload? boolean Automatically reload buffers changed by opencode
+---@field auto_reload? boolean Automatically reload buffers edited by opencode
 ---@field auto_focus? boolean Focus the opencode window after prompting
 ---@field command? string Command to launch opencode
 ---@field context? table<string, fun(string): string|nil> Context to add to prompts
@@ -12,6 +12,7 @@ local defaults = {
   command = "opencode",
   win = {
     position = "right",
+    -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
   },
   context = {
     file = require("opencode.context").file,
@@ -19,6 +20,7 @@ local defaults = {
     selection = require("opencode.context").visual_selection,
     diagnostics = require("opencode.context").diagnostics,
   },
+  -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
 }
 
 ---@type opencode.Config

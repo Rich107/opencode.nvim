@@ -1,6 +1,6 @@
 # opencode.nvim
 
-This plugin provides a convenient, customizable bridge between Neovim and the powerful [opencode](https://github.com/sst/opencode) AI assistant. No new tools to learn — just effective, contextualized research, reviews, refactors, and documentation, right inside your editor.
+`opencode.nvim` provides a convenient, customizable bridge between Neovim and the powerful [opencode](https://github.com/sst/opencode) AI assistant. No new tools to learn — just effective, contextualized research, reviews, refactors, and documentation, right inside your editor.
 
 <img alt="prompting" src="https://github.com/user-attachments/assets/ce1b97e4-225d-4813-b576-88858c5f554b" />
 <img alt="result" src="https://github.com/user-attachments/assets/7613551a-0b53-43c6-ad11-a49d9669b694" />
@@ -15,7 +15,7 @@ This plugin provides a convenient, customizable bridge between Neovim and the po
 - Insert editor context
 - Auto-reload edited buffers
 
-## 📦 Setup
+## 📦 Installation
 
 > [!IMPORTANT]
 > Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` — other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
@@ -30,18 +30,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   },
   ---@type opencode.Config
   opts = {
-    -- Default configuration — only include any that you wish to change
-    auto_reload = false,  -- Automatically reload buffers changed by opencode
-    auto_focus = false,   -- Focus the opencode window after prompting 
-    command = "opencode", -- Command to launch opencode
-    context = {           -- Context to add to prompts
-      -- See 'Context' docs section
-    },
-    win = {
-      position = "right",
-      -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
-    },
-    -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
+    -- Your configuration, if any
   },
   -- stylua: ignore
   keys = {
@@ -58,6 +47,30 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     { '<leader>od', function() require('opencode').prompt('Add documentation comments for @selection') end, desc = 'Document selection', mode = 'v', },
     { '<leader>ot', function() require('opencode').prompt('Add tests for @selection') end, desc = 'Test selection', mode = 'v', },
   },
+}
+```
+
+## ⚙️ Configuration
+
+Default settings:
+
+```lua
+---@type opencode.Config
+{
+  auto_reload = false,  -- Automatically reload buffers edited by opencode
+  auto_focus = false,   -- Focus the opencode window after prompting 
+  command = "opencode", -- Command to launch opencode
+  context = {           -- Context to add to prompts
+    file = require("opencode.context").file,
+    cursor = require("opencode.context").cursor_position,
+    selection = require("opencode.context").visual_selection,
+    diagnostics = require("opencode.context").diagnostics,
+  },
+  win = {
+    position = "right",
+    -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
+  },
+  -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
 }
 ```
 
