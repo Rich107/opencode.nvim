@@ -15,11 +15,11 @@ local defaults = {
     -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
   },
   context = {
-    file = require("opencode.context").file,
-    files = require("opencode.context").files,
-    cursor = require("opencode.context").cursor_position,
-    selection = require("opencode.context").visual_selection,
-    diagnostics = require("opencode.context").diagnostics,
+    ["@file"] = require("opencode.context").file,
+    ["@files"] = require("opencode.context").files,
+    ["@cursor"] = require("opencode.context").cursor_position,
+    ["@selection"] = require("opencode.context").visual_selection,
+    ["@diagnostics"] = require("opencode.context").diagnostics,
   },
   -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
 }

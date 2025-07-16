@@ -60,12 +60,12 @@ Default settings:
   auto_reload = false,  -- Automatically reload buffers edited by opencode
   auto_focus = false,   -- Focus the opencode window after prompting 
   command = "opencode", -- Command to launch opencode
-  context = {           -- Context to add to prompts
-    file = require("opencode.context").file,
-    files = require("opencode.context").files,
-    cursor = require("opencode.context").cursor_position,
-    selection = require("opencode.context").visual_selection,
-    diagnostics = require("opencode.context").diagnostics,
+  context = {           -- Context to inject in prompts
+    ["@file"] = require("opencode.context").file,
+    ["@files"] = require("opencode.context").files,
+    ["@cursor"] = require("opencode.context").cursor_position,
+    ["@selection"] = require("opencode.context").visual_selection,
+    ["@diagnostics"] = require("opencode.context").diagnostics,
   },
   win = {
     position = "right",
@@ -77,15 +77,15 @@ Default settings:
 
 ## 🕵️‍♂️ Context
 
-When triggered, the plugin will insert various contexts into the prompt before sending:
+When your prompt contains certain placeholder phrases, the plugin will replace it with appropriate context before sending:
 
-| Context | Trigger |
+| Placeholder | Context |
 | - | - |
-| Current file | Prompt contains `@file` |
-| Open files | Prompt contains `@files` |
-| Cursor position | Prompt contains `@cursor` |
-| Current buffer diagnostics | Prompt contains `@diagnostics` |
-| Selected text | In visual mode |
+| `@file` | Current file |
+| `@files` | Open files |
+| `@cursor` | Cursor position |
+| `@selection` | Selected text |
+| `@diagnostics` | Current buffer diagnostics |
 
 You can add custom contexts via `opts.context`. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
 
@@ -93,17 +93,14 @@ You can add custom contexts via `opts.context`. This example inserts all files t
 ---@type opencode.Config
 {
   context = {
-    ---@param prompt string
     ---@return string|nil
-    grapple = function(prompt)
-      if prompt:match '@grapple' then
-        local paths = {}
-        for _, tag in ipairs(require('grapple').tags() or {}) do
-          table.insert(paths, tag.path)
-        end
-        return table.concat(paths, '\n')
+    ['@grapple'] = function()
+      local paths = {}
+      for _, tag in ipairs(require('grapple').tags() or {}) do
+        table.insert(paths, tag.path)
       end
-    end
+      return table.concat(paths, ', ')
+    end,
   }
 }
 ```

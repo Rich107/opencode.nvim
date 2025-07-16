@@ -13,23 +13,31 @@ local function file_path(bufnr)
   return relname ~= "" and relname or nil
 end
 
----When `prompt` contains `@file`, returns the current file path.
+---Injects context into a prompt.
 ---@param prompt string
----@return string|nil
-function M.file(prompt)
-  -- TODO: Generically ignore when the trigger is part of a larger word.
-  -- Frontiers seem to not work when it's at the start or end of the prompt...
-  return (prompt:match("@file") and not prompt:match("@files")) and file_path(0) or nil
-end
-
----When prompt contains `@files`, returns a list of open files.
----@param prompt string
----@return string|nil
-function M.files(prompt)
-  if not prompt:match("@files") then
-    return nil
+---@param opts opencode.Config
+---@return string
+function M.inject(prompt, opts)
+  for placeholder, fun in pairs(opts.context) do
+    -- Only match whole-word placeholders using Lua frontier patterns
+    -- Ideally we'd have one in front of the pattern too, but I can't find a pattern
+    -- that will match the start of the string OR a word boundary but not match
+    -- a special character like `@` or `#` at the start of the placeholder.
+    prompt = prompt:gsub(placeholder .. "%f[%W]", fun() or placeholder)
   end
 
+  return prompt
+end
+
+---The current buffer's file path
+---@return string|nil
+function M.file()
+  return file_path(0)
+end
+
+---File paths of all open buffers.
+---@return string|nil
+function M.files()
   local file_list = {}
 
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -42,36 +50,27 @@ function M.files(prompt)
   end
 
   if #file_list == 0 then
-    return "No open files."
-  end
-
-  return table.concat(file_list, "\n")
-end
-
----When `prompt` contains `@cursor`, returns the current cursor position in the format `file_path:Lline:Ccol`.
----@param prompt string
----@return string|nil
-function M.cursor_position(prompt)
-  if not prompt:match("@cursor") then
     return nil
   end
 
+  return table.concat(file_list, ", ")
+end
+
+---The current cursor position in the format `file_path:Lline:Ccol`.
+---@return string
+function M.cursor_position()
   local pos = vim.api.nvim_win_get_cursor(0)
   local line = pos[1]
   local col = pos[2] + 1 -- Convert to 1-based index
 
-  -- Include file path so we don't depend on `file` context.
-  -- We don't replace `file` with `cursor_position` because the LLM can over-index on the cursor position.
-  -- e.g. "Analyze this file" will pay special attention to the code surrounding the cursor.
-  local file_path = file_path(0)
-
-  return string.format("%s:L%d:C%d", file_path, line, col)
+  return string.format("%s:L%d:C%d", file_path(0), line, col)
 end
 
----When in visual mode, returns the selected lines in the format `file_path:Lstart-end`.
----@param prompt string
+---The selected lines location in the format `file_path:Lstart-end`.
 ---@return string|nil
-function M.visual_selection(prompt)
+function M.visual_selection()
+  -- TODO: Should this be a special context that's always inserted when in visual mode,
+  -- regardless of prompt/placeholder?
   local mode = vim.fn.mode()
   local is_visual = mode:match("[vV\22]")
 
@@ -87,28 +86,21 @@ function M.visual_selection(prompt)
     -- Handle "backwards" selection
     start_line, end_line = end_line, start_line
   end
-  local file_path = file_path(0)
 
   -- Exit visual mode now that we've "consumed" the selection
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
 
-  return string.format("%s:L%d-%d", file_path, start_line, end_line)
+  return string.format("%s:L%d-%d", file_path(0), start_line, end_line)
 end
 
----When `prompt` contains `@diagnostics`, returns formatted diagnostics for the current buffer.
----@param prompt string
+---Formatted diagnostics for the current buffer.
 ---@return string|nil
-function M.diagnostics(prompt)
-  if not prompt:match("@diagnostics") then
-    return nil
-  end
-
+function M.diagnostics()
   local diagnostics = vim.diagnostic.get(0)
   if #diagnostics == 0 then
     return nil
   end
 
-  local file_path = file_path(0)
   local message = #diagnostics .. " error" .. (#diagnostics > 1 and "s" or "") .. ":"
 
   for _, diagnostic in ipairs(diagnostics) do
@@ -119,9 +111,9 @@ function M.diagnostics(prompt)
     local short_message = diagnostic.message:gsub("%s+", " "):gsub("^%s", ""):gsub("%s$", "")
 
     message = string.format(
-      "%s\n%s:L%d:C%d-L%d:C%d: (%s) %s",
+      "%s, %s:L%d:C%d-L%d:C%d: (%s) %s",
       message,
-      file_path,
+      file_path(0),
       start_line,
       start_col,
       end_line,
