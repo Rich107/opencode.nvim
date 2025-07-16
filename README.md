@@ -73,6 +73,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     { '<leader>od', function() require('opencode').prompt('Add documentation comments to this code') end, desc = 'Document selection', mode = 'v', },
     { '<leader>or', function() require('opencode').prompt('Review @file for correctness and readability') end, desc = 'Review file', },
     { '<leader>of', function() require('opencode').prompt('Fix these @diagnostics') end, desc = 'Fix errors in file', },
+    { '<leader>ot', function() require('opencode').prompt('Add tests for @selection') end, desc = 'Test selection', },
   },
 }
 ```
