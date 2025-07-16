@@ -100,6 +100,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     -- Example prompts
     { '<leader>oe', function() require('opencode').send('Explain this code') end, desc = 'Explain selected code', mode = 'v', },
     { '<leader>oc', function() require('opencode').send('Critique @file for correctness and readability') end, desc = 'Critique current file', },
+    { '<leader>od', function() require('opencode').send('Fix these @diagnostics') end, desc = 'Fix current file errors', },
   },
 }
 ```
