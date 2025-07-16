@@ -27,38 +27,6 @@ This plugin provides a simple, convenient bridge between Neovim and the [opencod
 - Auto-reload edited buffers
 - Configure terminal behavior and window style
 
-## 🕵️‍♂️ Context
-
-When triggered, various contexts will be inserted into the prompt before sending:
-
-| Context | Trigger |
-| - | - |
-| Current file path (relative) | Prompt contains `@file` |
-| Cursor position (file and location) | Prompt contains `@cursor` |
-| Current buffer diagnostics | Prompt contains `@diagnostics` |
-| Selected text (file and location) | In visual mode |
-
-You can add custom contexts via the `context` option. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
-
-```lua
----@type opencode.Config
-{
-  context = {
-    ---@param prompt string
-    ---@return string|nil
-    grapple = function(prompt)
-      if prompt:match '@grapple' then
-        local paths = {}
-        for _, tag in ipairs(require('grapple').tags() or {}) do
-          table.insert(paths, tag.path)
-        end
-        return table.concat(paths, '\n')
-      end
-    end
-  }
-}
-```
-
 ## 📦 Setup
 
 > [!IMPORTANT]
@@ -102,6 +70,38 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     { '<leader>oc', function() require('opencode').send('Critique @file for correctness and readability') end, desc = 'Critique current file', },
     { '<leader>od', function() require('opencode').send('Fix these @diagnostics') end, desc = 'Fix current file errors', },
   },
+}
+```
+
+## 🕵️‍♂️ Context
+
+When triggered, various contexts will be inserted into the prompt before sending:
+
+| Context | Trigger |
+| - | - |
+| Current file path (relative) | Prompt contains `@file` |
+| Cursor position (file and location) | Prompt contains `@cursor` |
+| Current buffer diagnostics | Prompt contains `@diagnostics` |
+| Selected text (file and location) | In visual mode |
+
+You can add custom contexts via the `context` option. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
+
+```lua
+---@type opencode.Config
+{
+  context = {
+    ---@param prompt string
+    ---@return string|nil
+    grapple = function(prompt)
+      if prompt:match '@grapple' then
+        local paths = {}
+        for _, tag in ipairs(require('grapple').tags() or {}) do
+          table.insert(paths, tag.path)
+        end
+        return table.concat(paths, '\n')
+      end
+    end
+  }
 }
 ```
 
