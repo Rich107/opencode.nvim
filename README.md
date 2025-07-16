@@ -2,19 +2,8 @@
 
 This plugin provides a convenient, customizable bridge between Neovim and the powerful [opencode](https://github.com/sst/opencode) AI assistant. No new tools to learn — just effective, contextualized research, reviews, refactors, and documentation, right inside your editor.
 
-<table>
-  <tr>
-    <td>
-      <img alt="prompting" src="https://github.com/user-attachments/assets/ce1b97e4-225d-4813-b576-88858c5f554b" />
-    </td>
-    <td>
-      ➡️
-    </td>
-    <td>
-      <img alt="result" src="https://github.com/user-attachments/assets/7613551a-0b53-43c6-ad11-a49d9669b694" />
-    </td>
-  </tr>
-</table>
+<img alt="prompting" src="https://github.com/user-attachments/assets/ce1b97e4-225d-4813-b576-88858c5f554b" />
+<img alt="result" src="https://github.com/user-attachments/assets/7613551a-0b53-43c6-ad11-a49d9669b694" />
 
 > [!WARNING]  
 > This plugin is in initial development. Expect breaking changes and rough edges. 
