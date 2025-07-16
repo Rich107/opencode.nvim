@@ -46,10 +46,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     auto_focus = false,   -- Focus the opencode window after prompting 
     command = "opencode", -- Command to launch opencode
     context = {           -- Context to add to prompts
-      file = require('opencode.context').file,
-      cursor = require("opencode.context").cursor_position,
-      selection = require("opencode.context").visual_selection,
-      diagnostics = require("opencode.context").diagnostics,
+      -- See 'Context' docs section
     },
     win = {
       position = "right",
