@@ -64,9 +64,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle opencode', },
     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
     { '<leader>oA', function() require('opencode').ask('@file ') end, desc = 'Ask opencode about current file', mode = { 'n', 'v' }, },
-    -- Commands
     { '<leader>on', function() require('opencode').command('/new') end, desc = 'New session', },
-    -- Prompts
     { '<leader>oe', function() require('opencode').prompt('Explain @selection') end, desc = 'Explain selection', mode = 'v', },
     { '<leader>oo', function() require('opencode').prompt('Optimize @selection for performance and readability') end, desc = 'Optimize selection', mode = 'v', },
     { '<leader>od', function() require('opencode').prompt('Add documentation comments for @selection') end, desc = 'Document selection', mode = 'v', },
