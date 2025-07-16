@@ -9,11 +9,37 @@ local function current_file_path()
   -- return vim.api.nvim_buf_get_name(0)
 end
 
-function M.file()
-  return current_file_path()
+---When `prompt` contains `@file`, return the current file path.
+---@param prompt string
+---@return string|nil
+function M.file(prompt)
+  return prompt:match("@file") and current_file_path() or nil
 end
 
-function M.visual_selection()
+---When `prompt` contains `@cursor`, return the current cursor position in the format `file_path:Lline:Ccol`.
+---@param prompt string
+---@return string|nil
+function M.cursor_position(prompt)
+  if not prompt:match("@cursor") then
+    return nil
+  end
+
+  local pos = vim.api.nvim_win_get_cursor(0)
+  local line = pos[1]
+  local col = pos[2] + 1 -- Convert to 1-based index
+
+  -- Include file path so we don't depend on `file` context.
+  -- We don't replace `file` with `cursor_position` because the LLM can over-index on the cursor position.
+  -- e.g. "Analyze this file" will pay special attention to the code surrounding the cursor.
+  local file_path = current_file_path()
+
+  return string.format("%s:L%d:C%d", file_path, line, col)
+end
+
+---When in visual mode, return the selected lines in the format `file_path:Lstart-end`.
+---@param prompt string
+---@return string|nil
+function M.visual_selection(prompt)
   local mode = vim.fn.mode()
   local is_visual = mode:match("[vV\22]")
 
@@ -37,7 +63,14 @@ function M.visual_selection()
   return string.format("%s:L%d-%d", file_path, start_line, end_line)
 end
 
-function M.diagnostics()
+---When `prompt` contains `@diagnostics`, return the diagnostics for the current buffer.
+---@param prompt string
+---@return string|nil
+function M.diagnostics(prompt)
+  if not prompt:match("@diagnostics") then
+    return nil
+  end
+
   local diagnostics = vim.diagnostic.get(0)
   if #diagnostics == 0 then
     return nil
@@ -67,19 +100,6 @@ function M.diagnostics()
   end
 
   return message
-end
-
-function M.cursor_position()
-  local pos = vim.api.nvim_win_get_cursor(0)
-  local line = pos[1]
-  local col = pos[2] + 1 -- Convert to 1-based index
-
-  -- Include file path so we don't depend on `file` context.
-  -- We don't replace `file` with `cursor_position` because the LLM can over-index on the cursor position.
-  -- e.g. "Analyze this file" will pay special attention to the code surrounding the cursor.
-  local file_path = current_file_path()
-
-  return string.format("%s:L%d:C%d", file_path, line, col)
 end
 
 return M

@@ -23,20 +23,41 @@ This plugin provides a simple, convenient bridge between Neovim and the [opencod
 
 - Toggle an `opencode` terminal window within Neovim
 - Send prompts and commands to the window
-- Automatically include editor context
+- Insert customizable editor context
 - Auto-reload edited buffers
 - Configurable terminal behavior and window style
 
 ## 🕵️‍♂️ Context
 
-The following editor context is automatically captured and included in each prompt for your convenience.
+When triggered, various contexts will be inserted into the prompt before sending:
 
-- Current file
-- Cursor position
-- Visual mode selection
-- Current buffer diagnostics
+| Context | Trigger |
+| - | - |
+| Current file path (relative) | Prompt contains `@file` |
+| Cursor position (file and location) | Prompt contains `@cursor` |
+| Current buffer diagnostics | Prompt contains `@diagnostics` |
+| Selected text (file and location) | In visual mode |
 
-You can disable these and/or add your own contexts via the `context` option.
+You can add custom contexts via the `context` option. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
+
+```lua
+---@type opencode.Config
+{
+  context = {
+    ---@param prompt string
+    ---@return string|nil
+    grapple = function(prompt)
+      if prompt:match '@grapple' then
+        local paths = {}
+        for _, tag in ipairs(require('grapple').tags() or {}) do
+          table.insert(paths, tag.path)
+        end
+        return table.concat(paths, '\n')
+      end
+    end
+  }
+}
+```
 
 ## 📦 Setup
 
@@ -57,7 +78,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     auto_reload = false,  -- Automatically reload buffers changed by opencode
     auto_focus = false,   -- Focus the opencode window after prompting 
     command = "opencode", -- Command to launch opencode
-    context = {           -- Context added to prompts
+    context = {           -- Context to add to prompts
       file = require('opencode.context').file,
       cursor = require("opencode.context").cursor_position,
       selection = require("opencode.context").visual_selection,
@@ -78,28 +99,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
     { '<leader>on', function() require('opencode').command('/new') end, desc = 'New opencode session', },
     -- Example prompts
     { '<leader>oe', function() require('opencode').send('Explain this code') end, desc = 'Explain selected code', mode = 'v', },
-    { '<leader>oc', function() require('opencode').send('Critique this file for correctness and readability') end, desc = 'Critique current file', },
-    -- Example integration with custom context
-    {
-       '<leader>og',
-       function()
-         require('opencode').send(
-           "Analyze my grappled files in regard to our current discussion",
-           {
-             context = {
-               grapple = function()
-                 local paths = {}
-                 for _, tag in ipairs(require('grapple').tags() or {}) do
-                   table.insert(paths, tag.path)
-                 end
-                 return table.concat(paths, '\n')
-               end
-             }
-           }
-         )
-       end,
-       desc = 'Analyze grappled files'
-     }
+    { '<leader>oc', function() require('opencode').send('Critique @file for correctness and readability') end, desc = 'Critique current file', },
   },
 }
 ```
