@@ -126,4 +126,23 @@ function M.diagnostics()
   return message
 end
 
+---Formatted quickfix list entries.
+---@return string|nil
+function M.quickfix()
+  local qflist = vim.fn.getqflist()
+  if #qflist == 0 then
+    return nil
+  end
+
+  local lines = {}
+  for _, entry in ipairs(qflist) do
+    local filename = entry.bufnr ~= 0 and file_path(entry.bufnr) or "unknown file"
+    local lnum = entry.lnum
+    local col = entry.col
+    table.insert(lines, string.format("%s:L%d:C%d", filename, lnum, col))
+  end
+  local result = table.concat(lines, ", ")
+  return result
+end
+
 return M
