@@ -29,7 +29,7 @@ function M.inject(prompt, opts)
   return prompt
 end
 
----The current buffer's file path
+---The current buffer's file path.
 ---@return string|nil
 function M.file()
   return file_path(0)
@@ -143,6 +143,21 @@ function M.quickfix()
   end
   local result = table.concat(lines, ", ")
   return result
+end
+
+---The git diff (unified diff format).
+---@return string|nil
+function M.git_diff()
+  local handle = io.popen("git --no-pager diff")
+  if not handle then
+    return nil
+  end
+  local result = handle:read("*a")
+  handle:close()
+  if result and result ~= "" then
+    return result
+  end
+  return nil
 end
 
 return M

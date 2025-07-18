@@ -63,6 +63,7 @@ Default settings:
     ["@selection"] = require("opencode.context").visual_selection,
     ["@diagnostics"] = require("opencode.context").diagnostics,
     ["@quickfix"] = require("opencode.context").quickfix,
+    ["@diff"] = require("opencode.context").git_diff,
   },
   win = {
     position = "right",
@@ -84,6 +85,7 @@ When your prompt contains placeholders, the plugin will replace it with context 
 | `@selection` | Selected text |
 | `@diagnostics` | Current buffer diagnostics |
 | `@quickfix` | Quickfix list |
+| `@diff` | Git diff |
 
 You can add custom contexts via `opts.context`. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
 

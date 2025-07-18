@@ -21,6 +21,7 @@ local defaults = {
     ["@selection"] = require("opencode.context").visual_selection,
     ["@diagnostics"] = require("opencode.context").diagnostics,
     ["@quickfix"] = require("opencode.context").quickfix,
+    ["@diff"] = require("opencode.context").git_diff,
   },
   -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
 }
