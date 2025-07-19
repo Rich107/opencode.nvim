@@ -62,13 +62,6 @@ function M.send(text, opts, multi_line)
 
   if opts.auto_focus then
     term:focus()
-  else
-    -- Manually re-focus the previous window.
-    -- snacks.terminal does not seem to have an option to prevent focusing the newly created or just-shown terminal.
-    vim.cmd("stopinsert") -- Ensure we leave insert mode in the terminal buffer
-    vim.api.nvim_set_current_win(prev_win)
-    -- TODO: opencode cursor remains visible,
-    -- which is not the case when manually entering Normal mode then switching windows
   end
 end
 

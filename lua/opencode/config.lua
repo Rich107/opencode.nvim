@@ -12,6 +12,7 @@ local defaults = {
   command = "opencode",
   win = {
     position = "right",
+    enter = false,
     -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
   },
   context = {

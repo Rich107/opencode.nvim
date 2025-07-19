@@ -67,6 +67,7 @@ Default settings:
   },
   win = {
     position = "right",
+    enter = false,      -- Do not enter the opencode window after opening it
     -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
   },
   -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
