@@ -95,8 +95,13 @@ You can add custom contexts via `opts.context`. This example replaces `@grapple`
   context = {
     ---@return string|nil
     ['@grapple'] = function()
+      local tags = require('grapple').tags()
+      if not tags or #tags == 0 then
+        return nil
+      end
+
       local paths = {}
-      for _, tag in ipairs(require('grapple').tags() or {}) do
+      for _, tag in ipairs(tags) do
         table.insert(paths, tag.path)
       end
       return table.concat(paths, ', ')
