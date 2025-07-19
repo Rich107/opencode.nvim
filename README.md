@@ -87,7 +87,7 @@ When your prompt contains placeholders, the plugin will replace it with context 
 | `@quickfix` | Quickfix list |
 | `@diff` | Git diff |
 
-You can add custom contexts via `opts.context`. This example inserts all files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim) when the prompt contains `@grapple`:
+You can add custom contexts via `opts.context`. This example replaces `@grapple` with files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
 
 ```lua
 ---@type opencode.Config
