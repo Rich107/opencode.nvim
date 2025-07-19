@@ -111,6 +111,23 @@ You can add custom contexts via `opts.context`. This example replaces `@grapple`
 }
 ```
 
+## 💻 Events
+
+You can prompt opencode on Neovim events. This example prompts opencode to fix diagnostics whenever they change in the current buffer:
+
+```lua
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+  callback = function(args)
+    local diagnostics = vim.diagnostic.get(args.buf)
+    if #diagnostics > 0 then
+      require('opencode').prompt('Fix these @diagnostics')
+    end
+  end,
+})
+```
+
+It's kind of annoying and should at least debounce, but just to show what's possible.
+
 ## 🙏 Acknowledgments
 
 - Inspired by (and partially based on) [nvim-aider](https://github.com/GeorgesAlkhouri/nvim-aider).
