@@ -6,7 +6,7 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
 ## ✨ Features
 
-- Toggle an `opencode` terminal window within Neovim
+- Toggle the `opencode` TUI within Neovim
 - Send prompts and commands
 - Insert editor context
 - Auto-reload edited buffers
@@ -131,5 +131,5 @@ It's kind of annoying and should at least debounce, but just to show what's poss
 ## 🙏 Acknowledgments
 
 - Inspired by (and partially based on) [nvim-aider](https://github.com/GeorgesAlkhouri/nvim-aider).
-- This plugin uses opencode's familiar interface to reduce cognitive load. See [sudo-tee/opencode.nvim](https://github.com/sudo-tee/opencode.nvim) for a Neovim frontend.
+- This plugin uses opencode's familiar TUI for simplicity — see [sudo-tee/opencode.nvim](https://github.com/sudo-tee/opencode.nvim) for a Neovim frontend.
 - [mcp-neovim-server](https://github.com/bigcodegen/mcp-neovim-server) may better suit your workflow, although it lacks custom contexts and tool calls are slow and unreliable.
