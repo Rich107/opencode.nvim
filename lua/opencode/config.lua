@@ -1,20 +1,19 @@
 local M = {}
 
----@class opencode.Config: snacks.terminal.Opts
----@field auto_reload? boolean Automatically reload buffers edited by opencode
----@field auto_focus? boolean Focus the opencode window after prompting
----@field command? string Command to launch opencode
+-- TODO: Possible to require model_id and provider_id in passed opts?
+-- Unlikely they're using the defaults.
+-- But without requiring it in single-call opts.
+-- Ideally without two separate classes.
+
+---@class opencode.Config
+---@field model_id? string [Model](https://models.dev/) to use for opencode requests
+---@field provider_id? string [Provider](https://models.dev/) to use for opencode requests
+---@field auto_reload? boolean Automatically reload buffers edited by opencode 
 ---@field context? table<string, fun(string): string|nil> Context to add to prompts
 local defaults = {
   auto_reload = false,
-  auto_focus = false,
-  -- TODO: default to system theme https://github.com/sst/opencode/issues/445#issuecomment-3071197414
-  command = "opencode",
-  win = {
-    position = "right",
-    enter = false,
-    -- See https://github.com/folke/snacks.nvim/blob/main/docs/win.md for more window options
-  },
+  model_id = "gpt-4.1",
+  provider_id = "github-copilot",
   context = {
     ["@file"] = require("opencode.context").file,
     ["@files"] = require("opencode.context").files,
@@ -24,7 +23,6 @@ local defaults = {
     ["@quickfix"] = require("opencode.context").quickfix,
     ["@diff"] = require("opencode.context").git_diff,
   },
-  -- See https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md for more terminal options
 }
 
 ---@type opencode.Config

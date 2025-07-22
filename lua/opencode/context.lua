@@ -1,19 +1,14 @@
 local M = {}
 
----Given a buffer number, returns the relative file path, or nil if not associated with a file.
+---Given a buffer number, returns the absolute file path, or nil if not associated with a file.
 ---@param bufnr number
 ---@return string|nil
 local function file_path(bufnr)
-  -- Relative paths are prettier and more readable.
-  -- But may be less reliable...?
-  -- Probably only if they pass a different `cwd` to the terminal config.
-  -- TODO: Includes terminal buffers (and other non-file buffers?)
   local name = vim.api.nvim_buf_get_name(bufnr)
-  local relname = vim.fn.fnamemodify(name, ":.")
-  return relname ~= "" and relname or nil
+  return name ~= "" and not name:match("^term://") and name or nil
 end
 
----Injects context into a prompt.
+---Inject context into a prompt.
 ---@param prompt string
 ---@param opts opencode.Config
 ---@return string
