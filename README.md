@@ -5,7 +5,7 @@ Bring the powerful [opencode](https://github.com/sst/opencode) AI to Neovim — 
 https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
 > [!NOTE]
-> `opencode.nvim` uses opencode's currently undocumented and likely unstable [API](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
+> Uses opencode's currently undocumented and likely unstable [API](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
 > 
 > Latest tested opencode version: `v0.3.54`.
 
@@ -16,7 +16,6 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 - Inject editor context
 - Auto-reload edited buffers
 
-> [!NOTE]
 > Does not re-implement opencode TUI features, like session management.
 
 ## 📦 Installation
@@ -82,7 +81,7 @@ When your prompt contains placeholders, the plugin will replace it with context 
 | `@quickfix` | Quickfix list |
 | `@diff` | Git diff |
 
-You can add custom contexts via `opts.context`. This example replaces `@grapple` with files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
+Add custom contexts via `opts.context`. The below replaces `@grapple` with files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
 
 ```lua
 ---@type opencode.Config
@@ -107,9 +106,11 @@ You can add custom contexts via `opts.context`. This example replaces `@grapple`
 
 ## 👀 Events
 
-You can prompt opencode on Neovim events. This example prompts opencode to fix diagnostics whenever they change in the current buffer:
+You can prompt opencode on Neovim events:
 
 ```lua
+-- Prompt opencode to fix diagnostics whenever they change in the current buffer.
+-- Kind of annoying and should at least debounce, but just to show what's possible.
 vim.api.nvim_create_autocmd('DiagnosticChanged', {
   callback = function(args)
     local diagnostics = vim.diagnostic.get(args.buf)
@@ -120,11 +121,9 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
 })
 ```
 
-It's kind of annoying and should at least debounce, but just to show what's possible.
-
 ## 💻 Embedded
 
-`opencode.nvim` communicates with any external `opencode`, but here's how you can embed it in Neovim via [`snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md):
+`opencode.nvim` calls *any* `opencode` process, but you can easily embed it in Neovim via [`snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md):
 
 ```lua
 {
@@ -136,11 +135,7 @@ It's kind of annoying and should at least debounce, but just to show what's poss
     {
       '<leader>ot',
       function()
-        require('snacks.terminal').toggle('opencode', {
-          win = {
-            position = 'right',
-          }
-        })
+        require('snacks.terminal').toggle('opencode', { win = { position = 'right', } })
       end,
       desc = "Toggle opencode",
     },
@@ -155,4 +150,4 @@ It's kind of annoying and should at least debounce, but just to show what's poss
 
 - Inspired by (and partially based on) [nvim-aider](https://github.com/GeorgesAlkhouri/nvim-aider) and later [neopencode.nvim](https://github.com/loukotal/neopencode.nvim).
 - This plugin uses opencode's familiar TUI for simplicity — see [sudo-tee/opencode.nvim](https://github.com/sudo-tee/opencode.nvim) for a Neovim frontend.
-- [mcp-neovim-server](https://github.com/bigcodegen/mcp-neovim-server) may better suit your workflow, although it lacks custom contexts and tool calls are slow and unreliable.
+- [mcp-neovim-server](https://github.com/bigcodegen/mcp-neovim-server) may better suit you, but it lacks customization and tool calls are slow and unreliable.
