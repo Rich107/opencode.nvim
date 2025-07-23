@@ -135,7 +135,7 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
     {
       '<leader>ot',
       function()
-        require('snacks.terminal').toggle('opencode', { win = { position = 'right', } })
+        require('snacks.terminal').toggle('opencode', { win = { position = 'right' } })
       end,
       desc = "Toggle opencode",
     },
