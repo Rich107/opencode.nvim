@@ -16,7 +16,7 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 - Inject editor context
 - Auto-reload edited buffers
 
-> Does not re-implement opencode TUI features, like session management.
+> Please use the opencode TUI to manage its active session until [the plugin can do so](https://github.com/sst/opencode/issues/1255).
 
 ## 📦 Installation
 
