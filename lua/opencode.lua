@@ -30,13 +30,14 @@ function M.prompt(prompt, opts)
   end
 
   if not server_pid then
-    vim.notify("Did not find an opencode server process running in or under Neovim's CWD", vim.log.levels.ERROR)
+    vim.notify("Couldn't find an opencode server process running in or under Neovim's CWD", vim.log.levels.ERROR)
     return
   end
 
   local server_port = server.get_port(server_pid)
+  print("server_port", server_port)
   if not server_port then
-    vim.notify("Could not determine opencode server port", vim.log.levels.ERROR)
+    vim.notify("Couldn't determine opencode server port", vim.log.levels.ERROR)
     return
   end
 
@@ -46,11 +47,21 @@ function M.prompt(prompt, opts)
       return
     end
 
-    -- TODO: I don't see a way to verify that a session is actually open in the TUI...
+    -- TODO: I don't see a way to get the currently active session in the TUI.
     -- Kinda awkward because when the TUI currently has no open session,
     -- we can create one, but we can't then open it in the TUI.
-    -- (Unless it does that itself?)
+    -- Also awkward because user might change sessions in TUI, but they need
+    -- to then send a message there for it to be the active session here.
+
+    -- Find the most recently interacted session.
     local most_recent_session_id = sessions[1].id
+    local max_updated = sessions[1].time.updated
+    for _, session in ipairs(sessions) do
+      if session.time.updated > max_updated then
+        max_updated = session.time.updated
+        most_recent_session_id = session.id
+      end
+    end
     client.send(context_injected_prompt, most_recent_session_id, server_port, opts)
   end)
 end
