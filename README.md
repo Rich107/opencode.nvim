@@ -123,7 +123,7 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
 
 ## 💻 Embedded
 
-`opencode.nvim` calls *any* `opencode` process, but you can easily embed it in Neovim via [`snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md):
+`opencode.nvim` calls *any* `opencode` process running in or under Neovim's CWD, but you can easily embed it in Neovim using [`snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md):
 
 ```lua
 {
