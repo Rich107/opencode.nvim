@@ -5,9 +5,9 @@ Bring the powerful [opencode](https://github.com/sst/opencode) AI to Neovim — 
 https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
 > [!NOTE]
-> Uses opencode's currently undocumented and likely unstable [API](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
+> Uses opencode's currently undocumented, likely unstable [API](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
 > 
-> Latest tested opencode version: `v0.3.54`.
+> Latest tested opencode version: `v0.3.58`
 
 ## ✨ Features
 
