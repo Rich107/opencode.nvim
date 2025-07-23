@@ -11,10 +11,10 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
 ## ✨ Features
 
-- Finds the `opencode` process running in or under Neovim's CWD
-- Send prompts to the active session
-- Inject editor context
-- Auto-reload edited buffers
+- Finds your `opencode` process running in or under Neovim's CWD
+- Sends prompts to its active session
+- Injects customizable editor context
+- Auto-reloads edited buffers
 
 > Please use the opencode TUI to manage its active session until [the plugin can do so](https://github.com/sst/opencode/issues/1255).
 
