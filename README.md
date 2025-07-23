@@ -1,6 +1,6 @@
 # opencode.nvim
 
-Bring the powerful [opencode](https://github.com/sst/opencode) AI to Neovim — editor-aware research, reviews, and refactors.
+Send editor-aware prompts to the powerful [opencode AI](https://github.com/sst/opencode) from Neovim.
 
 https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
