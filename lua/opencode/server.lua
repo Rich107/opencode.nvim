@@ -19,6 +19,7 @@ function M.get_all_pids()
   return pids
 end
 
+---@param pid number
 ---@return number|nil
 function M.get_port(pid)
   local command = "lsof -p " .. pid .. " | grep LISTEN | grep TCP | awk '{print $9}' | cut -d: -f2"
@@ -35,6 +36,7 @@ function M.get_port(pid)
   return tonumber(port)
 end
 
+---@param pid number
 ---@return string|nil
 function M.get_cwd(pid)
   local command = "lsof -a -p " .. pid .. " -d cwd | tail -1 | awk '{print $NF}'"
