@@ -24,6 +24,9 @@ function M.prompt(prompt, opts)
 
   client.get_sessions(server_port, function(sessions)
     if not sessions or #sessions == 0 then
+      -- TODO: Create new session?
+      -- User still must awkwardly then select it in the TUI.
+      -- But may be slightly less confusing than having to send a message in the TUI to create the first session.
       vim.notify("No opencode sessions found", vim.log.levels.ERROR)
       return
     end
@@ -33,6 +36,7 @@ function M.prompt(prompt, opts)
     -- we can create one, but we can't then open it in the TUI.
     -- Also awkward because user might change sessions in TUI, but they need
     -- to then send a message there for it to be the active session here.
+    -- Waiting/hoping for https://github.com/sst/opencode/issues/1255.
 
     -- Find the most recently interacted session.
     local most_recent_session_id = sessions[1].id
