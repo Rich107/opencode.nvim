@@ -55,6 +55,7 @@ local function get_cwd(pid)
   return cwd
 end
 
+---@return number|nil
 function M.find_port()
   local server_pid
   for _, pid in ipairs(get_all_pids()) do
