@@ -1,5 +1,16 @@
 local M = {}
 
+local function ensure_lsof()
+  if vim.fn.executable("lsof") == 0 then
+    vim.notify(
+      "'lsof' command is not available. Please install it to auto-find the opencode server.",
+      vim.log.levels.ERROR
+    )
+    return false
+  end
+  return true
+end
+
 ---@return table<number>
 local function get_all_pids()
   -- Regex also allows flags like --port
@@ -20,10 +31,14 @@ local function get_all_pids()
   return pids
 end
 
+---Returns special values for some ports, e.g. 6969 = "acmsoda".
 ---@param pid number
 ---@return number|nil
 local function get_port(pid)
-  -- WARNING: Returns special values for some ports, e.g. 6969 = "acmsoda"
+  if not ensure_lsof() then
+    return nil
+  end
+
   local command = "lsof -p " .. pid .. " | grep LISTEN | grep TCP | awk '{print $9}' | cut -d: -f2"
   local handle = io.popen(command)
   if not handle then
@@ -41,6 +56,10 @@ end
 ---@param pid number
 ---@return string|nil
 local function get_cwd(pid)
+  if not ensure_lsof() then
+    return nil
+  end
+
   local command = "lsof -a -p " .. pid .. " -d cwd | tail -1 | awk '{print $NF}'"
   local handle = io.popen(command)
   if not handle then
@@ -55,6 +74,7 @@ local function get_cwd(pid)
   return cwd
 end
 
+---Find the port of an opencode server process running in or under Neovim's CWD.
 ---@return number|nil
 function M.find_port()
   local server_pid
