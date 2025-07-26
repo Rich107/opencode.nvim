@@ -20,7 +20,8 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
 ## 📦 Setup
 
-Using [lazy.nvim](https://github.com/folke/lazy.nvim):
+<details>
+<summary>lazy.nvim</summary>
 
 ```lua
 {
@@ -33,8 +34,6 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   },
   -- stylua: ignore
   keys = {
-    -- opencode.nvim exposes a general, flexible API — customize it to your workflow!
-    -- But here are some examples to get you started :)
     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
     { '<leader>oA', function() require('opencode').ask('@file ') end, desc = 'Ask opencode about current file', mode = { 'n', 'v' }, },
     { '<leader>oe', function() require('opencode').prompt('Explain @cursor and its context') end, desc = 'Explain code near cursor' },
@@ -46,6 +45,32 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
   },
 }
 ```
+</details>
+
+<details>
+<summary>NixOS/nixvim</summary>
+
+```nix
+  programs.nixvim = {
+    extraPlugins = [
+      pkgs.vimPlugins.opencode-nvim
+    ];
+    keymaps = [
+      { key = "<leader>oa"; action = "<cmd>lua require('opencode').ask()<CR>"; mode = ["n" "v"]; } 
+      { key = "<leader>oA"; action = "<cmd>lua require('opencode').ask('@file ')<CR>"; mode = ["n" "v"]; }
+      { key = "<leader>oe"; action = "<cmd>lua require('opencode').prompt('Explain @cursor and its context')<CR>"; }
+      { key = "<leader>or"; action = "<cmd>lua require('opencode').prompt('Review @file for correctness and readability')<CR>"; }
+      { key = "<leader>of"; action = "<cmd>lua require('opencode').prompt('Fix these @diagnostics')<CR>"; }
+      { key = "<leader>oo"; action = "<cmd>lua require('opencode').prompt('Optimize @selection for performance and readability')<CR>"; mode = "v"; }
+      { key = "<leader>od"; action = "<cmd>lua require('opencode').prompt('Add documentation comments for @selection')<CR>"; mode = "v"; }
+      { key = "<leader>ot"; action = "<cmd>lua require('opencode').prompt('Add tests for @selection')<CR>"; mode = "v"; }
+    ];
+  };
+```
+</details>
+
+> [!TIP]
+> `opencode.nvim` offers a flexible API — customize keymaps to fit your workflow!
 
 ## ⚙️ Configuration
 
