@@ -156,17 +156,9 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
 ```lua
 {
   'NickvanDyke/opencode.nvim',
-  dependencies = {
-    'folke/snacks.nvim',
-  },
+  dependencies = { 'folke/snacks.nvim' },
   keys = {
-    {
-      '<leader>ot',
-      function()
-        require('snacks.terminal').toggle('opencode', { win = { position = 'right' } })
-      end,
-      desc = "Toggle opencode",
-    },
+    '<leader>ot', function() require('snacks.terminal').toggle('opencode', { win = { position = 'right' } }) end, desc = 'Toggle opencode' },
   }
 }
 ```
