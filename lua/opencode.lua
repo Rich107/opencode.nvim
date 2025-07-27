@@ -25,12 +25,8 @@ function M.prompt(prompt, opts)
 
   client.get_sessions(server_port, function(sessions)
     if #sessions == 0 then
-      client.create_session(server_port, function(new_session)
-        if not new_session or not new_session.id then
-          vim.notify("No opencode sessions found, and failed to create a new one", vim.log.levels.ERROR)
-          return
-        end
-
+      vim.notify("No opencode sessions found — creating...", vim.log.levels.INFO)
+      M.create_session(opts, function(new_session)
         client.send(prompt, new_session.id, server_port, opts)
       end)
     else
@@ -64,6 +60,29 @@ function M.ask(prefill, opts)
   vim.ui.input({ prompt = "Ask opencode: ", default = prefill }, function(input)
     if input ~= nil then
       M.prompt(input, opts)
+    end
+  end)
+end
+
+---Create a new opencode session.
+---For now, the plugin can't select it in the TUI — please use the TUI `/sessions` command.
+---@param opts? opencode.Config Optional config to merge for this call only.
+---@param callback? fun(new_session: table)
+function M.create_session(opts, callback)
+  opts = vim.tbl_deep_extend("force", {}, config.options, opts or {})
+  local server_port = opts.port or server.find_port()
+  if not server_port then
+    return
+  end
+
+  client.create_session(server_port, function(new_session)
+    if not new_session or not new_session.id then
+      vim.notify("Failed to create a new opencode session", vim.log.levels.ERROR)
+    else
+      vim.notify("Created new opencode session — select via TUI /sessions", vim.log.levels.INFO)
+      if callback then
+        callback(new_session)
+      end
     end
   end)
 end

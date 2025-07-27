@@ -87,6 +87,8 @@ function M.get_sessions(port, callback)
   curl(url, "GET", nil, callback)
 end
 
+---@param port number
+---@param callback fun(session: table)
 function M.create_session(port, callback)
   local url = "http://localhost:" .. port .. "/session"
 

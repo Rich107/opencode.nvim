@@ -36,7 +36,8 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
   keys = {
     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
     { '<leader>oA', function() require('opencode').ask('@file ') end, desc = 'Ask opencode about current file', mode = { 'n', 'v' }, },
-    { '<leader>oe', function() require('opencode').prompt('Explain @cursor and its context') end, desc = 'Explain code near cursor' },
+    { '<leader>on', function() require('opencode').create_session() end, desc = 'New session', },
+    { '<leader>oe', function() require('opencode').prompt('Explain @cursor and its context') end, desc = 'Explain code near cursor', },
     { '<leader>or', function() require('opencode').prompt('Review @file for correctness and readability') end, desc = 'Review file', },
     { '<leader>of', function() require('opencode').prompt('Fix these @diagnostics') end, desc = 'Fix errors', },
     { '<leader>oo', function() require('opencode').prompt('Optimize @selection for performance and readability') end, desc = 'Optimize selection', mode = 'v', },
@@ -58,6 +59,7 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
     keymaps = [
       { key = "<leader>oa"; action = "<cmd>lua require('opencode').ask()<CR>"; mode = ["n" "v"]; } 
       { key = "<leader>oA"; action = "<cmd>lua require('opencode').ask('@file ')<CR>"; mode = ["n" "v"]; }
+      { key = "<leader>on"; action = "<cmd>lua require('opencode').create_session()<CR>"; }
       { key = "<leader>oe"; action = "<cmd>lua require('opencode').prompt('Explain @cursor and its context')<CR>"; }
       { key = "<leader>or"; action = "<cmd>lua require('opencode').prompt('Review @file for correctness and readability')<CR>"; }
       { key = "<leader>of"; action = "<cmd>lua require('opencode').prompt('Fix these @diagnostics')<CR>"; }
