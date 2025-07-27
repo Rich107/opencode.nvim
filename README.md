@@ -99,7 +99,7 @@ Default settings:
 
 ## 🕵️‍♂️ Context
 
-When your prompt contains placeholders, the plugin will replace it with context before sending:
+When your prompt contains placeholders, the plugin will replace them with context before sending:
 
 | Placeholder | Context |
 | - | - |
