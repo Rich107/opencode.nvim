@@ -1,5 +1,3 @@
-local config = require("opencode.config")
-
 ---Calls the opencode [server](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
 local M = {}
 
