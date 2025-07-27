@@ -134,23 +134,6 @@ Add custom contexts via `opts.context`. The below replaces `@grapple` with files
 }
 ```
 
-## 👀 Events
-
-You can prompt opencode on Neovim events:
-
-```lua
--- Prompt opencode to fix diagnostics whenever they change in the current buffer.
--- Kind of annoying and should at least debounce, but just to show what's possible.
-vim.api.nvim_create_autocmd('DiagnosticChanged', {
-  callback = function(args)
-    local diagnostics = vim.diagnostic.get(args.buf)
-    if #diagnostics > 0 then
-      require('opencode').prompt('Fix these @diagnostics')
-    end
-  end,
-})
-```
-
 ## 💻 Embedded
 
 `opencode.nvim` calls *any* `opencode` process running in or under Neovim's CWD, but you can easily embed it in Neovim using [`snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md):
