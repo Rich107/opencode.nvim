@@ -21,6 +21,9 @@ local defaults = {
     ["@files"] = require("opencode.context").files,
     ["@cursor"] = require("opencode.context").cursor_position,
     ["@selection"] = require("opencode.context").visual_selection,
+    ["@diagnostic"] = function()
+      return require("opencode.context").diagnostics(true)
+    end,
     ["@diagnostics"] = require("opencode.context").diagnostics,
     ["@quickfix"] = require("opencode.context").quickfix,
     ["@diff"] = require("opencode.context").git_diff,

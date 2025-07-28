@@ -81,14 +81,15 @@ function M.visual_selection()
 end
 
 ---Formatted diagnostics for the current buffer.
+---@param curr_line_only? boolean Whether to only include diagnostics for the current line.
 ---@return string|nil
-function M.diagnostics()
-  local diagnostics = vim.diagnostic.get(0)
+function M.diagnostics(curr_line_only)
+  local diagnostics = vim.diagnostic.get(0, { lnum = curr_line_only and vim.api.nvim_win_get_cursor(0)[1] - 1 or nil })
   if #diagnostics == 0 then
     return nil
   end
 
-  local message = #diagnostics .. " error" .. (#diagnostics > 1 and "s" or "") .. ":"
+  local message = #diagnostics .. " diagnostic" .. (#diagnostics > 1 and "s" or "") .. ":"
 
   for _, diagnostic in ipairs(diagnostics) do
     local start_line = diagnostic.lnum + 1 -- Convert to 1-based line numbers
@@ -98,7 +99,7 @@ function M.diagnostics()
     local short_message = diagnostic.message:gsub("%s+", " "):gsub("^%s", ""):gsub("%s$", "")
 
     message = string.format(
-      "%s, %s:L%d:C%d-L%d:C%d: (%s) %s",
+      "%s %s:L%d:C%d-L%d:C%d: (%s) %s",
       message,
       file_path(0),
       start_line,

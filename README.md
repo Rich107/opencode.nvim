@@ -95,6 +95,9 @@ Default settings:
     ["@files"] = require("opencode.context").files,
     ["@cursor"] = require("opencode.context").cursor_position,
     ["@selection"] = require("opencode.context").visual_selection,
+    ["@diagnostic"] = function()
+      return require("opencode.context").diagnostics(true)
+    end,
     ["@diagnostics"] = require("opencode.context").diagnostics,
     ["@quickfix"] = require("opencode.context").quickfix,
     ["@diff"] = require("opencode.context").git_diff,
@@ -112,6 +115,7 @@ When your prompt contains placeholders, the plugin will replace them with contex
 | `@files` | Open files |
 | `@cursor` | Cursor position |
 | `@selection` | Selected text |
+| `@diagnostic` | Current line diagnostics |
 | `@diagnostics` | Current buffer diagnostics |
 | `@quickfix` | Quickfix list |
 | `@diff` | Git diff |
