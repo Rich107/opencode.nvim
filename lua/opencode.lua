@@ -14,11 +14,9 @@ end
 ---Injects context before sending.
 ---Sends to the most recently used session, or creates a new one if none exist.
 ---@param prompt string Prompt to send to opencode.
----@param opts? opencode.Config Optional config to merge for this call only.
-function M.prompt(prompt, opts)
-  opts = vim.tbl_deep_extend("force", {}, config.options, opts or {})
-  prompt = context.inject(prompt, opts)
-  local server_port = opts.port or server.find_port()
+function M.prompt(prompt)
+  prompt = context.inject(prompt, config.options.context)
+  local server_port = config.options.port or server.find_port()
   if not server_port then
     return
   end
@@ -26,8 +24,8 @@ function M.prompt(prompt, opts)
   client.get_sessions(server_port, function(sessions)
     if #sessions == 0 then
       vim.notify("No opencode sessions found — creating...", vim.log.levels.INFO)
-      M.create_session(opts, function(new_session)
-        client.send(prompt, new_session.id, server_port, opts)
+      M.create_session(function(new_session)
+        client.send(prompt, new_session.id, server_port, config.options.provider_id, config.options.model_id)
       end)
     else
       -- TODO: I don't see a way to get the currently active session in the TUI.
@@ -47,18 +45,16 @@ function M.prompt(prompt, opts)
         end
       end
 
-      client.send(prompt, most_recent_session_id, server_port, opts)
+      client.send(prompt, most_recent_session_id, server_port, config.options.provider_id, config.options.model_id)
     end
   end)
 end
 
 ---Create a new opencode session.
 ---For now, the plugin can't select it in the TUI — please use the TUI `/sessions` command.
----@param opts? opencode.Config Optional config to merge for this call only.
 ---@param callback? fun(new_session: table)
-function M.create_session(opts, callback)
-  opts = vim.tbl_deep_extend("force", {}, config.options, opts or {})
-  local server_port = opts.port or server.find_port()
+function M.create_session(callback)
+  local server_port = config.options.port or server.find_port()
   if not server_port then
     return
   end

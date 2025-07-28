@@ -58,13 +58,14 @@ end
 ---@param prompt string
 ---@param session_id string
 ---@param port number
----@param opts opencode.Config
-function M.send(prompt, session_id, port, opts)
+---@param provider_id string
+---@param model_id string
+function M.send(prompt, session_id, port, provider_id, model_id)
   local url = "http://localhost:" .. port .. "/session/" .. session_id .. "/message"
   local body = {
     sessionID = session_id,
-    providerID = opts.provider_id,
-    modelID = opts.model_id,
+    providerID = provider_id,
+    modelID = model_id,
     parts = {
       {
         type = "text",

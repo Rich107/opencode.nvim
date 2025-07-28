@@ -10,10 +10,10 @@ end
 
 ---Inject context into a prompt.
 ---@param prompt string
----@param opts opencode.Config
+---@param context table<string, fun(): string|nil>
 ---@return string
-function M.inject(prompt, opts)
-  for placeholder, fun in pairs(opts.context) do
+function M.inject(prompt, context)
+  for placeholder, fun in pairs(context) do
     -- Only match whole-word placeholders using Lua frontier patterns.
     -- Ideally we'd have one in front of the pattern too, but I can't find a pattern
     -- that will match the start of the string OR a word boundary but not match
