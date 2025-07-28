@@ -66,6 +66,7 @@ end
 function M.visual_selection()
   local is_visual = vim.fn.mode():match("[vV\22]")
   -- Need to change our getpos arg when in visual mode because '< and '> update upon exiting visual mode, not during.
+  -- Whereas snacks.input clears visual mode, so we need to get the now-set range.
   local _, start_line = unpack(vim.fn.getpos(is_visual and "v" or "'<"))
   local _, end_line = unpack(vim.fn.getpos(is_visual and "." or "'>"))
   if start_line > end_line then

@@ -8,31 +8,6 @@ local server = require("opencode.server")
 ---@param opts opencode.Config
 function M.setup(opts)
   config.setup(opts)
-
-  vim.api.nvim_create_user_command("OpencodePrompt", function(args)
-    local prompt = args.args or ""
-    M.prompt(prompt)
-  end, {
-    nargs = "?",
-    range = true,
-    -- We can use a custom completion function here, but not with `vim.ui.input` unfortunately.
-    -- Hence DIYing it by pre-filling `OpencodePrompt` in `ask`.
-    -- Fortunately this seems to work with both built-in completion, and plugins like blink.cmp.
-    -- FIX: Should return all of them when ArgLead is @. Probably something to do with patterns or special chars.
-    complete = function(ArgLead, CmdLine, CursorPos)
-      if ArgLead == "" then
-        return {}
-      end
-
-      local items = {}
-      for placeholder, _ in pairs(config.options.context) do
-        if placeholder:find(ArgLead, 1, true) == 1 then
-          table.insert(items, placeholder)
-        end
-      end
-      return items
-    end,
-  })
 end
 
 ---Send a prompt to opencode.
@@ -78,9 +53,19 @@ function M.prompt(prompt, opts)
 end
 
 ---Input a prompt to send to opencode.
----@param prefill? string Text to prefill the input with.
-function M.ask(prefill)
-  vim.api.nvim_feedkeys(":OpencodePrompt " .. (prefill or ""), "n", false)
+---@param default? string Text to prefill the input with.
+function M.ask(default)
+  -- While I'd like to use the standard vim.ui.input, it doesn't support custom completion.
+  require("snacks.input").input({
+    prompt = "Ask opencode",
+    default = default,
+    icon = "󱚣",
+    completion = "customlist,v:lua.require'opencode.cmp'",
+  }, function(value)
+    if value and value ~= "" then
+      M.prompt(value)
+    end
+  end)
 end
 
 ---Create a new opencode session.
@@ -103,7 +88,5 @@ function M.create_session(opts, callback)
     end
   end)
 end
-
--- TODO: Another convenience function that shows a floating buffer to input a prompt.
 
 return M

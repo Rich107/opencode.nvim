@@ -26,6 +26,7 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 ```lua
 {
   'NickvanDyke/opencode.nvim',
+  dependencies = { 'folke/snacks.nvim', },
   ---@type opencode.Config
   opts = {
     -- Set these according to https://models.dev/
@@ -34,6 +35,7 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
   },
   -- stylua: ignore
   keys = {
+    { '<leader>ot', function() require('snacks.terminal').toggle('opencode', { win = { position = 'right' } }) end, desc = 'Toggle opencode', },
     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
     { '<leader>oA', function() require('opencode').ask('@file ') end, desc = 'Ask opencode about current file', mode = { 'n', 'v' }, },
     { '<leader>on', function() require('opencode').create_session() end, desc = 'New session', },
@@ -73,6 +75,9 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
 > [!TIP]
 > `opencode.nvim` offers a flexible API — customize keymaps to fit your workflow!
+
+> [!IMPORTANT]
+> If using the embedded terminal, set your [opencode theme](https://opencode.ai/docs/themes/) to `system` — see https://github.com/sst/opencode/issues/445.
 
 ## ⚙️ Configuration
 
@@ -134,22 +139,6 @@ Add custom contexts via `opts.context`. The below replaces `@grapple` with files
 }
 ```
 
-## 💻 Embedded
-
-`opencode.nvim` calls *any* `opencode` process running in or under Neovim's CWD, but you can easily embed it in Neovim using [`snacks.terminal`](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md):
-
-```lua
-{
-  'NickvanDyke/opencode.nvim',
-  dependencies = { 'folke/snacks.nvim' },
-  keys = {
-    '<leader>ot', function() require('snacks.terminal').toggle('opencode', { win = { position = 'right' } }) end, desc = 'Toggle opencode' },
-  }
-}
-```
-
-> [!IMPORTANT]
-> Set your [opencode theme](https://opencode.ai/docs/themes/) to `system` — other themes currently have [visual bugs in embedded terminals](https://github.com/sst/opencode/issues/445).
 
 ## 🙏 Acknowledgments
 
