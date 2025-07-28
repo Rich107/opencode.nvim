@@ -21,7 +21,9 @@ function M.setup(opts)
     complete = function(ArgLead, CmdLine, CursorPos)
       local items = {}
       for placeholder, _ in pairs(config.options.context) do
-        table.insert(items, placeholder)
+        if placeholder:find(ArgLead) == 1 then
+          table.insert(items, placeholder)
+        end
       end
       return items
     end,
