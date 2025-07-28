@@ -11,10 +11,10 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
 ## ✨ Features
 
-- Finds your `opencode` process running in or under Neovim's CWD
-- Sends prompts to its active session
-- Injects customizable editor context
-- Auto-reloads edited buffers
+- Toggle an embedded `opencode` terminal or automatically find any `opencode` process running in or under Neovim's CWD
+- Send prompts to its active session
+- Inject customizable editor context
+- Auto-reload edited buffers
 
 > Please use the opencode TUI to manage its active session until [the plugin can do so](https://github.com/sst/opencode/issues/1255).
 
@@ -35,7 +35,7 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
   },
   -- stylua: ignore
   keys = {
-    { '<leader>ot', function() require('snacks.terminal').toggle('opencode', { win = { position = 'right' } }) end, desc = 'Toggle opencode', },
+    { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle embedded opencode', },
     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
     { '<leader>oA', function() require('opencode').ask('@file ') end, desc = 'Ask opencode about current file', mode = { 'n', 'v' }, },
     { '<leader>on', function() require('opencode').create_session() end, desc = 'New session', },

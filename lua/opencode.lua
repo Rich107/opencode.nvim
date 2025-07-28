@@ -52,22 +52,6 @@ function M.prompt(prompt, opts)
   end)
 end
 
----Input a prompt to send to opencode.
----@param default? string Text to prefill the input with.
-function M.ask(default)
-  -- While I'd like to use the standard vim.ui.input, it doesn't support custom completion.
-  require("snacks.input").input({
-    prompt = "Ask opencode",
-    default = default,
-    icon = "󱚣",
-    completion = "customlist,v:lua.require'opencode.cmp'",
-  }, function(value)
-    if value and value ~= "" then
-      M.prompt(value)
-    end
-  end)
-end
-
 ---Create a new opencode session.
 ---For now, the plugin can't select it in the TUI — please use the TUI `/sessions` command.
 ---@param opts? opencode.Config Optional config to merge for this call only.
@@ -89,6 +73,29 @@ function M.create_session(opts, callback)
       end
     end
   end)
+end
+
+---Input a prompt to send to opencode.
+---@param default? string Text to prefill the input with.
+function M.ask(default)
+  -- While I'd like to use the standard vim.ui.input, it doesn't support custom completion.
+  -- TODO: Should expose snacks.input opts in config
+  require("snacks.input").input({
+    prompt = "Ask opencode",
+    default = default,
+    icon = "󱚣",
+    completion = "customlist,v:lua.require'opencode.cmp'",
+  }, function(value)
+    if value and value ~= "" then
+      M.prompt(value)
+    end
+  end)
+end
+
+---Toggle embedded opencode TUI.
+function M.toggle()
+  -- TODO: Should expose snacks.terminal opts in config
+  require("snacks.terminal").toggle("opencode", { win = { position = "right" } })
 end
 
 return M
