@@ -120,6 +120,8 @@ When your prompt contains placeholders, the plugin will replace them with contex
 | `@quickfix` | Quickfix list |
 | `@diff` | Git diff |
 
+Press Tab in the `ask` input to trigger placeholder completion.
+
 Add custom contexts via `opts.context`. The below replaces `@grapple` with files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
 
 ```lua

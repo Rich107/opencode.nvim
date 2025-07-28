@@ -76,6 +76,7 @@ function M.create_session(opts, callback)
 end
 
 ---Input a prompt to send to opencode.
+---Press Tab to trigger context placeholder completion.
 ---@param default? string Text to prefill the input with.
 function M.ask(default)
   -- While I'd like to use the standard vim.ui.input, it doesn't support custom completion.
