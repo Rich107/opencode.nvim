@@ -81,37 +81,7 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 
 ## ⚙️ Configuration
 
-Default settings:
-
-```lua
----@type opencode.Config
-{
-  provider_id = "github-copilot",  -- Provider to use for opencode requests
-  model_id = "gpt-4.1",            -- Model to use for opencode requests
-  port = nil,                      -- The port opencode is running on — use `opencode --port <port>`. If `nil`, tries to find a running instance in or under Neovim's CWD.
-  auto_reload = false,             -- Automatically reload buffers edited by opencode
-  context = {                      -- Context to inject in prompts
-    ["@file"] = require("opencode.context").file,
-    ["@files"] = require("opencode.context").files,
-    ["@cursor"] = require("opencode.context").cursor_position,
-    ["@selection"] = require("opencode.context").visual_selection,
-    ["@diagnostic"] = function()
-      return require("opencode.context").diagnostics(true)
-    end,
-    ["@diagnostics"] = require("opencode.context").diagnostics,
-    ["@quickfix"] = require("opencode.context").quickfix,
-    ["@diff"] = require("opencode.context").git_diff,
-  },
-  input = {
-    prompt = "Ask opencode",
-    icon = "󱚣",
-    completion = "customlist,v:lua.require'opencode.cmp'",
-  },
-  terminal = {
-    win = { position = "right" },
-  },
-}
-```
+See the available options and their defaults [here](./lua/opencode/config.lua#L11).
 
 ## 🕵️‍♂️ Context
 

@@ -1,10 +1,5 @@
 local M = {}
 
--- TODO: Possible to require model_id and provider_id in passed opts?
--- Unlikely they're using the defaults.
--- But without requiring it in single-call opts.
--- Ideally without two separate classes.
-
 ---@class opencode.Config
 ---@field provider_id? string [Provider](https://models.dev/) to use for opencode requests
 ---@field model_id? string [Model](https://models.dev/) to use for opencode requests
