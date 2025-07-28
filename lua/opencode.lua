@@ -75,14 +75,11 @@ end
 ---Press Tab to trigger context placeholder completion.
 ---@param default? string Text to prefill the input with.
 function M.ask(default)
+  local opts = vim.tbl_deep_extend("force", config.options.input, {
+    default = default or "",
+  })
   -- While I'd like to use the standard vim.ui.input, it doesn't support custom completion.
-  -- TODO: Should expose snacks.input opts in config
-  require("snacks.input").input({
-    prompt = "Ask opencode",
-    default = default,
-    icon = "󱚣",
-    completion = "customlist,v:lua.require'opencode.cmp'",
-  }, function(value)
+  require("snacks.input").input(opts, function(value)
     if value and value ~= "" then
       M.prompt(value)
     end
@@ -91,8 +88,7 @@ end
 
 ---Toggle embedded opencode TUI.
 function M.toggle()
-  -- TODO: Should expose snacks.terminal opts in config
-  require("snacks.terminal").toggle("opencode", { win = { position = "right" } })
+  require("snacks.terminal").toggle("opencode", config.options.terminal)
 end
 
 return M

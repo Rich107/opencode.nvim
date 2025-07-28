@@ -11,6 +11,8 @@ local M = {}
 ---@field port? number The port opencode is running on — use `--port <port>`. If `nil`, tries to find a running instance in or under Neovim's CWD.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode
 ---@field context? table<string, fun(string): string|nil> Context to add to prompts
+---@field input? snacks.input.Opts Input options — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md)
+---@field terminal? snacks.terminal.Opts Terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md)
 local defaults = {
   provider_id = "github-copilot",
   model_id = "gpt-4.1",
@@ -27,6 +29,14 @@ local defaults = {
     ["@diagnostics"] = require("opencode.context").diagnostics,
     ["@quickfix"] = require("opencode.context").quickfix,
     ["@diff"] = require("opencode.context").git_diff,
+  },
+  input = {
+    prompt = "Ask opencode",
+    icon = "󱚣",
+    completion = "customlist,v:lua.require'opencode.cmp'",
+  },
+  terminal = {
+    win = { position = "right" },
   },
 }
 

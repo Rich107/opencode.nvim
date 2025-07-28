@@ -102,6 +102,14 @@ Default settings:
     ["@quickfix"] = require("opencode.context").quickfix,
     ["@diff"] = require("opencode.context").git_diff,
   },
+  input = {
+    prompt = "Ask opencode",
+    icon = "󱚣",
+    completion = "customlist,v:lua.require'opencode.cmp'",
+  },
+  terminal = {
+    win = { position = "right" },
+  },
 }
 ```
 
