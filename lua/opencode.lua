@@ -8,6 +8,23 @@ local server = require("opencode.server")
 ---@param opts opencode.Config
 function M.setup(opts)
   config.setup(opts)
+
+  vim.api.nvim_create_user_command("OpencodePrompt", function(args)
+    local prompt = args.args or ""
+    M.prompt(prompt)
+  end, {
+    nargs = "?",
+    -- We can use a custom completion function here, but not with `vim.ui.input` unfortunately.
+    -- Hence DIYing it by pre-filling `OpencodePrompt` in `ask`.
+    -- Fortunately this seems to work with both built-in completion, and plugins like blink.cmp.
+    complete = function(ArgLead, CmdLine, CursorPos)
+      local items = {}
+      for placeholder, _ in pairs(config.options.context) do
+        table.insert(items, placeholder)
+      end
+      return items
+    end,
+  })
 end
 
 ---Send a prompt to opencode.
@@ -53,23 +70,15 @@ function M.prompt(prompt, opts)
 end
 
 ---Input a prompt to send to opencode.
----Convenience function that calls `prompt` internally.
 ---@param prefill? string Text to prefill the input with.
----@param opts? opencode.Config Optional config to merge for this call only.
-function M.ask(prefill, opts)
-  vim.ui.input({ prompt = "Ask opencode: ", default = prefill }, function(input)
-    if input ~= nil then
-      M.prompt(input, opts)
-    end
-  end)
+function M.ask(prefill)
+  vim.api.nvim_feedkeys(":OpencodePrompt " .. (prefill or ""), "n", false)
 end
 
 ---Create a new opencode session.
 ---For now, the plugin can't select it in the TUI — please use the TUI `/sessions` command.
----@param opts? opencode.Config Optional config to merge for this call only.
 ---@param callback? fun(new_session: table)
 function M.create_session(opts, callback)
-  opts = vim.tbl_deep_extend("force", {}, config.options, opts or {})
   local server_port = opts.port or server.find_port()
   if not server_port then
     return
