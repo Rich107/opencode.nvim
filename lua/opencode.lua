@@ -70,8 +70,10 @@ end
 
 ---Create a new opencode session.
 ---For now, the plugin can't select it in the TUI — please use the TUI `/sessions` command.
+---@param opts? opencode.Config Optional config to merge for this call only.
 ---@param callback? fun(new_session: table)
 function M.create_session(opts, callback)
+  opts = vim.tbl_deep_extend("force", {}, config.options, opts or {})
   local server_port = opts.port or server.find_port()
   if not server_port then
     return
