@@ -18,10 +18,15 @@ function M.setup(opts)
     -- We can use a custom completion function here, but not with `vim.ui.input` unfortunately.
     -- Hence DIYing it by pre-filling `OpencodePrompt` in `ask`.
     -- Fortunately this seems to work with both built-in completion, and plugins like blink.cmp.
+    -- FIX: Should return all of them when ArgLead is @. Probably something to do with patterns or special chars.
     complete = function(ArgLead, CmdLine, CursorPos)
+      if ArgLead == "" then
+        return {}
+      end
+
       local items = {}
       for placeholder, _ in pairs(config.options.context) do
-        if placeholder:find(ArgLead) == 1 then
+        if placeholder:find(ArgLead, 1, true) == 1 then
           table.insert(items, placeholder)
         end
       end
