@@ -14,6 +14,7 @@ function M.setup(opts)
     M.prompt(prompt)
   end, {
     nargs = "?",
+    range = true,
     -- We can use a custom completion function here, but not with `vim.ui.input` unfortunately.
     -- Hence DIYing it by pre-filling `OpencodePrompt` in `ask`.
     -- Fortunately this seems to work with both built-in completion, and plugins like blink.cmp.

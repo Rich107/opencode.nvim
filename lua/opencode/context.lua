@@ -61,21 +61,13 @@ function M.cursor_position()
   return string.format("%s:L%d:C%d", file_path(0), line, col)
 end
 
----The selected lines location in the format `file_path:Lstart-end`.
+---The visual selection range in the format `file_path:Lstart-end`.
 ---@return string|nil
 function M.visual_selection()
-  -- TODO: Should this be a special context that's always inserted when in visual mode,
-  -- regardless of prompt/placeholder?
   local is_visual = vim.fn.mode():match("[vV\22]")
-
-  if not is_visual then
-    return nil
-  end
-
-  local start_pos = vim.fn.getpos("v")
-  local end_pos = vim.fn.getpos(".")
-  local start_line = start_pos[2]
-  local end_line = end_pos[2]
+  -- Need to change our getpos arg when in visual mode because '< and '> update upon exiting visual mode, not during.
+  local _, start_line = unpack(vim.fn.getpos(is_visual and "v" or "'<"))
+  local _, end_line = unpack(vim.fn.getpos(is_visual and "." or "'>"))
   if start_line > end_line then
     -- Handle "backwards" selection
     start_line, end_line = end_line, start_line
