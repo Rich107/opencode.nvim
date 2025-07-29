@@ -51,7 +51,6 @@ function M.prompt(prompt)
 end
 
 ---Create a new opencode session.
----For now, the plugin can't select it in the TUI — please use the TUI `/sessions` command.
 ---@param callback? fun(new_session: table)
 function M.create_session(callback)
   local server_port = config.options.port or server.find_port()
@@ -72,13 +71,12 @@ function M.create_session(callback)
 end
 
 ---Input a prompt to send to opencode.
----Press Tab to trigger context placeholder completion.
 ---@param default? string Text to prefill the input with.
 function M.ask(default)
   local opts = vim.tbl_deep_extend("force", config.options.input, {
-    default = default or "",
+    default = default,
   })
-  -- While I'd like to use the standard vim.ui.input, it doesn't support custom completion.
+  -- While I'd like to use the standard vim.ui.input, it doesn't support completion.
   require("snacks.input").input(opts, function(value)
     if value and value ~= "" then
       M.prompt(value)
