@@ -21,11 +21,20 @@ function M.prompt(prompt)
     return
   end
 
+  ---@param session_id string
+  local function send_prompt(session_id)
+    client.send(prompt, session_id, server_port, config.options.provider_id, config.options.model_id, function()
+      vim.api.nvim_exec_autocmds("User", {
+        pattern = "OpencodePromptPost",
+      })
+    end)
+  end
+
   client.get_sessions(server_port, function(sessions)
     if #sessions == 0 then
       vim.notify("No opencode sessions found — creating...", vim.log.levels.INFO)
       M.create_session(function(new_session)
-        client.send(prompt, new_session.id, server_port, config.options.provider_id, config.options.model_id)
+        send_prompt(new_session.id)
       end)
     else
       -- TODO: I don't see a way to get the currently active session in the TUI.
@@ -45,7 +54,7 @@ function M.prompt(prompt)
         end
       end
 
-      client.send(prompt, most_recent_session_id, server_port, config.options.provider_id, config.options.model_id)
+      send_prompt(most_recent_session_id)
     end
   end)
 end

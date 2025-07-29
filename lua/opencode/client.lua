@@ -60,7 +60,8 @@ end
 ---@param port number
 ---@param provider_id string
 ---@param model_id string
-function M.send(prompt, session_id, port, provider_id, model_id)
+---@param callback fun(response: table)|nil
+function M.send(prompt, session_id, port, provider_id, model_id, callback)
   local url = "http://localhost:" .. port .. "/session/" .. session_id .. "/message"
   local body = {
     sessionID = session_id,
@@ -75,7 +76,7 @@ function M.send(prompt, session_id, port, provider_id, model_id)
     },
   }
 
-  curl(url, "POST", body)
+  curl(url, "POST", body, callback)
 end
 
 ---@param port number
