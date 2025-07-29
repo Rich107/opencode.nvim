@@ -1,0 +1,77 @@
+--- @module 'blink.cmp'
+--- @class blink.cmp.Source
+local source = {}
+
+local config = require("opencode.config")
+
+-- `opts` table comes from `sources.providers.your_provider.opts`
+-- You may also accept a second argument `config`, to get the full
+-- `sources.providers.your_provider` table
+function source.new(opts)
+  local self = setmetatable({}, { __index = source })
+  self.opts = opts
+  return self
+end
+
+function source:enabled()
+  return vim.bo.filetype == "opencode_ask"
+end
+
+function source:get_trigger_characters()
+  -- Parse `config.options.context` to return all non-alphanumeric first characters in placeholders
+  local trigger_chars = {}
+  for placeholder, _ in pairs(config.options.context) do
+    local first_char = placeholder:sub(1, 1)
+    if not first_char:match("%w") and not vim.tbl_contains(trigger_chars, first_char) then
+      table.insert(trigger_chars, first_char)
+    end
+  end
+
+  return trigger_chars
+end
+
+function source:get_completions(ctx, callback)
+  -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#completionItem
+  --- @type lsp.CompletionItem[]
+  local items = {}
+  for placeholder, _ in pairs(config.options.context) do
+    --- @type lsp.CompletionItem
+    local item = {
+      label = placeholder,
+      kind = require("blink.cmp.types").CompletionItemKind.Enum,
+      filterText = placeholder,
+      insertText = placeholder,
+      insertTextFormat = vim.lsp.protocol.InsertTextFormat.PlainText,
+
+      -- There are some other fields you may want to explore which are blink.cmp
+      -- specific, such as `score_offset` (blink.cmp.CompletionItem)
+    }
+    table.insert(items, item)
+  end
+
+  -- The callback _MUST_ be called at least once. The first time it's called,
+  -- blink.cmp will show the results in the completion menu. Subsequent calls
+  -- will append the results to the menu to support streaming results.
+  --
+  -- NOTE: blink.cmp will mutate the items you return, so you must vim.deepcopy them
+  -- before returning if you want to re-use them in the future (such as for caching)
+  callback({
+    items = items,
+    -- Whether blink.cmp should request items when deleting characters
+    -- from the keyword (i.e. "foo|" -> "fo|")
+    -- Note that any non-alphanumeric characters will always request
+    -- new items (excluding `-` and `_`)
+    is_incomplete_backward = false,
+    -- Whether blink.cmp should request items when adding characters
+    -- to the keyword (i.e. "fo|" -> "foo|")
+    -- Note that any non-alphanumeric characters will always request
+    -- new items (excluding `-` and `_`)
+    is_incomplete_forward = false,
+  })
+
+  -- (Optional) Return a function which cancels the request
+  -- If you have long running requests, it's essential you support cancellation
+  return function() end
+end
+
+return source

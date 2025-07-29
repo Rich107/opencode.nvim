@@ -28,7 +28,20 @@ local defaults = {
   input = {
     prompt = "Ask opencode",
     icon = "󱚣",
-    completion = "customlist,v:lua.require'opencode.cmp'",
+    -- Built-in completion as fallback.
+    -- Okay to enable simultaneously with blink.cmp because built-in completion
+    -- only triggers via <Tab> and blink.cmp keymaps take priority.
+    completion = "customlist,v:lua.require'opencode.cmp.omni'",
+    win = {
+      b = {
+        -- Enable blink completion
+        completion = true,
+      },
+      bo = {
+        -- Custom filetype to configure blink with
+        filetype = "opencode_ask",
+      },
+    },
   },
   terminal = {
     win = { position = "right" },

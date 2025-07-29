@@ -26,7 +26,25 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 ```lua
 {
   'NickvanDyke/opencode.nvim',
-  dependencies = { 'folke/snacks.nvim', },
+  dependencies = {
+    'folke/snacks.nvim',
+    {
+      -- Optional blink.cmp integration for context placeholders
+      'saghen/blink.cmp',
+      opts = {
+        sources = {
+          providers = {
+            opencode = {
+              module = 'opencode.cmp.blink',
+            },
+          },
+          per_filetype = {
+            opencode_ask = { 'opencode', 'buffer' },
+          },
+        },
+      },
+    },
+  },
   ---@type opencode.Config
   opts = {
     -- Set these according to https://models.dev/
@@ -98,8 +116,8 @@ When your prompt contains placeholders, the plugin will replace them with contex
 | `@quickfix` | Quickfix list |
 | `@diff` | Git diff |
 
-> [!TIP] 
-> Press `<Tab>` in the `ask` input to trigger placeholder completion.
+> [!TIP]
+> If not using `blink.cmp`, press `<Tab>` to trigger built-in completion of placeholders.
 
 Add custom contexts via `opts.context`. The below replaces `@grapple` with files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
 
