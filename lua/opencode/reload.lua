@@ -11,7 +11,9 @@ function M.setup()
 
   -- Trigger :checktime on the events that matter
   -- TODO: Possible to trigger immediately, i.e. without user interactions?
-  -- Maybe we occasionally :checktime for some period after sending a prompt.
+  -- Seems like `curl.on_exit` doesn't fire until opencode has completely finished responding,
+  -- so we could fire an autocmd event there and listen for it here.
+  -- May not cover gradually edited files in the middle of a long response though.
   vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermClose" }, {
     group = group,
     pattern = "*",
