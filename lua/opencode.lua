@@ -73,15 +73,17 @@ end
 ---Input a prompt to send to opencode.
 ---@param default? string Text to prefill the input with.
 function M.ask(default)
-  local opts = vim.tbl_deep_extend("force", config.options.input, {
-    default = default,
-  })
-  -- While I'd like to use the standard vim.ui.input, it doesn't support completion.
-  require("snacks.input").input(opts, function(value)
-    if value and value ~= "" then
-      M.prompt(value)
+  -- snacks.input supports completion and normal mode movement, unlike the standard vim.ui.input.
+  require("snacks.input").input(
+    vim.tbl_deep_extend("force", config.options.input, {
+      default = default,
+    }),
+    function(value)
+      if value and value ~= "" then
+        M.prompt(value)
+      end
     end
-  end)
+  )
 end
 
 ---Toggle embedded opencode TUI.
