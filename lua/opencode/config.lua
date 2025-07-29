@@ -33,6 +33,10 @@ local defaults = {
     -- only triggers via <Tab> and blink.cmp keymaps take priority.
     completion = "customlist,v:lua.require'opencode.cmp.omni'",
     win = {
+      title_pos = "left",
+      relative = "cursor",
+      row = -3,
+      col = 0,
       b = {
         -- Enable blink completion
         completion = true,
