@@ -74,7 +74,7 @@ local function get_cwd(pid)
   return cwd
 end
 
----Find the port of an opencode server process running in or under Neovim's CWD.
+---Find the port of an opencode server process running inside Neovim's CWD.
 ---@return number|nil
 function M.find_port()
   local server_pid
@@ -88,7 +88,7 @@ function M.find_port()
   end
 
   if not server_pid then
-    vim.notify("Couldn't find an opencode server process running in or under Neovim's CWD", vim.log.levels.ERROR)
+    vim.notify("Couldn't find an opencode server process running inside Neovim's CWD", vim.log.levels.ERROR)
     return nil
   end
 

@@ -3,7 +3,7 @@ local M = {}
 ---@class opencode.Config
 ---@field provider_id? string [Provider](https://models.dev/) to use for opencode requests
 ---@field model_id? string [Model](https://models.dev/) to use for opencode requests
----@field port? number The port opencode is running on — use `--port <port>`. If `nil`, tries to find a running instance in or under Neovim's CWD.
+---@field port? number The port opencode is listening on — use `opencode --port <port>`. If `nil`, searches for an instance inside Neovim's CWD.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode
 ---@field context? table<string, fun(string): string|nil> Context to add to prompts
 ---@field input? snacks.input.Opts Input options — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md)
