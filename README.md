@@ -143,6 +143,11 @@ Add custom contexts via `opts.context`. The below replaces `@grapple` with files
 }
 ```
 
+## 👀 Events
+
+| Event | Description |
+| - | - |
+| `OpencodePromptResponse` | `opencode` has responded to a prompt |
 
 ## 🙏 Acknowledgments
 

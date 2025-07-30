@@ -25,7 +25,7 @@ function M.prompt(prompt)
   local function send_prompt(session_id)
     client.send(prompt, session_id, server_port, config.options.provider_id, config.options.model_id, function()
       vim.api.nvim_exec_autocmds("User", {
-        pattern = "OpencodePromptPost",
+        pattern = "OpencodePromptResponse",
       })
     end)
   end

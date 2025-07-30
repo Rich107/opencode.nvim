@@ -21,7 +21,7 @@ function M.setup()
 
   vim.api.nvim_create_autocmd({ "User" }, {
     group = group,
-    pattern = "OpencodePromptPost",
+    pattern = "OpencodePromptResponse",
     callback = function()
       vim.cmd("checktime")
     end,
