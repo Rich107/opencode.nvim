@@ -17,7 +17,8 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 - Write prompts quickly with completion integration
 - Auto-reload edited buffers
 
-> Please use the opencode TUI to manage its active session until [the plugin can do so](https://github.com/sst/opencode/issues/1255).
+> [!Important]
+> Please use the opencode TUI's `/sessions` to manage its visible session until [the plugin can do so](https://github.com/sst/opencode/issues/1255).
 
 ## 📦 Setup
 
