@@ -8,6 +8,14 @@ local server = require("opencode.server")
 ---@param opts opencode.Config
 function M.setup(opts)
   config.setup(opts)
+
+  for _, prompt in pairs(config.options.prompts) do
+    if prompt.key then
+      vim.keymap.set({ "n", "v" }, prompt.key, function()
+        M.prompt(prompt.prompt)
+      end, { desc = prompt.description })
+    end
+  end
 end
 
 ---Send a prompt to opencode.
@@ -90,6 +98,30 @@ function M.ask(default)
     function(value)
       if value and value ~= "" then
         M.prompt(value)
+      end
+    end
+  )
+end
+
+---Select a prompt to send to opencode.
+function M.select_prompt()
+  -- vim.tbl_values does not include nils, allowing users to remove built-in prompts.
+  ---@type opencode.Prompt[]
+  local prompts = vim.tbl_values(config.options.prompts)
+
+  vim.ui.select(
+    prompts,
+    {
+      prompt = "Prompt opencode: ",
+      ---@param item opencode.Prompt
+      format_item = function(item)
+        return item.description
+      end,
+    },
+    ---@param choice opencode.Prompt
+    function(choice)
+      if choice then
+        M.prompt(choice.prompt)
       end
     end
   )

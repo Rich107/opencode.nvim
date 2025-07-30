@@ -5,6 +5,7 @@ local M = {}
 ---@field model_id? string [Model](https://models.dev/) to use for opencode requests
 ---@field port? number The port opencode is listening on — use `opencode --port <port>`. If `nil`, searches for an instance inside Neovim's CWD.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode
+---@field prompts? table<string, opencode.Prompt> Prompts to select from
 ---@field context? table<string, fun(string): string|nil> Context to add to prompts
 ---@field input? snacks.input.Opts Input options — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md)
 ---@field terminal? snacks.terminal.Opts Terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md)
@@ -13,6 +14,36 @@ local defaults = {
   model_id = "gpt-4.1",
   port = nil,
   auto_reload = false,
+  prompts = {
+    ---@class opencode.Prompt
+    ---@field description? string Description of the prompt
+    ---@field prompt? string The prompt to send to opencode, with placeholders for context like `@cursor`, `@file`, etc.
+    ---@field key? string Optional key to bind the prompt to a keymap
+    explain = {
+      description = "Explain code near cursor",
+      prompt = "Explain @cursor and its context",
+    },
+    review = {
+      description = "Review file",
+      prompt = "Review @file for correctness and readability",
+    },
+    fix = {
+      description = "Fix diagnostics",
+      prompt = "Fix these @diagnostics",
+    },
+    optimize = {
+      description = "Optimize selection",
+      prompt = "Optimize @selection for performance and readability",
+    },
+    document = {
+      description = "Document selection",
+      prompt = "Add documentation comments for @selection",
+    },
+    test = {
+      description = "Add tests for selection",
+      prompt = "Add tests for @selection",
+    },
+  },
   context = {
     ["@file"] = require("opencode.context").file,
     ["@files"] = require("opencode.context").files,
