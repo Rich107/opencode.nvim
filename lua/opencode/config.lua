@@ -3,7 +3,7 @@ local M = {}
 ---@class opencode.Config
 ---@field provider_id? string [Provider](https://models.dev/) to use for opencode requests
 ---@field model_id? string [Model](https://models.dev/) to use for opencode requests
----@field port? number The port opencode is listening on — use `opencode --port <port>`. If `nil`, searches for an instance inside Neovim's CWD.
+---@field port? number The port opencode's server is running on. If `nil`, searches for an opencode process inside Neovim's CWD — usually you can leave this unset unless that fails. Embedded instances will automatically use this — launch external instances with `opencode --port <port>`.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode
 ---@field prompts? table<string, opencode.Prompt> Prompts to select from
 ---@field context? table<string, fun(string): string|nil> Context to add to prompts

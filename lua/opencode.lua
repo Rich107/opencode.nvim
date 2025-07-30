@@ -129,7 +129,8 @@ end
 
 ---Toggle embedded opencode TUI.
 function M.toggle()
-  require("snacks.terminal").toggle("opencode", config.options.terminal)
+  local port = config.options.port
+  require("snacks.terminal").toggle("opencode" .. (port and (" --port " .. port) or ""), config.options.terminal)
 end
 
 return M
