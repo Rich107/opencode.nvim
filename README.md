@@ -73,22 +73,22 @@ https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
 <summary><a href="https://github.com/nix-community/nixvim">nixvim</a></summary>
 
 ```nix
-  programs.nixvim = {
-    extraPlugins = [
-      pkgs.vimPlugins.opencode-nvim
-    ];
-    keymaps = [
-      { key = "<leader>oa"; action = "<cmd>lua require('opencode').ask()<CR>"; mode = "n"; } 
-      { key = "<leader>oa"; action = "<cmd>lua require('opencode').ask('@selection: ')<CR>"; mode = "v"; } 
-      { key = "<leader>on"; action = "<cmd>lua require('opencode').create_session()<CR>"; }
-      { key = "<leader>oe"; action = "<cmd>lua require('opencode').prompt('Explain @cursor and its context')<CR>"; }
-      { key = "<leader>or"; action = "<cmd>lua require('opencode').prompt('Review @file for correctness and readability')<CR>"; }
-      { key = "<leader>of"; action = "<cmd>lua require('opencode').prompt('Fix these @diagnostics')<CR>"; }
-      { key = "<leader>oo"; action = "<cmd>lua require('opencode').prompt('Optimize @selection for performance and readability')<CR>"; mode = "v"; }
-      { key = "<leader>od"; action = "<cmd>lua require('opencode').prompt('Add documentation comments for @selection')<CR>"; mode = "v"; }
-      { key = "<leader>ot"; action = "<cmd>lua require('opencode').prompt('Add tests for @selection')<CR>"; mode = "v"; }
-    ];
-  };
+programs.nixvim = {
+  extraPlugins = [
+    pkgs.vimPlugins.opencode-nvim
+  ];
+  keymaps = [
+    { key = "<leader>oa"; action = "<cmd>lua require('opencode').ask()<CR>"; mode = "n"; } 
+    { key = "<leader>oa"; action = "<cmd>lua require('opencode').ask('@selection: ')<CR>"; mode = "v"; } 
+    { key = "<leader>on"; action = "<cmd>lua require('opencode').create_session()<CR>"; }
+    { key = "<leader>oe"; action = "<cmd>lua require('opencode').prompt('Explain @cursor and its context')<CR>"; }
+    { key = "<leader>or"; action = "<cmd>lua require('opencode').prompt('Review @file for correctness and readability')<CR>"; }
+    { key = "<leader>of"; action = "<cmd>lua require('opencode').prompt('Fix these @diagnostics')<CR>"; }
+    { key = "<leader>oo"; action = "<cmd>lua require('opencode').prompt('Optimize @selection for performance and readability')<CR>"; mode = "v"; }
+    { key = "<leader>od"; action = "<cmd>lua require('opencode').prompt('Add documentation comments for @selection')<CR>"; mode = "v"; }
+    { key = "<leader>ot"; action = "<cmd>lua require('opencode').prompt('Add tests for @selection')<CR>"; mode = "v"; }
+  ];
+};
 ```
 </details>
 
