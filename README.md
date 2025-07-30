@@ -2,7 +2,7 @@
 
 Send editor-aware prompts to the powerful [opencode AI](https://github.com/sst/opencode) from Neovim.
 
-https://github.com/user-attachments/assets/331271d7-e590-4e30-a161-5c643909a922
+https://github.com/user-attachments/assets/3ad9adff-840c-48e5-9e65-da9c9e9c8b60
 
 > [!NOTE]
 > Uses opencode's currently undocumented, likely unstable [API](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
