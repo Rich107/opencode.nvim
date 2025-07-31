@@ -20,6 +20,21 @@ https://github.com/user-attachments/assets/3ad9adff-840c-48e5-9e65-da9c9e9c8b60
 > [!Important]
 > Please use the opencode TUI's `/sessions` to manage its visible session until [the plugin can do so](https://github.com/sst/opencode/issues/1255).
 
+### Context
+
+When your prompt contains placeholders, the plugin will replace them with context before sending:
+
+| Placeholder | Context |
+| - | - |
+| `@file` | Current file |
+| `@files` | Open files |
+| `@cursor` | Cursor position |
+| `@selection` | Selected text |
+| `@diagnostic` | Current line diagnostics |
+| `@diagnostics` | Current buffer diagnostics |
+| `@quickfix` | Quickfix list |
+| `@diff` | Git diff |
+
 ## 📦 Setup
 
 <details>
@@ -65,21 +80,6 @@ programs.nixvim = {
 };
 ```
 </details>
-
-## 🕵️‍♂️ Context
-
-When your prompt contains placeholders, the plugin will replace them with context before sending:
-
-| Placeholder | Context |
-| - | - |
-| `@file` | Current file |
-| `@files` | Open files |
-| `@cursor` | Cursor position |
-| `@selection` | Selected text |
-| `@diagnostic` | Current line diagnostics |
-| `@diagnostics` | Current buffer diagnostics |
-| `@quickfix` | Quickfix list |
-| `@diff` | Git diff |
 
 ## ⚙️ Configuration
 
