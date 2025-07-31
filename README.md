@@ -84,9 +84,6 @@ programs.nixvim = {
 ```
 </details>
 
-> [!IMPORTANT]
-> If using the embedded terminal, set your [opencode theme](https://opencode.ai/docs/themes/) to `system` — see https://github.com/sst/opencode/issues/445.
-
 ## 🕵️‍♂️ Context
 
 When your prompt contains placeholders, the plugin will replace them with context before sending:

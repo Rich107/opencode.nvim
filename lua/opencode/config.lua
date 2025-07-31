@@ -80,6 +80,10 @@ local defaults = {
   },
   terminal = {
     win = { position = "right" },
+    env = {
+      -- Other themes have visual bugs in embedded terminals: https://github.com/sst/opencode/issues/445
+      OPENCODE_THEME = "system",
+    },
   },
 }
 
