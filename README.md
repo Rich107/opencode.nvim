@@ -28,25 +28,7 @@ https://github.com/user-attachments/assets/3ad9adff-840c-48e5-9e65-da9c9e9c8b60
 ```lua
 {
   'NickvanDyke/opencode.nvim',
-  dependencies = {
-    'folke/snacks.nvim',
-    {
-      -- Optional blink.cmp integration for context placeholders
-      'saghen/blink.cmp',
-      opts = {
-        sources = {
-          providers = {
-            opencode = {
-              module = 'opencode.cmp.blink',
-            },
-          },
-          per_filetype = {
-            opencode_ask = { 'opencode', 'buffer' },
-          },
-        },
-      },
-    },
-  },
+  dependencies = { 'folke/snacks.nvim', },
   ---@type opencode.Config
   opts = {
     -- Set these according to https://models.dev/
@@ -99,9 +81,6 @@ When your prompt contains placeholders, the plugin will replace them with contex
 | `@quickfix` | Quickfix list |
 | `@diff` | Git diff |
 
-> [!TIP]
-> If not using `blink.cmp`, press `<Tab>` to trigger built-in completion of placeholders.
-
 ## ⚙️ Configuration
 
 See all the available options and their defaults [here](./lua/opencode/config.lua#L12).
@@ -143,7 +122,6 @@ Add keymaps to [built-in prompts](./lua/opencode/config.lua#L17):
 Add custom contexts to `opts.context`. The below replaces `@grapple` with files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
 
 ```lua
----@type opencode.Config
 {
   context = {
     ---@return string|nil
@@ -162,6 +140,33 @@ Add custom contexts to `opts.context`. The below replaces `@grapple` with files 
   }
 }
 ```
+
+### Completion
+
+The plugin offers context placeholder completions in the `ask` input.
+
+#### blink.cmp
+
+Add the following to your [blink.cmp](https://github.com/Saghen/blink.cmp) config:
+
+```lua
+{
+  sources = {
+    providers = {
+      opencode = {
+          module = 'opencode.cmp.blink',
+      },
+    },
+    per_filetype = {
+      opencode_ask = { 'opencode', 'buffer' },
+    },
+  },
+}
+```
+
+#### Built-in
+
+Press `<Tab>` to trigger Neovim's built-in completion.
 
 ## 👀 Events
 
