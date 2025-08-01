@@ -1,6 +1,6 @@
 # opencode.nvim
 
-Send editor-aware prompts to the powerful [opencode AI](https://github.com/sst/opencode) from Neovim.
+Seamlessly integrate the [opencode](https://github.com/sst/opencode) AI assistant with Neovim.
 
 https://github.com/user-attachments/assets/3ad9adff-840c-48e5-9e65-da9c9e9c8b60
 
@@ -52,6 +52,7 @@ When your prompt contains placeholders, the plugin will replace them with contex
     { '<leader>oa', function() require('opencode').ask('@selection: ') end, desc = 'Ask opencode about selection', mode = 'v', },
     { '<leader>op', function() require('opencode').select_prompt() end, desc = 'Select opencode prompt', mode = { 'n', 'v', }, },
     { '<leader>on', function() require('opencode').command('session_new') end, desc = 'New session', },
+    { '<leader>oy', function() require('opencode').command('messages_copy') end, desc = 'Copy last opencode message', },
     { '<S-C-u>', function() require('opencode').command('messages_half_page_up') end, desc = 'New session', },
     { '<S-C-d>', function() require('opencode').command('messages_half_page_down') end, desc = 'New session', },
   },
