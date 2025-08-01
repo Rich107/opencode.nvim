@@ -4,7 +4,8 @@ local function ensure_lsof()
   if vim.fn.executable("lsof") == 0 then
     vim.notify(
       "'lsof' command is not available. Please install it to auto-find the opencode server.",
-      vim.log.levels.ERROR
+      vim.log.levels.ERROR,
+      { title = "opencode" }
     )
     return false
   end
@@ -88,13 +89,17 @@ function M.find_port()
   end
 
   if not server_pid then
-    vim.notify("Couldn't find an opencode server process running inside Neovim's CWD", vim.log.levels.ERROR)
+    vim.notify(
+      "Couldn't find an opencode server process running inside Neovim's CWD",
+      vim.log.levels.ERROR,
+      { title = "opencode" }
+    )
     return nil
   end
 
   local server_port = get_port(server_pid)
   if not server_port then
-    vim.notify("Couldn't determine opencode server port", vim.log.levels.ERROR)
+    vim.notify("Couldn't determine opencode server port", vim.log.levels.ERROR, { title = "opencode" })
     return nil
   end
 

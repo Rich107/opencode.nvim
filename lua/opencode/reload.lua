@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup()
   if not vim.o.autoread then
-    vim.notify("Please enable autoread to use opencode.nvim auto_reload", vim.log.levels.WARN)
+    vim.notify("Please enable autoread to use opencode.nvim auto_reload", vim.log.levels.WARN, { title = "opencode" })
     return
   end
 

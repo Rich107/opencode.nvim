@@ -30,7 +30,7 @@ local function curl(url, method, body, callback)
         end
         local ok, response = pcall(vim.fn.json_decode, response_str)
         if not ok then
-          vim.notify("JSON decode error: " .. response_str, vim.log.levels.ERROR)
+          vim.notify("JSON decode error: " .. response_str, vim.log.levels.ERROR, { title = "opencode" })
         else
           if callback then
             callback(response)
@@ -51,7 +51,7 @@ local function curl(url, method, body, callback)
           .. code
           .. "\n\nstderr:\n"
           .. table.concat(stderr_lines, "\n")
-        vim.notify(error_message, vim.log.levels.ERROR)
+        vim.notify(error_message, vim.log.levels.ERROR, { title = "opencode" })
       end
     end,
   })
