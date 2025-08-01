@@ -18,15 +18,6 @@ function M.setup()
     end,
     desc = "Reload buffer if the underlying file was changed by opencode or anything else",
   })
-
-  vim.api.nvim_create_autocmd({ "User" }, {
-    group = group,
-    pattern = "OpencodePromptResponse",
-    callback = function()
-      vim.cmd("checktime")
-    end,
-    desc = "Reload buffer if the underlying file was changed by opencode or anything else",
-  })
 end
 
 return M

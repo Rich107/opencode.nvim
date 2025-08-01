@@ -1,8 +1,6 @@
 local M = {}
 
 ---@class opencode.Config
----@field provider_id? string [Provider](https://models.dev/) to use for opencode requests
----@field model_id? string [Model](https://models.dev/) to use for opencode requests
 ---@field port? number The port opencode's server is running on. If `nil`, searches for an opencode process inside Neovim's CWD — usually you can leave this unset unless that fails. Embedded instances will automatically use this — launch external instances with `opencode --port <port>`.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode
 ---@field prompts? table<string, opencode.Prompt> Prompts to select from
@@ -10,8 +8,6 @@ local M = {}
 ---@field input? snacks.input.Opts Input options — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md)
 ---@field terminal? snacks.terminal.Opts Terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md)
 local defaults = {
-  provider_id = "github-copilot",
-  model_id = "gpt-4.1",
   port = nil,
   auto_reload = false,
   prompts = {
@@ -60,7 +56,7 @@ local defaults = {
     prompt = "Ask opencode",
     icon = "󱚣",
     -- Built-in completion as fallback.
-    -- Okay to enable simultaneously with blink.cmp because built-in completion
+    -- It's okay to enable simultaneously with blink.cmp because built-in completion
     -- only triggers via <Tab> and blink.cmp keymaps take priority.
     completion = "customlist,v:lua.require'opencode.cmp.omni'",
     win = {
@@ -79,7 +75,11 @@ local defaults = {
     },
   },
   terminal = {
-    win = { position = "right" },
+    win = {
+      position = "right",
+      -- I usually want to `toggle` and then immediately `ask` — seems like a sensible default
+      enter = false,
+    },
     env = {
       -- Other themes have visual bugs in embedded terminals: https://github.com/sst/opencode/issues/445
       OPENCODE_THEME = "system",

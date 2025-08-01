@@ -7,7 +7,7 @@ https://github.com/user-attachments/assets/3ad9adff-840c-48e5-9e65-da9c9e9c8b60
 > [!NOTE]
 > Uses opencode's currently undocumented, likely unstable [API](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
 > 
-> Latest tested opencode version: `v0.3.76`
+> Latest tested opencode version: `v0.3.110`
 
 ## ✨ Features
 
@@ -16,9 +16,6 @@ https://github.com/user-attachments/assets/3ad9adff-840c-48e5-9e65-da9c9e9c8b60
 - Inject customizable editor context
 - Write prompts quickly with completion integration
 - Auto-reload edited buffers
-
-> [!Important]
-> Please use the opencode TUI's `/sessions` to manage its visible session until [the plugin can do so](https://github.com/sst/opencode/issues/1255).
 
 ### Context
 
@@ -46,9 +43,7 @@ When your prompt contains placeholders, the plugin will replace them with contex
   dependencies = { 'folke/snacks.nvim', },
   ---@type opencode.Config
   opts = {
-    -- Set these according to https://models.dev/
-    provider_id = ...,
-    model_id = ...,
+    -- Your configuration, if any
   },
   -- stylua: ignore
   keys = {
@@ -56,7 +51,9 @@ When your prompt contains placeholders, the plugin will replace them with contex
     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = 'n', },
     { '<leader>oa', function() require('opencode').ask('@selection: ') end, desc = 'Ask opencode about selection', mode = 'v', },
     { '<leader>op', function() require('opencode').select_prompt() end, desc = 'Select opencode prompt', mode = { 'n', 'v', }, },
-    { '<leader>on', function() require('opencode').create_session() end, desc = 'New session', },
+    { '<leader>on', function() require('opencode').command('session_new') end, desc = 'New session', },
+    { '<S-C-u>', function() require('opencode').command('messages_half_page_up') end, desc = 'New session', },
+    { '<S-C-d>', function() require('opencode').command('messages_half_page_down') end, desc = 'New session', },
   },
 }
 ```
@@ -74,8 +71,8 @@ programs.nixvim = {
     { key = "<leader>ot"; action = "<cmd>lua require('opencode').toggle()<CR>"; } 
     { key = "<leader>oa"; action = "<cmd>lua require('opencode').ask()<CR>"; mode = "n"; } 
     { key = "<leader>oa"; action = "<cmd>lua require('opencode').ask('@selection: ')<CR>"; mode = "v"; } 
-    { key = "<leader>on"; action = "<cmd>lua require('opencode').create_session()<CR>"; }
     { key = "<leader>oe"; action = "<cmd>lua require('opencode').select_prompt()<CR>"; mode = ["n", "v"]; }
+    { key = "<leader>on"; action = "<cmd>lua require('opencode').command('session_new')<CR>"; }
   ];
 };
 ```
@@ -167,12 +164,6 @@ Add the following to your [blink.cmp](https://github.com/Saghen/blink.cmp) confi
 #### Built-in
 
 Press `<Tab>` to trigger Neovim's built-in completion.
-
-## 👀 Events
-
-| Event | Description |
-| - | - |
-| `OpencodePromptResponse` | `opencode` has responded to a prompt |
 
 ## 🙏 Acknowledgments
 

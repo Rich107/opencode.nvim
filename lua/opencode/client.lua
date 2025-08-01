@@ -1,6 +1,8 @@
 ---Calls the opencode [server](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
 local M = {}
 
+local origin = "http://localhost:"
+
 ---@param url string
 ---@param method string
 ---@param body table|nil
@@ -55,6 +57,31 @@ local function curl(url, method, body, callback)
   })
 end
 
+---@param text string
+---@param port number
+---@param callback fun(response: table)|nil
+function M.tui_append_prompt(text, port, callback)
+  curl(origin .. port .. "/tui/append-prompt", "POST", { text = text }, callback)
+end
+
+---@param port number
+---@param callback fun(response: table)|nil
+function M.tui_submit_prompt(port, callback)
+  curl(origin .. port .. "/tui/submit-prompt", "POST", {}, callback)
+end
+
+---@param port number
+---@param callback fun(response: table)|nil
+function M.tui_clear_prompt(port, callback)
+  curl(origin .. port .. "/tui/clear-prompt", "POST", {}, callback)
+end
+
+---@param command string
+---@param port number
+function M.tui_execute_command(command, port)
+  curl(origin .. port .. "/tui/execute-command", "POST", { command = command })
+end
+
 ---@param prompt string
 ---@param session_id string
 ---@param port number
@@ -62,7 +89,6 @@ end
 ---@param model_id string
 ---@param callback fun(response: table)|nil
 function M.send(prompt, session_id, port, provider_id, model_id, callback)
-  local url = "http://localhost:" .. port .. "/session/" .. session_id .. "/message"
   local body = {
     sessionID = session_id,
     providerID = provider_id,
@@ -76,23 +102,19 @@ function M.send(prompt, session_id, port, provider_id, model_id, callback)
     },
   }
 
-  curl(url, "POST", body, callback)
+  curl(origin .. port .. "/session/" .. session_id .. "/message", "POST", body, callback)
 end
 
 ---@param port number
 ---@param callback fun(sessions: table)
 function M.get_sessions(port, callback)
-  local url = "http://localhost:" .. port .. "/session"
-
-  curl(url, "GET", nil, callback)
+  curl(origin .. port .. "/session", "GET", nil, callback)
 end
 
 ---@param port number
 ---@param callback fun(session: table)
 function M.create_session(port, callback)
-  local url = "http://localhost:" .. port .. "/session"
-
-  curl(url, "POST", nil, callback)
+  curl(origin .. port .. "/session", "POST", nil, callback)
 end
 
 return M
