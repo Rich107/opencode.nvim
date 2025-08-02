@@ -84,7 +84,7 @@ programs.nixvim = {
 See all the available options and their defaults [here](./lua/opencode/config.lua#L10).
 
 > [!TIP]
-> `opencode.nvim` offers a flexible API — customize prompts, contexts, and keymaps to fit your workflow!
+> `opencode.nvim` offers a flexible [API](./lua/opencode.lua) — customize prompts, contexts, and keymaps to fit your workflow!
 
 ### Prompts
 
