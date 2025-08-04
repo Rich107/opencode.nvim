@@ -23,8 +23,8 @@ When your prompt contains placeholders, the plugin will replace them with contex
 
 | Placeholder | Context |
 | - | - |
-| `@file` | Current file |
-| `@files` | Open files |
+| `@buffer` | Current buffer |
+| `@buffers` | Open buffers |
 | `@cursor` | Cursor position |
 | `@selection` | Selected text |
 | `@diagnostic` | Current line diagnostics |

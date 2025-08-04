@@ -13,15 +13,15 @@ local defaults = {
   prompts = {
     ---@class opencode.Prompt
     ---@field description? string Description of the prompt
-    ---@field prompt? string The prompt to send to opencode, with placeholders for context like `@cursor`, `@file`, etc.
+    ---@field prompt? string The prompt to send to opencode, with placeholders for context like `@cursor`, `@buffer`, etc.
     ---@field key? string Optional key to bind the prompt to a keymap
     explain = {
       description = "Explain code near cursor",
       prompt = "Explain @cursor and its context",
     },
     review = {
-      description = "Review file",
-      prompt = "Review @file for correctness and readability",
+      description = "Review buffer",
+      prompt = "Review @buffer for correctness and readability",
     },
     fix = {
       description = "Fix diagnostics",
@@ -41,8 +41,8 @@ local defaults = {
     },
   },
   context = {
-    ["@file"] = require("opencode.context").file,
-    ["@files"] = require("opencode.context").files,
+    ["@buffer"] = require("opencode.context").buffer,
+    ["@buffers"] = require("opencode.context").buffers,
     ["@cursor"] = require("opencode.context").cursor_position,
     ["@selection"] = require("opencode.context").visual_selection,
     ["@diagnostic"] = function()

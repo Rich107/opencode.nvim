@@ -26,13 +26,13 @@ end
 
 ---The current buffer's file path.
 ---@return string|nil
-function M.file()
+function M.buffer()
   return file_path(0)
 end
 
----File paths of all open buffers.
+---All open buffers' file paths.
 ---@return string|nil
-function M.files()
+function M.buffers()
   local file_list = {}
 
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
