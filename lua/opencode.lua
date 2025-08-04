@@ -5,6 +5,8 @@ local context = require("opencode.context")
 local client = require("opencode.client")
 local server = require("opencode.server")
 
+local is_listening_sse = false
+
 ---@param opts opencode.Config
 function M.setup(opts)
   config.setup(opts)
@@ -29,13 +31,20 @@ function M.prompt(prompt)
 
   prompt = context.inject(prompt, config.options.context)
 
-  -- Is there much use in separate exposed functions for clear/append/submit? Seems rare.
+  if not is_listening_sse then
+    client.listen_sse(server_port, function(response)
+      vim.api.nvim_exec_autocmds("User", {
+        pattern = "OpencodeEvent",
+        data = response,
+      })
+    end)
+    is_listening_sse = true
+  end
+
   client.tui_clear_prompt(server_port, function()
     client.tui_append_prompt(prompt, server_port, function()
       client.tui_submit_prompt(server_port, function()
-        -- Unfortunately the server responds immediately,
-        -- not after processing and responding to the prompt.
-        -- So we can't e.g. reload the buffer here.
+        -- ...
       end)
     end)
   end)

@@ -166,6 +166,25 @@ Add the following to your [blink.cmp](https://github.com/Saghen/blink.cmp) confi
 
 Press `<Tab>` to trigger Neovim's built-in completion.
 
+## 👀 Events
+
+`opencode.nvim` forwards opencode's Server-Sent-Events as an autocmd:
+
+```lua
+-- Listen for opencode events
+vim.api.nvim_create_autocmd("User", {
+  pattern = "OpencodeEvent",
+  callback = function(args)
+    -- See the available event types and their properties
+    vim.notify(vim.inspect(args.data), vim.log.levels.DEBUG)
+    -- Do something interesting, like show a notification when opencode updates a response
+    if args.data.type == "message.updated" then
+      vim.notify("opencode updated message", vim.log.levels.INFO)
+    end
+  end,
+})
+```
+
 ## 🙏 Acknowledgments
 
 - Inspired by (and partially based on) [nvim-aider](https://github.com/GeorgesAlkhouri/nvim-aider) and later [neopencode.nvim](https://github.com/loukotal/neopencode.nvim).

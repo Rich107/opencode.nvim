@@ -15,6 +15,11 @@ local function curl(url, method, body, callback)
     method,
     "-H",
     "Content-Type: application/json",
+    "-H",
+    "Accept: application/json",
+    "-H",
+    "Accept: text/event-stream",
+    "-N", -- No buffering, for streaming responses
     body and "-d" or nil,
     body and vim.fn.json_encode(body) or nil,
     url,
@@ -23,14 +28,17 @@ local function curl(url, method, body, callback)
   local stderr_lines = {}
   vim.fn.jobstart(command, {
     on_stdout = function(_, data)
-      if data and #data > 0 then
-        local response_str = table.concat(data, "")
-        if response_str == "" then
+      -- SSEs can have #data > 1, each being their own event and JSON
+      for _, line in ipairs(data) do
+        -- SSEs start with "data: " - remove it so we can parse the JSON
+        line = line:gsub("^data: ", "")
+        if line == "" then
           return
         end
-        local ok, response = pcall(vim.fn.json_decode, response_str)
+
+        local ok, response = pcall(vim.fn.json_decode, line)
         if not ok then
-          vim.notify("JSON decode error: " .. response_str, vim.log.levels.ERROR, { title = "opencode" })
+          vim.notify("JSON decode error: " .. line, vim.log.levels.ERROR, { title = "opencode" })
         else
           if callback then
             callback(response)
@@ -55,6 +63,12 @@ local function curl(url, method, body, callback)
       end
     end,
   })
+end
+
+---@param port number
+---@param callback fun(response: table)|nil
+function M.listen_sse(port, callback)
+  curl(origin .. port .. "/event", "GET", nil, callback)
 end
 
 ---@param text string
