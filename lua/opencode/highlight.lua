@@ -17,21 +17,17 @@ local function highlight_placeholders(bufnr, text, placeholders)
   end
 end
 
-function M.setup()
+---@param bufnr number
+function M.register(bufnr)
   vim.api.nvim_set_hl(0, "OpencodePlaceholder", { link = "@lsp.type.enum" })
 
   vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufWinEnter" }, {
     group = vim.api.nvim_create_augroup("OpencodeAskHighlight", { clear = true }),
-    pattern = "*",
+    buffer = bufnr,
     callback = function(args)
-      local bufnr = args.buf
-      if vim.api.nvim_get_option_value("filetype", { buf = bufnr }) ~= "opencode_ask" then
-        return
-      end
-
-      local text = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ""
+      local text = vim.api.nvim_buf_get_lines(args.buf, 0, 1, false)[1] or ""
       local placeholders = vim.tbl_keys(require("opencode.config").options.contexts)
-      highlight_placeholders(bufnr, text, placeholders)
+      highlight_placeholders(args.buf, text, placeholders)
     end,
   })
 end

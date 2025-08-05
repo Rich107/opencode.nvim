@@ -78,6 +78,10 @@ local defaults = {
         -- Custom filetype to configure blink with
         filetype = "opencode_ask",
       },
+      ---@param win snacks.win
+      on_buf = function(win)
+        require("opencode.highlight").register(win.buf)
+      end,
     },
   },
   terminal = {

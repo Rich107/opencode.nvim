@@ -7,10 +7,10 @@ local sse_listening_port = nil
 ---@param opts opencode.Config
 function M.setup(opts)
   require("opencode.config").setup(opts)
-  require("opencode.highlight").setup()
 
   -- TODO: Hmm, this is problematic for lazy-loading.
   -- May prefer to just demonstrate how to keymap configured prompts.
+  -- Without this, user wouldn't need to call `require("opencode").setup()` at all, aside from configuring options.
   for _, prompt in pairs(require("opencode.config").options.prompts) do
     if prompt.key then
       vim.keymap.set({ "n", "v" }, prompt.key, function()
