@@ -9,7 +9,7 @@ local M = {}
 ---@field terminal? snacks.terminal.Opts Terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md)
 local defaults = {
   port = nil,
-  auto_reload = false,
+  auto_reload = true,
   prompts = {
     ---@class opencode.Prompt
     ---@field description? string Description of the prompt
