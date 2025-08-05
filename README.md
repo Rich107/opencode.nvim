@@ -15,7 +15,7 @@ https://github.com/user-attachments/assets/170fa3fa-cb21-4f76-9aed-aa51bf1963bf
 - Select and input customizable prompts
 - Inject customizable editor context
 - Auto-reload edited buffers
-- Write and refine prompts quickly with context completion and highlighting
+- Write and refine prompts quickly with context completion and highlighting, and normal-mode support
 
 ## 🕵️ Context
 
