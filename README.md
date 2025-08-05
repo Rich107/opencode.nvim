@@ -12,12 +12,12 @@ https://github.com/user-attachments/assets/170fa3fa-cb21-4f76-9aed-aa51bf1963bf
 ## ✨ Features
 
 - Toggle an embedded `opencode` terminal or auto-find any `opencode` process running inside Neovim's CWD
-- Send and input customizable prompts
+- Select and input customizable prompts
 - Inject customizable editor context
-- Prompt quickly with completion integration
 - Auto-reload edited buffers
+- Write and refine prompts quickly with context completion and highlighting
 
-### Context
+## 🕵️ Context
 
 When your prompt contains placeholders, the plugin will replace them with context before sending:
 
