@@ -3,6 +3,26 @@ local M = {}
 
 local origin = "http://localhost:"
 
+---Strips the "data: " SSE prefix from each line and joins long SSEs that span multiple lines.
+---@param data string[]
+---@return string[]
+local function format_sse_data(data)
+  local formatted_data = {}
+  for _, line in ipairs(data) do
+    if line:sub(1, 6) == "data: " then
+      table.insert(formatted_data, line:sub(7))
+    else
+      if #formatted_data > 0 then
+        -- If the line doesn't start with "data: ", it's part of the previous SSE - append it.
+        formatted_data[#formatted_data] = formatted_data[#formatted_data] .. line
+      else
+        table.insert(formatted_data, line)
+      end
+    end
+  end
+  return formatted_data
+end
+
 ---@param url string
 ---@param method string
 ---@param body table|nil
@@ -19,7 +39,7 @@ local function curl(url, method, body, callback)
     "Accept: application/json",
     "-H",
     "Accept: text/event-stream",
-    "-N", -- No buffering, for streaming responses
+    "-N", -- No buffering, for streaming SSEs
     body and "-d" or nil,
     body and vim.fn.json_encode(body) or nil,
     url,
@@ -27,21 +47,21 @@ local function curl(url, method, body, callback)
 
   local stderr_lines = {}
   vim.fn.jobstart(command, {
+    ---@param data string[]
     on_stdout = function(_, data)
-      -- SSEs can have #data > 1, each being their own event and JSON
-      for _, line in ipairs(data) do
-        -- SSEs start with "data: " - remove it so we can parse the JSON
-        line = line:gsub("^data: ", "")
-        if line == "" then
-          return
-        end
+      if data[1]:match("^data: ") then
+        data = format_sse_data(data)
+      end
 
-        local ok, response = pcall(vim.fn.json_decode, line)
-        if not ok then
-          vim.notify("JSON decode error: " .. line, vim.log.levels.ERROR, { title = "opencode" })
-        else
-          if callback then
-            callback(response)
+      for _, line in ipairs(data) do
+        if line ~= "" then
+          local ok, response = pcall(vim.fn.json_decode, line)
+          if not ok then
+            vim.notify("JSON decode error: " .. line, vim.log.levels.ERROR, { title = "opencode" })
+          else
+            if callback then
+              callback(response)
+            end
           end
         end
       end
