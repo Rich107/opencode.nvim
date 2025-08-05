@@ -10,15 +10,15 @@ end
 
 ---Inject context into a prompt.
 ---@param prompt string
----@param context table<string, fun(): string|nil>
+---@param contexts table<string, opencode.Context>
 ---@return string
-function M.inject(prompt, context)
-  for placeholder, fun in pairs(context) do
+function M.inject(prompt, contexts)
+  for placeholder, context in pairs(contexts) do
     -- Only match whole-word placeholders using Lua frontier patterns.
     -- Ideally we'd have one in front of the pattern too, but I can't find a pattern
     -- that will match the start of the string OR a word boundary but not match
     -- a special character like `@` or `#` at the start of the placeholder.
-    prompt = prompt:gsub(placeholder .. "%f[%W]", fun() or placeholder)
+    prompt = prompt:gsub(placeholder .. "%f[%W]", context.value() or placeholder)
   end
 
   return prompt

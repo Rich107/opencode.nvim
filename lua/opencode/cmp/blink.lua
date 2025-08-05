@@ -34,7 +34,7 @@ function source:get_completions(ctx, callback)
   -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#completionItem
   --- @type lsp.CompletionItem[]
   local items = {}
-  for placeholder, _ in pairs(config.options.context) do
+  for placeholder, context in pairs(config.options.context) do
     --- @type lsp.CompletionItem
     local item = {
       label = placeholder,
@@ -42,6 +42,7 @@ function source:get_completions(ctx, callback)
       filterText = placeholder,
       insertText = placeholder,
       insertTextFormat = vim.lsp.protocol.InsertTextFormat.PlainText,
+      documentation = context.description,
 
       -- There are some other fields you may want to explore which are blink.cmp
       -- specific, such as `score_offset` (blink.cmp.CompletionItem)

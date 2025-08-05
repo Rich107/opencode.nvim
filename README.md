@@ -117,24 +117,27 @@ Add keymaps to [built-in prompts](./lua/opencode/config.lua#L13):
 
 ### Contexts
 
-Add custom contexts to `opts.context`. The below replaces `@grapple` with files tracked by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
+Add custom contexts to `opts.context`. The below replaces `@grapple` with files tagged by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
 
 ```lua
 {
   context = {
-    ---@return string|nil
-    ['@grapple'] = function()
-      local tags = require('grapple').tags()
-      if not tags or #tags == 0 then
-        return nil
-      end
+    ---@type opencode.Context
+    ['@grapple'] = {
+      description = 'Files tagged by grapple',
+      value = function()
+        local tags = require('grapple').tags()
+        if not tags or #tags == 0 then
+          return nil
+        end
 
-      local paths = {}
-      for _, tag in ipairs(tags) do
-        table.insert(paths, tag.path)
-      end
-      return table.concat(paths, ', ')
-    end,
+        local paths = {}
+        for _, tag in ipairs(tags) do
+          table.insert(paths, tag.path)
+        end
+        return table.concat(paths, ', ')
+      end,
+    },
   }
 }
 ```
