@@ -75,6 +75,8 @@ local defaults = {
     },
   },
   terminal = {
+    -- No reason to prefer normal mode - can't scroll TUI like a normal buffer
+    auto_insert = true,
     win = {
       position = "right",
       -- I usually want to `toggle` and then immediately `ask` — seems like a sensible default
