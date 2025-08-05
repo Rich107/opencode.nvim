@@ -80,7 +80,7 @@ local defaults = {
       },
       ---@param win snacks.win
       on_buf = function(win)
-        require("opencode.highlight").register(win.buf)
+        require("opencode.highlight").setup(win.buf)
       end,
     },
   },

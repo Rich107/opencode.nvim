@@ -18,7 +18,7 @@ local function highlight_placeholders(bufnr, text, placeholders)
 end
 
 ---@param bufnr number
-function M.register(bufnr)
+function M.setup(bufnr)
   vim.api.nvim_set_hl(0, "OpencodePlaceholder", { link = "@lsp.type.enum" })
 
   vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufWinEnter" }, {

@@ -18,12 +18,6 @@ function M.setup(opts)
       end, { desc = prompt.description })
     end
   end
-
-  -- TODO: Ahh aside from auto_reload... not sure about that, because we need to wait for custom opts in case it's disabled.
-  -- I guess we could set up auto_reload in `prompt`? Given we need to hit that path to listen to the SSEs that will trigger it anyway.
-  if require("opencode.config").options.auto_reload then
-    require("opencode.reload").setup()
-  end
 end
 
 ---Send a prompt to opencode.
@@ -37,9 +31,9 @@ function M.prompt(prompt)
 
   prompt = require("opencode.context").inject(prompt, require("opencode.config").options.contexts)
 
+  -- WARNING: If user never prompts opencode via the plugin, we'll never receive SSEs or register auto_reload autocmds.
+  -- Could register `/plugin` and even periodically check, but is it worth the complexity?
   if server_port ~= sse_listening_port then
-    -- WARNING: If user never prompts opencode via the plugin, we'll never receive SSEs.
-    -- Could register in `setup` and even periodically check, but is it worth the complexity?
     require("opencode.client").sse_listen(server_port, function(response)
       vim.api.nvim_exec_autocmds("User", {
         pattern = "OpencodeEvent",
@@ -47,6 +41,10 @@ function M.prompt(prompt)
       })
     end)
     sse_listening_port = server_port
+  end
+
+  if require("opencode.config").options.auto_reload then
+    require("opencode.reload").setup()
   end
 
   require("opencode.client").tui_clear_prompt(server_port, function()

@@ -13,7 +13,6 @@ function M.setup()
   end
 
   vim.api.nvim_create_autocmd("User", {
-    -- Group to avoid stacking duplicates on reload
     group = vim.api.nvim_create_augroup("OpencodeAutoReload", { clear = true }),
     pattern = "OpencodeEvent",
     callback = function(args)
