@@ -34,6 +34,8 @@ function M.prompt(prompt)
   prompt = context.inject(prompt, config.options.context)
 
   if server_port ~= sse_listening_port then
+    -- WARNING: If user never prompts opencode via the plugin, we'll never receive SSEs.
+    -- Could register in `setup` and even periodically check, but is it worth the complexity?
     client.sse_listen(server_port, function(response)
       vim.api.nvim_exec_autocmds("User", {
         pattern = "OpencodeEvent",
