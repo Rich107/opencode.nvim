@@ -33,7 +33,7 @@ function M.prompt(prompt)
     return
   end
 
-  prompt = context.inject(prompt, config.options.context)
+  prompt = context.inject(prompt, config.options.contexts)
 
   if server_port ~= sse_listening_port then
     -- WARNING: If user never prompts opencode via the plugin, we'll never receive SSEs.

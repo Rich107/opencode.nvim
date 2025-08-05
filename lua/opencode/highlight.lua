@@ -32,7 +32,7 @@ function M.setup()
       end
 
       local text = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ""
-      local placeholders = vim.tbl_keys(config.options.context)
+      local placeholders = vim.tbl_keys(config.options.contexts)
       highlight_placeholders(bufnr, text, placeholders)
     end,
   })
