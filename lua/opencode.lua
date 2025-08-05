@@ -4,6 +4,7 @@ local config = require("opencode.config")
 local context = require("opencode.context")
 local client = require("opencode.client")
 local server = require("opencode.server")
+local highlight = require("opencode.highlight")
 
 -- Important to track the port, not just true/false,
 -- because opencode may have restarted (usually on a new port) while the plugin is running
@@ -12,6 +13,7 @@ local sse_listening_port = nil
 ---@param opts opencode.Config
 function M.setup(opts)
   config.setup(opts)
+  highlight.setup()
 
   for _, prompt in pairs(config.options.prompts) do
     if prompt.key then
