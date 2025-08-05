@@ -68,7 +68,7 @@ end
 
 ---@param port number
 ---@param callback fun(response: table)|nil
-function M.listen_sse(port, callback)
+function M.sse_listen(port, callback)
   curl(origin .. port .. "/event", "GET", nil, callback)
 end
 

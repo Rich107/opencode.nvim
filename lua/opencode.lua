@@ -5,7 +5,9 @@ local context = require("opencode.context")
 local client = require("opencode.client")
 local server = require("opencode.server")
 
-local is_listening_sse = false
+-- Important to track the port, not just true/false,
+-- because opencode may have restarted (usually on a new port) while the plugin is running
+local sse_listening_port = nil
 
 ---@param opts opencode.Config
 function M.setup(opts)
@@ -31,14 +33,14 @@ function M.prompt(prompt)
 
   prompt = context.inject(prompt, config.options.context)
 
-  if not is_listening_sse then
-    client.listen_sse(server_port, function(response)
+  if server_port ~= sse_listening_port then
+    client.sse_listen(server_port, function(response)
       vim.api.nvim_exec_autocmds("User", {
         pattern = "OpencodeEvent",
         data = response,
       })
     end)
-    is_listening_sse = true
+    sse_listening_port = server_port
   end
 
   client.tui_clear_prompt(server_port, function()
