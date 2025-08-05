@@ -19,7 +19,7 @@ https://github.com/user-attachments/assets/170fa3fa-cb21-4f76-9aed-aa51bf1963bf
 
 ## 🕵️ Context
 
-When your prompt contains placeholders, the plugin will replace them with context before sending:
+When your prompt contains placeholders, `opencode.nvim` will replace them with context before sending:
 
 | Placeholder | Context |
 | - | - |
@@ -142,13 +142,14 @@ Add custom contexts to `opts.contexts`. The below replaces `@grapple` with files
 }
 ```
 
-### Completion
+## ✍️ Completion
 
-The plugin offers context placeholder completions in the `ask` input.
+`opencode.nvim` offers context placeholder completions in the `ask` input.
 
-#### blink.cmp
+<details>
+<summary><a href="https://github.com/Saghen/blink.cmp">blink.cmp</a></summary>
 
-Add the following to your [blink.cmp](https://github.com/Saghen/blink.cmp) config:
+Add the following to your blink.cmp config:
 
 ```lua
 {
@@ -164,10 +165,14 @@ Add the following to your [blink.cmp](https://github.com/Saghen/blink.cmp) confi
   },
 }
 ```
+</details>
 
-#### Built-in
+<details>
+<summary>Built-in</summary>
 
 Press `<Tab>` to trigger Neovim's built-in completion.
+
+</details>
 
 ## 👀 Events
 
@@ -197,5 +202,5 @@ vim.api.nvim_create_autocmd("User", {
 ## 🙏 Acknowledgments
 
 - Inspired by (and partially based on) [nvim-aider](https://github.com/GeorgesAlkhouri/nvim-aider) and later [neopencode.nvim](https://github.com/loukotal/neopencode.nvim).
-- This plugin uses opencode's familiar TUI for simplicity — see [sudo-tee/opencode.nvim](https://github.com/sudo-tee/opencode.nvim) for a Neovim frontend.
+- `opencode.nvim` uses opencode's familiar TUI for simplicity — see [sudo-tee/opencode.nvim](https://github.com/sudo-tee/opencode.nvim) for a Neovim frontend.
 - [mcp-neovim-server](https://github.com/bigcodegen/mcp-neovim-server) may better suit you, but it lacks customization and tool calls are slow and unreliable.
