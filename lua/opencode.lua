@@ -15,6 +15,8 @@ function M.setup(opts)
   config.setup(opts)
   highlight.setup()
 
+  -- TODO: Hmm, this is problematic for lazy-loading.
+  -- May prefer to just demonstrate how to keymap configured prompts.
   for _, prompt in pairs(config.options.prompts) do
     if prompt.key then
       vim.keymap.set({ "n", "v" }, prompt.key, function()
