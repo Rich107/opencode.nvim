@@ -1,23 +1,17 @@
 local M = {}
 
-local config = require("opencode.config")
-local context = require("opencode.context")
-local client = require("opencode.client")
-local server = require("opencode.server")
-local highlight = require("opencode.highlight")
-
 -- Important to track the port, not just true/false,
 -- because opencode may have restarted (usually on a new port) while the plugin is running
 local sse_listening_port = nil
 
 ---@param opts opencode.Config
 function M.setup(opts)
-  config.setup(opts)
-  highlight.setup()
+  require("opencode.config").setup(opts)
+  require("opencode.highlight").setup()
 
   -- TODO: Hmm, this is problematic for lazy-loading.
   -- May prefer to just demonstrate how to keymap configured prompts.
-  for _, prompt in pairs(config.options.prompts) do
+  for _, prompt in pairs(require("opencode.config").options.prompts) do
     if prompt.key then
       vim.keymap.set({ "n", "v" }, prompt.key, function()
         M.prompt(prompt.prompt)
@@ -30,17 +24,17 @@ end
 ---Injects context before sending.
 ---@param prompt string
 function M.prompt(prompt)
-  local server_port = config.options.port or server.find_port()
+  local server_port = require("opencode.config").options.port or require("opencode.server").find_port()
   if not server_port then
     return
   end
 
-  prompt = context.inject(prompt, config.options.contexts)
+  prompt = require("opencode.context").inject(prompt, require("opencode.config").options.contexts)
 
   if server_port ~= sse_listening_port then
     -- WARNING: If user never prompts opencode via the plugin, we'll never receive SSEs.
     -- Could register in `setup` and even periodically check, but is it worth the complexity?
-    client.sse_listen(server_port, function(response)
+    require("opencode.client").sse_listen(server_port, function(response)
       vim.api.nvim_exec_autocmds("User", {
         pattern = "OpencodeEvent",
         data = response,
@@ -49,9 +43,9 @@ function M.prompt(prompt)
     sse_listening_port = server_port
   end
 
-  client.tui_clear_prompt(server_port, function()
-    client.tui_append_prompt(prompt, server_port, function()
-      client.tui_submit_prompt(server_port, function()
+  require("opencode.client").tui_clear_prompt(server_port, function()
+    require("opencode.client").tui_append_prompt(prompt, server_port, function()
+      require("opencode.client").tui_submit_prompt(server_port, function()
         -- ...
       end)
     end)
@@ -62,12 +56,12 @@ end
 ---See https://opencode.ai/docs/keybinds/ for available commands.
 ---@param command string
 function M.command(command)
-  local server_port = config.options.port or server.find_port()
+  local server_port = require("opencode.config").options.port or require("opencode.server").find_port()
   if not server_port then
     return
   end
 
-  client.tui_execute_command(command, server_port)
+  require("opencode.client").tui_execute_command(command, server_port)
 end
 
 ---Input a prompt to send to opencode.
@@ -75,7 +69,7 @@ end
 function M.ask(default)
   -- snacks.input supports completion and normal mode movement, unlike the standard vim.ui.input.
   require("snacks.input").input(
-    vim.tbl_deep_extend("force", config.options.input, {
+    vim.tbl_deep_extend("force", require("opencode.config").options.input, {
       default = default,
     }),
     function(value)
@@ -90,7 +84,7 @@ end
 function M.select_prompt()
   -- vim.tbl_values does not include nils, allowing users to remove built-in prompts.
   ---@type opencode.Prompt[]
-  local prompts = vim.tbl_values(config.options.prompts)
+  local prompts = vim.tbl_values(require("opencode.config").options.prompts)
 
   vim.ui.select(
     prompts,
@@ -112,8 +106,11 @@ end
 
 ---Toggle embedded opencode TUI.
 function M.toggle()
-  local port = config.options.port
-  require("snacks.terminal").toggle("opencode" .. (port and (" --port " .. port) or ""), config.options.terminal)
+  local port = require("opencode.config").options.port
+  require("snacks.terminal").toggle(
+    "opencode" .. (port and (" --port " .. port) or ""),
+    require("opencode.config").options.terminal
+  )
 end
 
 return M

@@ -1,7 +1,5 @@
 local M = {}
 
-local config = require("opencode.config")
-
 local function highlight_placeholders(bufnr, text, placeholders)
   local ns_id = vim.api.nvim_create_namespace("opencode_placeholders")
   vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
@@ -32,7 +30,7 @@ function M.setup()
       end
 
       local text = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ""
-      local placeholders = vim.tbl_keys(config.options.contexts)
+      local placeholders = vim.tbl_keys(require("opencode.config").options.contexts)
       highlight_placeholders(bufnr, text, placeholders)
     end,
   })

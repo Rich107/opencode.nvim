@@ -2,8 +2,6 @@
 --- @class blink.cmp.Source
 local source = {}
 
-local config = require("opencode.config")
-
 -- `opts` table comes from `sources.providers.your_provider.opts`
 -- You may also accept a second argument `config`, to get the full
 -- `sources.providers.your_provider` table
@@ -20,7 +18,7 @@ end
 function source:get_trigger_characters()
   -- Parse `config.options.context` to return all non-alphanumeric first characters in placeholders
   local trigger_chars = {}
-  for placeholder, _ in pairs(config.options.contexts) do
+  for placeholder, _ in pairs(require("opencode.config").options.contexts) do
     local first_char = placeholder:sub(1, 1)
     if not first_char:match("%w") and not vim.tbl_contains(trigger_chars, first_char) then
       table.insert(trigger_chars, first_char)
@@ -34,7 +32,7 @@ function source:get_completions(ctx, callback)
   -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#completionItem
   --- @type lsp.CompletionItem[]
   local items = {}
-  for placeholder, context in pairs(config.options.contexts) do
+  for placeholder, context in pairs(require("opencode.config").options.contexts) do
     --- @type lsp.CompletionItem
     local item = {
       label = placeholder,

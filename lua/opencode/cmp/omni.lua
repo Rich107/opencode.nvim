@@ -1,5 +1,3 @@
-local config = require("opencode.config")
-
 ---Generate completion items for snacks.input or customlist completion.
 ---This function finds the last word in the current command line and, for each matching
 ---placeholder in the config context, returns the entire command line with that word replaced.
@@ -19,7 +17,7 @@ return function(ArgLead, CmdLine, CursorPos)
   local latest_word = start_idx and CmdLine:sub(start_idx, end_idx) or nil
 
   local items = {}
-  for placeholder, _ in pairs(config.options.contexts) do
+  for placeholder, _ in pairs(require("opencode.config").options.contexts) do
     if not latest_word then
       local new_cmd = CmdLine .. placeholder
       table.insert(items, new_cmd)
