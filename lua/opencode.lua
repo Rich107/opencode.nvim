@@ -18,6 +18,12 @@ function M.setup(opts)
       end, { desc = prompt.description })
     end
   end
+
+  -- TODO: Ahh aside from auto_reload... not sure about that, because we need to wait for custom opts in case it's disabled.
+  -- I guess we could set up auto_reload in `prompt`? Given we need to hit that path to listen to the SSEs that will trigger it anyway.
+  if require("opencode.config").options.auto_reload then
+    require("opencode.reload").setup()
+  end
 end
 
 ---Send a prompt to opencode.

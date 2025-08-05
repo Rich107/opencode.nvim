@@ -107,10 +107,6 @@ M.options = vim.deepcopy(defaults)
 function M.setup(opts)
   M.options = vim.tbl_deep_extend("force", M.options, opts or {})
 
-  if M.options.auto_reload then
-    require("opencode.reload").setup()
-  end
-
   return M.options
 end
 
