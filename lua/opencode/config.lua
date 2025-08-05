@@ -2,11 +2,11 @@ local M = {}
 
 ---@class opencode.Config
 ---@field port? number The port opencode's server is running on. If `nil`, searches for an opencode process inside Neovim's CWD — usually you can leave this unset unless that fails. Embedded instances will automatically use this — launch external instances with `opencode --port <port>`.
----@field auto_reload? boolean Automatically reload buffers edited by opencode
----@field prompts? table<string, opencode.Prompt> Prompts to select from
----@field contexts? table<string, opencode.Context> Context to add to prompts
----@field input? snacks.input.Opts Input options — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md)
----@field terminal? snacks.terminal.Opts Terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md)
+---@field auto_reload? boolean Automatically reload buffers edited by opencode. Requires `vim.opt.autoread = true`.
+---@field prompts? table<string, opencode.Prompt> Prompts to select from.
+---@field contexts? table<string, opencode.Context> Contexts to inject into prompts.
+---@field input? snacks.input.Opts Input options — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md).
+---@field terminal? snacks.terminal.Opts Terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md).
 local defaults = {
   port = nil,
   auto_reload = true,
