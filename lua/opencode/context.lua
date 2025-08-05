@@ -1,11 +1,18 @@
 local M = {}
 
----Given a buffer number, returns the absolute file path, or nil if not associated with a file.
+---Given a buffer number, returns the file path relative to Neovim's CWD, or nil if not associated with a file.
+---Opencode seems to easily ignore directories in the path above its CWD, so it's okay to use paths relative to Neovim's CWD,
+---given that we verify the former is inside the latter.
+---Unless the user does something weird like set opts.port to an opencode running in an entirely different directory.
 ---@param bufnr number
 ---@return string|nil
 local function file_path(bufnr)
   local name = vim.api.nvim_buf_get_name(bufnr)
-  return name ~= "" and not name:match("^term://") and name or nil
+  if name == "" or name:match("^term://") then
+    return nil
+  end
+
+  return vim.fn.fnamemodify(name, ":.")
 end
 
 ---Inject context into a prompt.
