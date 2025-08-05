@@ -54,7 +54,7 @@ local defaults = {
   },
   input = {
     prompt = "Ask opencode",
-    icon = "󱚣",
+    icon = "󱚣 ",
     -- Built-in completion as fallback.
     -- It's okay to enable simultaneously with blink.cmp because built-in completion
     -- only triggers via <Tab> and blink.cmp keymaps take priority.
@@ -62,8 +62,8 @@ local defaults = {
     win = {
       title_pos = "left",
       relative = "cursor",
-      row = -3,
-      col = 0,
+      row = -3, -- Row above the cursor
+      col = -5, -- First input cell is directly above the cursor
       b = {
         -- Enable blink completion
         completion = true,
