@@ -7,7 +7,7 @@ https://github.com/user-attachments/assets/170fa3fa-cb21-4f76-9aed-aa51bf1963bf
 > [!NOTE]
 > Uses opencode's currently undocumented, likely unstable [API](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
 >
-> Latest tested opencode version: `v0.3.130`
+> Latest tested opencode version: `v0.3.131`
 
 ## ✨ Features
 
@@ -185,9 +185,9 @@ vim.api.nvim_create_autocmd("User", {
   callback = function(args)
     -- See the available event types and their properties
     vim.notify(vim.inspect(args.data), vim.log.levels.DEBUG)
-    -- Do something interesting, like show a notification when opencode updates a response
-    if args.data.type == "message.updated" then
-      vim.notify("opencode updated message", vim.log.levels.INFO)
+    -- Do something interesting, like show a notification when opencode finishes responding
+    if args.data.type == "session.idle" then
+      vim.notify("opencode finished responding", vim.log.levels.INFO)
     end
   end,
 })
