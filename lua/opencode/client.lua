@@ -54,7 +54,8 @@ local function curl(url, method, body, callback)
       end
     end,
     on_exit = function(_, code)
-      if code ~= 0 then
+      -- 18 means connection closed while there was more data to read, which happens occasionally with SSEs when we quit opencode. nbd.
+      if code ~= 0 and code ~= 18 then
         local error_message = "curl command failed with exit code: "
           .. code
           .. "\n\nstderr:\n"
