@@ -2,6 +2,23 @@
 --- @class blink.cmp.Source
 local source = {}
 
+local is_setup = false
+
+---@param sources string[]
+function source.setup(sources)
+  if is_setup then
+    return
+  end
+  is_setup = true
+
+  require("blink.cmp").add_source_provider("opencode", {
+    module = "opencode.cmp.blink",
+  })
+  for _, src in ipairs(sources) do
+    require("blink.cmp").add_filetype_source("opencode_ask", src)
+  end
+end
+
 -- `opts` table comes from `sources.providers.your_provider.opts`
 -- You may also accept a second argument `config`, to get the full
 -- `sources.providers.your_provider` table
@@ -52,7 +69,7 @@ function source:get_completions(ctx, callback)
   -- blink.cmp will show the results in the completion menu. Subsequent calls
   -- will append the results to the menu to support streaming results.
   --
-  -- NOTE: blink.cmp will mutate the items you return, so you must vim.deepcopy them
+  -- blink.cmp will mutate the items you return, so you must vim.deepcopy them
   -- before returning if you want to re-use them in the future (such as for caching)
   callback({
     items = items,

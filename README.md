@@ -81,7 +81,7 @@ programs.nixvim = {
 
 ## ⚙️ Configuration
 
-See all the available options and their defaults [here](./lua/opencode/config.lua#L10).
+See all the available options and their defaults [here](./lua/opencode/config.lua#L11).
 
 > [!TIP]
 > `opencode.nvim` offers a flexible [API](./lua/opencode.lua) — customize prompts, contexts, and keymaps to fit your workflow!
@@ -101,7 +101,7 @@ Add custom selectable prompts to `opts.prompts`:
 }
 ```
 
-Add keymaps for your favorite [built-in](./lua/opencode/config.lua#L13) or custom prompts:
+Add keymaps for your favorite [built-in](./lua/opencode/config.lua#L15) or custom prompts:
 
 ```lua
 local prompts = require('opencode.config').options.prompts or {}
@@ -144,29 +144,13 @@ Add custom contexts to `opts.contexts`. The below replaces `@grapple` with files
 <details>
 <summary><a href="https://github.com/Saghen/blink.cmp">blink.cmp</a></summary>
 
-Add the following to your blink.cmp config:
-
-```lua
-{
-  sources = {
-    providers = {
-      opencode = {
-          module = 'opencode.cmp.blink',
-      },
-    },
-    per_filetype = {
-      opencode_ask = { 'opencode', 'buffer' },
-    },
-  },
-}
-```
+`opencode.nvim` automatically registers `opts.auto_register_cmp_sources` (default: `{ "opencode", "buffer" }`) with `blink.cmp` (if loaded) at runtime.
 </details>
 
 <details>
 <summary>Built-in</summary>
 
 Press `<Tab>` to trigger Neovim's built-in completion.
-
 </details>
 
 ## 👀 Events

@@ -3,6 +3,7 @@ local M = {}
 ---@class opencode.Config
 ---@field port? number The port opencode's server is running on. If `nil`, searches for an opencode process inside Neovim's CWD — usually you can leave this unset unless that fails. Embedded instances will automatically use this — launch external instances with `opencode --port <port>`.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode. Requires `vim.opt.autoread = true`.
+---@field auto_register_cmp_sources? string[] Completion sources to automatically register with [blink.cmp](https://github.com/Saghen/blink.cmp) in the `ask` input.
 ---@field prompts? table<string, opencode.Prompt> Prompts to select from.
 ---@field contexts? table<string, opencode.Context> Contexts to inject into prompts.
 ---@field input? snacks.input.Opts Input options — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md).
@@ -10,6 +11,7 @@ local M = {}
 local defaults = {
   port = nil,
   auto_reload = true,
+  auto_register_cmp_sources = { "opencode", "buffer" },
   prompts = {
     ---@class opencode.Prompt
     ---@field description? string Description of the prompt
@@ -80,6 +82,17 @@ local defaults = {
       ---@param win snacks.win
       on_buf = function(win)
         require("opencode.highlight").setup(win.buf)
+
+        -- Wait as long as possible to check for blink.cmp loaded - many users lazy-load on `InsertEnter`.
+        -- OptionSet :runtimepath didn't seem to fire for lazy.nvim.
+        vim.api.nvim_create_autocmd("InsertEnter", {
+          buffer = win.buf,
+          callback = function()
+            if package.loaded["blink.cmp"] then
+              require("opencode.cmp.blink").setup(M.options.auto_register_cmp_sources)
+            end
+          end,
+        })
       end,
     },
   },
@@ -88,7 +101,7 @@ local defaults = {
     auto_insert = true,
     win = {
       position = "right",
-      -- I usually want to `toggle` and then immediately `ask` — seems like a sensible default
+      -- I usually want to `toggle` and then immediately `ask` - seems like a sensible default
       enter = false,
     },
     env = {
