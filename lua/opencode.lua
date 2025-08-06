@@ -21,7 +21,8 @@ function M.setup(opts)
 end
 
 ---Send a prompt to opencode.
----Injects context before sending.
+---Injects contexts before sending.
+---Listens for SSEs from opencode to forward as `OpencodeEvent` autocmd and, if enabled, sets up `auto_reload`.
 ---@param prompt string
 function M.prompt(prompt)
   local server_port = require("opencode.config").options.port or require("opencode.server").find_port()
