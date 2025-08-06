@@ -21,11 +21,9 @@ return function(ArgLead, CmdLine, CursorPos)
     if not latest_word then
       local new_cmd = CmdLine .. placeholder
       table.insert(items, new_cmd)
-    else
-      if placeholder:find(latest_word, 1, true) == 1 then
-        local new_cmd = CmdLine:sub(1, start_idx - 1) .. placeholder .. CmdLine:sub(end_idx + 1)
-        table.insert(items, new_cmd)
-      end
+    elseif placeholder:find(latest_word, 1, true) == 1 then
+      local new_cmd = CmdLine:sub(1, start_idx - 1) .. placeholder .. CmdLine:sub(end_idx + 1)
+      table.insert(items, new_cmd)
     end
   end
   return items
