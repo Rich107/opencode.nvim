@@ -4,25 +4,19 @@ local M = {}
 -- because opencode may have restarted (usually on a new port) while the plugin is running
 local sse_listening_port = nil
 
+---Set up the plugin with your configuration.
+---You don't need to call this if you use the default configuration - it does nothing else.
 ---@param opts opencode.Config
 function M.setup(opts)
+  -- What if we just received the relevant opts in each function?
+  -- But people have come to expect a `setup` function with global `opts`...
   require("opencode.config").setup(opts)
-
-  -- TODO: Hmm, this is problematic for lazy-loading.
-  -- May prefer to just demonstrate how to keymap configured prompts.
-  -- Without this, user wouldn't need to call `require("opencode").setup()` at all, aside from configuring options.
-  for _, prompt in pairs(require("opencode.config").options.prompts) do
-    if prompt.key then
-      vim.keymap.set({ "n", "v" }, prompt.key, function()
-        M.prompt(prompt.prompt)
-      end, { desc = prompt.description })
-    end
-  end
 end
 
 ---Send a prompt to opencode.
 ---Injects contexts before sending.
----Listens for SSEs from opencode to forward as `OpencodeEvent` autocmd and, if enabled, sets up `auto_reload`.
+---Starts listening for SSEs from opencode to forward as `OpencodeEvent` autocmd.
+---If enabled, sets up `auto_reload`.
 ---@param prompt string
 function M.prompt(prompt)
   local server_port = require("opencode.config").options.port or require("opencode.server").find_port()

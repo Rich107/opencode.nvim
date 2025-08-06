@@ -14,7 +14,6 @@ local defaults = {
     ---@class opencode.Prompt
     ---@field description? string Description of the prompt
     ---@field prompt? string The prompt to send to opencode, with placeholders for context like `@cursor`, `@buffer`, etc.
-    ---@field key? string Optional key to bind the prompt to a keymap
     explain = {
       description = "Explain code near cursor",
       prompt = "Explain @cursor and its context",

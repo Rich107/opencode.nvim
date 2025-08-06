@@ -96,23 +96,18 @@ Add custom selectable prompts to `opts.prompts`:
     joke = {
       description = 'Tell me a cat joke',
       prompt = 'Tell me a joke about cats. Make it funny, but not too funny.',
-      -- Map it to a key if you really like it!
-      key = '<leader>oj',
     },
   },
 }
 ```
 
-Add keymaps to [built-in prompts](./lua/opencode/config.lua#L13):
+Add keymaps for your favorite [built-in](./lua/opencode/config.lua#L13) or custom prompts:
 
 ```lua
-{
-  prompts = {
-    explain = {
-      key = '<leader>oe',
-    },
-  },
-}
+local prompts = require('opencode.config').options.prompts or {}
+vim.keymap.set('n', '<leader>oj', function() require('opencode').prompt(prompts.joke.prompt) end, { desc = prompts.joke.description })
+
+vim.keymap.set('v', '<leader>os', function() require('opencode').prompt("Tell me a story about cats and @selection") end, { desc = "Tell me a story" })
 ```
 
 ### Contexts
