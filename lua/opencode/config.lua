@@ -3,6 +3,7 @@ local M = {}
 ---@class opencode.Config
 ---@field port? number The port opencode's server is running on. If `nil`, searches for an opencode process inside Neovim's CWD — usually you can leave this unset unless that fails. Embedded instances will automatically use this — launch external instances with `opencode --port <port>`.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode. Requires `vim.opt.autoread = true`.
+---@field auto_fallback_to_embedded? boolean Automatically open an embedded opencode instance if none found when `prompt`ing.
 ---@field auto_register_cmp_sources? string[] Completion sources to automatically register with [blink.cmp](https://github.com/Saghen/blink.cmp) in the `ask` input.
 ---@field prompts? table<string, opencode.Prompt> Prompts to select from.
 ---@field contexts? table<string, opencode.Context> Contexts to inject into prompts.
@@ -11,6 +12,7 @@ local M = {}
 local defaults = {
   port = nil,
   auto_reload = true,
+  auto_fallback_to_embedded = true,
   auto_register_cmp_sources = { "opencode", "buffer" },
   prompts = {
     ---@class opencode.Prompt
@@ -99,6 +101,7 @@ local defaults = {
   terminal = {
     -- No reason to prefer normal mode - can't scroll TUI like a normal buffer
     auto_insert = true,
+    auto_close = true,
     win = {
       position = "right",
       -- I usually want to `toggle` and then immediately `ask` - seems like a sensible default

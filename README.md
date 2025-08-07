@@ -11,7 +11,7 @@ https://github.com/user-attachments/assets/be5c8545-c69d-456e-91a4-42acee7a49c1
 
 ## ✨ Features
 
-- Toggle an embedded `opencode` terminal or auto-find any `opencode` process running inside Neovim's CWD
+- Auto-find any `opencode` process running inside Neovim's CWD or open in an embedded terminal
 - Select and input customizable prompts
 - Inject customizable editor context
 - Auto-reload edited buffers
@@ -81,7 +81,7 @@ programs.nixvim = {
 
 ## ⚙️ Configuration
 
-See all the available options and their defaults [here](./lua/opencode/config.lua#L11).
+See all the available options and their defaults [here](./lua/opencode/config.lua#L12).
 
 > [!TIP]
 > `opencode.nvim` offers a flexible [API](./lua/opencode.lua) — customize prompts, contexts, and keymaps to fit your workflow!
@@ -101,7 +101,7 @@ Add custom selectable prompts to `opts.prompts`:
 }
 ```
 
-Add keymaps for your favorite [built-in](./lua/opencode/config.lua#L15) or custom prompts:
+Add keymaps for your favorite [built-in](./lua/opencode/config.lua#L17) or custom prompts:
 
 ```lua
 local prompts = require('opencode.config').options.prompts or {}

@@ -21,7 +21,7 @@ function M.setup()
         vim.cmd("checktime")
       end
     end,
-    desc = "Reload buffers when opencode edits a file",
+    desc = "Reload buffers edited by opencode",
   })
 end
 

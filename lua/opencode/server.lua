@@ -1,22 +1,16 @@
 local M = {}
 
 ---@param command string
----@return string|nil
+---@return string
 local function exec(command)
   if command:match("^lsof") and vim.fn.executable("lsof") == 0 then
     -- lsof is the only utility in this file that's not guaranteed to be available on all systems.
-    vim.notify(
-      "'lsof' command is not available. Please install it to auto-find the opencode server, or set opts.port.",
-      vim.log.levels.ERROR,
-      { title = "opencode" }
-    )
-    return nil
+    error("'lsof' command is not available — please install it to auto-find the opencode, or set opts.port", 0)
   end
 
   local handle = io.popen(command)
   if not handle then
-    vim.notify("Couldn't execute command: " .. command, vim.log.levels.ERROR, { title = "opencode" })
-    return nil
+    error("Couldn't execute command: " .. command, 0)
   end
 
   local output = handle:read("*a")
@@ -24,13 +18,12 @@ local function exec(command)
   return output
 end
 
----@return table<number>|nil
+---@return table<number>
 local function get_all_pids()
   -- Regex also allows flags like --port
   local output = exec("ps aux | grep -E 'opencode(\\s+--.*)?$' | grep -v grep | awk '{print $2}'")
   if not output then
-    vim.notify("Couldn't retrieve PIDs", vim.log.levels.ERROR, { title = "opencode" })
-    return nil
+    error("Couldn't retrieve PIDs", 0)
   end
 
   local pids = {}
@@ -45,25 +38,23 @@ end
 
 ---Beware: returns special values for some ports, e.g. 6969 = "acmsoda".
 ---@param pid number
----@return number|nil
+---@return number
 local function get_port(pid)
   local port = exec("lsof -p " .. pid .. " | grep LISTEN | grep TCP | awk '{print $9}' | cut -d: -f2")
   port = (port or ""):match("^%s*(.-)%s*$") -- trim whitespace
   if port == "" then
-    vim.notify("Couldn't determine opencode server's port", vim.log.levels.ERROR, { title = "opencode" })
-    return nil
+    error("Couldn't determine opencode's port", 0)
   end
-  return tonumber(port)
+  return tonumber(port) or error("Found opencode port is not a number: " .. port, 0)
 end
 
 ---@param pid number
----@return string|nil
+---@return string
 local function get_cwd(pid)
   local cwd = exec("lsof -a -p " .. pid .. " -d cwd | tail -1 | awk '{print $NF}'")
   cwd = (cwd or ""):match("^%s*(.-)%s*$") -- trim whitespace
   if cwd == "" then
-    vim.notify("Couldn't determine opencode server's CWD", vim.log.levels.ERROR, { title = "opencode" })
-    return nil
+    error("Couldn't determine opencode's CWD", 0)
   end
   return cwd
 end
@@ -80,26 +71,48 @@ local function find_pid_inside_neovim_cwd()
   end
 
   if not server_pid then
-    vim.notify(
-      "Couldn't find an opencode server process running inside Neovim's CWD",
-      vim.log.levels.ERROR,
-      { title = "opencode" }
-    )
-    return nil
+    error("Couldn't find an opencode process running inside Neovim's CWD", 0)
   end
 
   return server_pid
 end
 
 ---Find the port of an opencode server process running inside Neovim's CWD.
----@return number|nil
+---@return number
 function M.find_port()
-  local server_pid = find_pid_inside_neovim_cwd()
-  if not server_pid then
-    return nil
+  local ok, server_pid = pcall(find_pid_inside_neovim_cwd)
+  if not ok then
+    error(server_pid, 0)
   end
 
-  return get_port(server_pid)
+  local ok2, port = pcall(get_port, server_pid)
+  if not ok2 then
+    error(port, 0)
+  end
+
+  return port
+end
+
+---@param callback fun(ok: boolean, result?: number|string) Called with eventually found port or error if not found after some time.
+function M.poll_for_port(callback)
+  local retries = 0
+  local timer = vim.loop.new_timer()
+  timer:start(
+    100,
+    100,
+    vim.schedule_wrap(function()
+      local ok, port_result = pcall(M.find_port)
+      if ok then
+        timer:stop()
+        callback(true, port_result)
+      elseif retries >= 20 then
+        timer:stop()
+        callback(false, port_result)
+      else
+        retries = retries + 1
+      end
+    end)
+  )
 end
 
 return M
