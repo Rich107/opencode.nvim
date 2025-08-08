@@ -81,9 +81,6 @@ function M.visual_selection()
     start_line, end_line = end_line, start_line
   end
 
-  -- Exit visual mode now that we've "consumed" the selection
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
-
   return string.format("%s:L%d-%d", file_path(0), start_line, end_line)
 end
 
