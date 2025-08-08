@@ -8,7 +8,7 @@ local M = {}
 ---@return string|nil
 local function file_path(bufnr)
   local name = vim.api.nvim_buf_get_name(bufnr)
-  if name == "" or name:match("^term://") then
+  if name == "" then
     return nil
   end
 
@@ -43,7 +43,8 @@ function M.buffers()
   local file_list = {}
 
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_loaded(buf) then
+    local buftype = vim.api.nvim_get_option_value("buftype", { buf = buf })
+    if vim.api.nvim_buf_is_loaded(buf) and buftype ~= "prompt" and buftype ~= "terminal" then
       local rel_path = file_path(buf)
       if rel_path then
         table.insert(file_list, rel_path)
