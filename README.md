@@ -7,7 +7,7 @@ https://github.com/user-attachments/assets/be5c8545-c69d-456e-91a4-42acee7a49c1
 > [!NOTE]
 > Uses opencode's currently undocumented, likely unstable [API](https://github.com/sst/opencode/blob/dev/packages/opencode/src/server/server.ts).
 >
-> Latest tested opencode version: `v0.3.131`
+> Latest tested opencode version: `v0.4.1`
 
 ## ✨ Features
 
