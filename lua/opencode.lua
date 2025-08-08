@@ -127,9 +127,18 @@ end
 
 ---Select a prompt to send to opencode.
 function M.select_prompt()
-  -- vim.tbl_values does not include nils, allowing users to remove built-in prompts.
   ---@type opencode.Prompt[]
-  local prompts = vim.tbl_values(require("opencode.config").options.prompts)
+  local prompts = vim.tbl_filter(function(prompt)
+    local is_visual = vim.fn.mode():match("[vV\22]")
+    -- WARNING: Technically depends on user using built-in `@selection` context by name...
+    -- Could compare function references? Probably more trouble than it's worth.
+    local does_prompt_use_visual = prompt.prompt:match("@selection")
+    if is_visual then
+      return does_prompt_use_visual
+    else
+      return not does_prompt_use_visual
+    end
+  end, vim.tbl_values(require("opencode.config").options.prompts))
 
   vim.ui.select(
     prompts,
