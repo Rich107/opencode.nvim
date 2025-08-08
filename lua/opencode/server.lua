@@ -93,7 +93,7 @@ function M.find_port()
   return port
 end
 
----@param callback fun(ok: boolean, result?: number|string) Called with eventually found port or error if not found after some time.
+---@param callback fun(ok: boolean, result: any) Called with eventually found port or error if not found after some time.
 function M.poll_for_port(callback)
   local retries = 0
   local timer = vim.loop.new_timer()

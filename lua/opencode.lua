@@ -4,14 +4,37 @@ local M = {}
 -- because opencode may have restarted (usually on a new port) while the plugin is running
 local sse_listening_port = nil
 
-local function opencode_cmd()
-  local port = require("opencode.config").options.port
-  return "opencode" .. (port and (" --port " .. port) or "")
-end
+---Get the opencode port. Checks, in order:
+---1. `opts.port`.
+---2. The port of any opencode server running inside Neovim's CWD.
+---3. If `auto_fallback_to_embedded` is enabled, opens an embedded opencode terminal and polls for the port.
+---@param callback fun(ok: boolean, result: any)
+local function get_opencode_port(callback)
+  local configured_port = require("opencode.config").options.port
+  if configured_port then
+    callback(true, configured_port)
+    return
+  end
 
----@return number
-local function opencode_port()
-  return require("opencode.config").options.port or require("opencode.server").find_port()
+  local find_port_ok, find_port_result = pcall(require("opencode.server").find_port)
+  if find_port_ok then
+    callback(true, find_port_result)
+    return
+  end
+
+  if require("opencode.config").options.auto_fallback_to_embedded then
+    local win, created = require("opencode.terminal").get()
+    if not win then
+      callback(false, "Failed to open fallback embedded opencode terminal")
+    elseif created then
+      require("opencode.server").poll_for_port(function(ok, result)
+        callback(ok, result)
+      end)
+    end
+    return
+  end
+
+  callback(false, find_port_result)
 end
 
 ---Set up the plugin with your configuration.
@@ -26,69 +49,42 @@ end
 ---Send a prompt to opencode after injecting contexts.
 ---
 ---As the entry point to prompting, this function also:
----1. Opens an embedded opencode terminal if `auto_fallback_to_embedded` is enabled and an opencode port is not found.
+---1. Sets up `auto_reload` if enabled.
 ---2. Starts listening for SSEs from opencode to forward as `OpencodeEvent` autocmd.
----3. Sets up `auto_reload` if enabled.
 ---@param prompt string
 function M.prompt(prompt)
-  -- TODO: Maybe extract this whole thing (checking opts.port, synchronously finding, polling) to a local function?
-  -- With a callback that just receives port. So we don't have to concern how to get it here.
-  -- Then can reuse in `M.command` too.
-  local ok, opencode_port_result = pcall(opencode_port)
-  if not ok then
-    if require("opencode.config").options.auto_fallback_to_embedded then
-      local win, created = require("snacks.terminal").get(opencode_cmd(), require("opencode.config").options.terminal)
-      if not win then
-        vim.notify("Failed to auto-open fallback embedded opencode terminal", vim.log.levels.ERROR, {
-          title = "opencode",
-        })
-      elseif created then
-        require("opencode.server").poll_for_port(function()
-          -- Try again.
-          -- We simply re-enter the function to re-use its logic and error-handling.
-          -- Not sure that's readable though?
-          -- Won't infinitely loop because next time `created` will be false.
-          M.prompt(prompt)
-        end)
-        return
-      end
+  get_opencode_port(function(ok, result)
+    if not ok then
+      vim.notify(result, vim.log.levels.ERROR, { title = "opencode" })
+      return
     end
 
-    vim.notify(opencode_port_result, vim.log.levels.ERROR, { title = "opencode" })
-    return
-  end
+    prompt = require("opencode.context").inject(prompt, require("opencode.config").options.contexts)
 
-  prompt = require("opencode.context").inject(prompt, require("opencode.config").options.contexts)
+    -- WARNING: If user never prompts opencode via the plugin, we'll never receive SSEs or register auto_reload autocmds.
+    -- Could register in `/plugin` and even periodically check, but is it worth the complexity?
+    if require("opencode.config").options.auto_reload then
+      require("opencode.reload").setup()
+    end
+    if result ~= sse_listening_port then
+      require("opencode.client").sse_listen(result, function(response)
+        vim.api.nvim_exec_autocmds("User", {
+          pattern = "OpencodeEvent",
+          data = response,
+        })
+      end)
+      sse_listening_port = result
+    end
 
-  -- WARNING: If user never prompts opencode via the plugin, we'll never receive SSEs or register auto_reload autocmds.
-  -- Could register `/plugin` and even periodically check, but is it worth the complexity?
-  if require("opencode.config").options.auto_reload then
-    require("opencode.reload").setup()
-  end
-  if opencode_port_result ~= sse_listening_port then
-    require("opencode.client").sse_listen(opencode_port_result, function(response)
-      vim.api.nvim_exec_autocmds("User", {
-        pattern = "OpencodeEvent",
-        data = response,
-      })
-    end)
-    sse_listening_port = opencode_port_result
-  end
-
-  local opencode_win = require("snacks.terminal").get(
-    opencode_cmd(),
-    vim.tbl_deep_extend("force", require("opencode.config").options.terminal, { create = false })
-  )
-  if opencode_win then
     -- Noting unlikely edge case where the found port may be an external instance,
     -- but a simultaneously-open embedded instance will still confusingly show.
-    opencode_win:show()
-  end
+    require("opencode.terminal").show_if_exists()
 
-  require("opencode.client").tui_clear_prompt(opencode_port_result, function()
-    require("opencode.client").tui_append_prompt(prompt, opencode_port_result, function()
-      require("opencode.client").tui_submit_prompt(opencode_port_result, function()
-        --
+    require("opencode.client").tui_clear_prompt(result, function()
+      require("opencode.client").tui_append_prompt(prompt, result, function()
+        require("opencode.client").tui_submit_prompt(result, function()
+          --
+        end)
       end)
     end)
   end)
@@ -98,16 +94,19 @@ end
 ---See https://opencode.ai/docs/keybinds/ for available commands.
 ---@param command string
 function M.command(command)
-  -- TODO: Should this also implement auto_fallback_to_embedded?
-  -- TODO: Should `M.command` also register the SSE listener?
-  -- And even `auto_reload`? Only `input_*` commands would edit files, and hopefully the user uses `M.prompt` for that...
-  local ok, opencode_port_result = pcall(opencode_port)
-  if not ok then
-    vim.notify(opencode_port_result, vim.log.levels.ERROR, { title = "opencode" })
-    return
-  end
+  get_opencode_port(function(ok, result)
+    if not ok then
+      vim.notify(result, vim.log.levels.ERROR, { title = "opencode" })
+      return
+    end
 
-  require("opencode.client").tui_execute_command(command, opencode_port_result)
+    -- No need to register SSE or auto_reload here - commands trigger neither
+    -- (except maybe the `input_*` commands? but no reason for user to use those).
+
+    require("opencode.terminal").show_if_exists()
+
+    require("opencode.client").tui_execute_command(command, result)
+  end)
 end
 
 ---Input a prompt to send to opencode.
@@ -152,7 +151,7 @@ end
 
 ---Toggle embedded opencode TUI.
 function M.toggle()
-  return require("snacks.terminal").toggle(opencode_cmd(), require("opencode.config").options.terminal)
+  require("opencode.terminal").toggle()
 end
 
 return M
