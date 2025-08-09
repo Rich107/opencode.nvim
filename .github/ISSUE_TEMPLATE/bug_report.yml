@@ -30,6 +30,12 @@ body:
       placeholder: "MacOS 11.5"
     validations:
       required: true
+  - type: input
+    attributes:
+      label: "Opencode version (opencode -v)"
+      placeholder: "0.4.1"
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Describe the bug
