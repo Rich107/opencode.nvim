@@ -57,7 +57,10 @@ function source:get_completions(ctx, callback)
       filterText = placeholder,
       insertText = placeholder,
       insertTextFormat = vim.lsp.protocol.InsertTextFormat.PlainText,
-      documentation = context.description,
+      documentation = {
+        kind = "markdown",
+        value = context.description,
+      },
 
       -- There are some other fields you may want to explore which are blink.cmp
       -- specific, such as `score_offset` (blink.cmp.CompletionItem)
@@ -88,6 +91,19 @@ function source:get_completions(ctx, callback)
   -- (Optional) Return a function which cancels the request
   -- If you have long running requests, it's essential you support cancellation
   return function() end
+end
+
+function source:resolve(item, callback)
+  item = vim.deepcopy(item)
+  local context = require("opencode.config").options.contexts[item.label]
+
+  item.documentation.value = item.documentation.value
+    .. ":\n"
+    .. "```"
+    .. (context.value() or "nil")
+    .. "```"
+
+  callback(item)
 end
 
 return source
