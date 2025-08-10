@@ -59,6 +59,15 @@ local function get_cwd(pid)
   return cwd
 end
 
+local function is_child_process(pid)
+  local output = exec("ps -o ppid= -p " .. pid)
+  local parent_pid = tonumber(output:match("^%s*(.-)%s*$")) -- trim whitespace
+  if not parent_pid then
+    error("Couldn't determine parent PID for: " .. pid, 0)
+  end
+  return parent_pid == vim.fn.getpid()
+end
+
 local function find_pid_inside_neovim_cwd()
   local server_pid
   for _, pid in ipairs(get_all_pids() or {}) do
@@ -66,7 +75,10 @@ local function find_pid_inside_neovim_cwd()
     -- CWDs match exactly, or opencode's CWD is under neovim's CWD.
     if opencode_cwd and opencode_cwd:find(vim.fn.getcwd(), 1, true) == 1 then
       server_pid = pid
-      break
+      if is_child_process(pid) then
+        -- Prioritize embedded
+        break
+      end
     end
   end
 
