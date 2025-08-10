@@ -51,6 +51,7 @@ local defaults = {
     ["@buffers"] = { value = require("opencode.context").buffers, description = "Open buffers" },
     ["@cursor"] = { value = require("opencode.context").cursor_position, description = "Cursor position" },
     ["@selection"] = { value = require("opencode.context").visual_selection, description = "Selected text" },
+    ["@visible"] = { value = require("opencode.context").visible_text, description = "Visible text" },
     ["@diagnostic"] = {
       value = function()
         return require("opencode.context").diagnostics(true)

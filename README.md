@@ -27,6 +27,7 @@ When your prompt contains placeholders, `opencode.nvim` will replace them with c
 | `@buffers` | Open buffers |
 | `@cursor` | Cursor position |
 | `@selection` | Selected text |
+| `@visible` | Visible text |
 | `@diagnostic` | Current line diagnostics |
 | `@diagnostics` | Current buffer diagnostics |
 | `@quickfix` | Quickfix list |

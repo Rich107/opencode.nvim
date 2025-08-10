@@ -4,24 +4,20 @@ local function is_buf_valid(buf)
   return vim.api.nvim_buf_is_loaded(buf) and vim.api.nvim_get_option_value("buftype", { buf = buf }) == ""
 end
 
-local function valid_wins()
-  return vim.tbl_filter(function(win)
-    local buf = vim.api.nvim_win_get_buf(win)
-    return is_buf_valid(buf)
-  end, vim.api.nvim_list_wins())
-end
-
 -- While focusing the input and calling contexts for completion documentation,
 -- the input will be the current window. So, find the last used "valid" window.
 local function last_used_valid_win()
   local last_used_win = 0
   local latest_lastused = 0
 
-  for _, win in ipairs(valid_wins()) do
-    local last_used = vim.fn.getbufinfo(vim.api.nvim_win_get_buf(win))[1].lastused or 0
-    if last_used > latest_lastused then
-      latest_lastused = last_used
-      last_used_win = win
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if is_buf_valid(buf) then
+      local last_used = vim.fn.getbufinfo(buf)[1].lastused or 0
+      if last_used > latest_lastused then
+        latest_lastused = last_used
+        last_used_win = win
+      end
     end
   end
 
@@ -72,9 +68,9 @@ function M.buffers()
 
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if is_buf_valid(buf) then
-      local rel_path = file_path(buf)
-      if rel_path then
-        table.insert(file_list, rel_path)
+      local path = file_path(buf)
+      if path then
+        table.insert(file_list, path)
       end
     end
   end
@@ -101,6 +97,11 @@ end
 ---@return string|nil
 function M.visual_selection()
   local is_visual = vim.fn.mode():match("[vV\22]")
+  local path = file_path(vim.api.nvim_win_get_buf(last_used_valid_win()))
+  if not path then
+    return nil
+  end
+
   -- Need to change our getpos arg when in visual mode because '< and '> update upon exiting visual mode, not during.
   -- Whereas snacks.input clears visual mode, so we need to get the now-set range.
   local _, start_line = unpack(vim.api.nvim_win_call(last_used_valid_win(), function()
@@ -114,7 +115,28 @@ function M.visual_selection()
     start_line, end_line = end_line, start_line
   end
 
-  return string.format("%s:L%d-%d", file_path(vim.api.nvim_win_get_buf(last_used_valid_win())), start_line, end_line)
+  return string.format("%s:L%d-%d", path, start_line, end_line)
+end
+
+function M.visible_text()
+  local visible = {}
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    if is_buf_valid(buf) then
+      local path = file_path(buf)
+      if path then
+        local start_line = vim.fn.line("w0", win)
+        local end_line = vim.fn.line("w$", win)
+        table.insert(visible, string.format("%s:L%d-%d", path, start_line, end_line))
+      end
+    end
+  end
+
+  if #visible == 0 then
+    return nil
+  end
+
+  return table.concat(visible, ", ")
 end
 
 ---Formatted diagnostics for the current buffer.
