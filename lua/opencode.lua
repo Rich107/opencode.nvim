@@ -76,8 +76,6 @@ function M.prompt(prompt)
       sse_listening_port = result
     end
 
-    -- Noting unlikely edge case where the found port may be an external instance,
-    -- but a simultaneously-open embedded instance will still confusingly show.
     require("opencode.terminal").show_if_exists()
 
     require("opencode.client").tui_clear_prompt(result, function()
