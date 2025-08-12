@@ -26,12 +26,13 @@ local function get_opencode_port(callback)
     local win, created = require("opencode.terminal").get()
     if not win then
       callback(false, "Failed to open fallback embedded opencode terminal")
+      return
     elseif created then
       require("opencode.server").poll_for_port(function(ok, result)
         callback(ok, result)
       end)
+      return
     end
-    return
   end
 
   callback(false, find_port_result)
