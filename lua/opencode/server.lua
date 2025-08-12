@@ -36,11 +36,10 @@ local function get_all_pids()
   return pids
 end
 
----Beware: returns special values for some ports, e.g. 6969 = "acmsoda".
 ---@param pid number
 ---@return number
 local function get_port(pid)
-  local port = exec("lsof -p " .. pid .. " | grep LISTEN | grep TCP | awk '{print $9}' | cut -d: -f2")
+  local port = exec("lsof -P -p " .. pid .. " | grep LISTEN | grep TCP | awk '{print $9}' | cut -d: -f2")
   port = (port or ""):match("^%s*(.-)%s*$") -- trim whitespace
   if port == "" then
     error("Couldn't determine opencode's port", 0)
