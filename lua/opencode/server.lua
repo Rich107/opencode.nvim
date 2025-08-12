@@ -21,7 +21,7 @@ end
 ---@return table<number>
 local function get_all_pids()
   -- Regex also allows flags like --port
-  local output = exec("ps aux | grep -E 'opencode(\\s+--.*)?$' | grep -v grep | awk '{print $2}'")
+  local output = exec("ps -o pid,comm | awk '$2 == \"opencode\" {print $1}'")
   if not output then
     error("Couldn't retrieve PIDs", 0)
   end
@@ -59,13 +59,25 @@ local function get_cwd(pid)
   return cwd
 end
 
-local function is_child_process(pid)
-  local output = exec("ps -o ppid= -p " .. pid)
-  local parent_pid = tonumber(output:match("^%s*(.-)%s*$")) -- trim whitespace
-  if not parent_pid then
-    error("Couldn't determine parent PID for: " .. pid, 0)
+local function is_descendant_of_neovim(pid)
+  local neovim_pid = vim.fn.getpid()
+  local current_pid = pid
+
+  -- Walk up because the way some shells launch processes,
+  -- Neovim will not be the direct parent.
+  for _ = 1, 10 do -- limit to 10 steps to avoid infinite loop
+    local output = exec("ps -o ppid= -p " .. current_pid)
+    local parent_pid = tonumber((output or ""):match("^%s*(.-)%s*$"))
+    if not parent_pid or parent_pid == 1 then
+      return false
+    end
+    if parent_pid == neovim_pid then
+      return true
+    end
+    current_pid = parent_pid
   end
-  return parent_pid == vim.fn.getpid()
+
+  return false
 end
 
 local function find_pid_inside_neovim_cwd()
@@ -75,7 +87,7 @@ local function find_pid_inside_neovim_cwd()
     -- CWDs match exactly, or opencode's CWD is under neovim's CWD.
     if opencode_cwd and opencode_cwd:find(vim.fn.getcwd(), 1, true) == 1 then
       server_pid = pid
-      if is_child_process(pid) then
+      if is_descendant_of_neovim(pid) then
         -- Prioritize embedded
         break
       end
