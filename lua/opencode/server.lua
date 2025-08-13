@@ -20,7 +20,7 @@ end
 
 ---@return table<number>
 local function get_all_pids()
-  local output = exec("ps -o pid,comm | awk '$2 == \"opencode\" {print $1}'")
+  local output = exec("ps -e -o pid,comm | awk '$2 == \"opencode\" {print $1}'")
   if not output then
     error("Couldn't retrieve PIDs", 0)
   end
@@ -64,7 +64,7 @@ local function is_descendant_of_neovim(pid)
   -- Walk up because the way some shells launch processes,
   -- Neovim will not be the direct parent.
   for _ = 1, 10 do -- limit to 10 steps to avoid infinite loop
-    local output = exec("ps -o ppid= -p " .. current_pid)
+    local output = exec("ps -e -o ppid= -p " .. current_pid)
     local parent_pid = tonumber((output or ""):match("^%s*(.-)%s*$"))
     if not parent_pid or parent_pid == 1 then
       return false
