@@ -5,10 +5,12 @@ local function opencode_cmd()
   return "opencode" .. (port and (" --port " .. port) or "")
 end
 
+---@return snacks.win?, boolean?
 function M.toggle()
   return require("snacks.terminal").toggle(opencode_cmd(), require("opencode.config").options.terminal)
 end
 
+---@return snacks.win?, boolean?
 function M.get()
   return require("snacks.terminal").get(opencode_cmd(), require("opencode.config").options.terminal)
 end
