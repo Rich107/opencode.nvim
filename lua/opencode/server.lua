@@ -20,7 +20,6 @@ end
 
 ---@return table<number>
 local function get_all_pids()
-  -- Regex also allows flags like --port
   local output = exec("ps -o pid,comm | awk '$2 == \"opencode\" {print $1}'")
   if not output then
     error("Couldn't retrieve PIDs", 0)
