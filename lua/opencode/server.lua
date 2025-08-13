@@ -5,7 +5,7 @@ local M = {}
 local function exec(command)
   if command:match("^lsof") and vim.fn.executable("lsof") == 0 then
     -- lsof is the only utility in this file that's not guaranteed to be available on all systems.
-    error("'lsof' command is not available — please install it to auto-find the opencode, or set opts.port", 0)
+    error("'lsof' command is not available — please install it to auto-find opencode, or set opts.port", 0)
   end
 
   local handle = io.popen(command)
@@ -21,16 +21,17 @@ end
 ---@return table<number>
 local function get_all_pids()
   local output = exec("ps -e -o pid,comm | awk '$2 == \"opencode\" {print $1}'")
-  if not output then
-    error("Couldn't retrieve PIDs", 0)
+  if output == "" then
+    error("Couldn't find any opencode processes", 0)
   end
 
   local pids = {}
   for pid_str in output:gmatch("[^\r\n]+") do
-    local pid = tonumber(pid_str:match("^%s*(.-)%s*$"))
-    if pid then
-      table.insert(pids, pid)
+    local pid = tonumber(pid_str)
+    if not pid then
+      error("Found opencode PID is not a number: " .. pid_str, 0)
     end
+    table.insert(pids, pid)
   end
   return pids
 end
@@ -38,19 +39,17 @@ end
 ---@param pid number
 ---@return number
 local function get_port(pid)
-  local port = exec("lsof -P -p " .. pid .. " | grep LISTEN | grep TCP | awk '{print $9}' | cut -d: -f2")
-  port = (port or ""):match("^%s*(.-)%s*$") -- trim whitespace
-  if port == "" then
+  local port = tonumber(exec("lsof -P -p " .. pid .. " | grep LISTEN | grep TCP | awk '{print $9}' | cut -d: -f2"))
+  if not port then
     error("Couldn't determine opencode's port", 0)
   end
-  return tonumber(port) or error("Found opencode port is not a number: " .. port, 0)
+  return port
 end
 
 ---@param pid number
 ---@return string
 local function get_cwd(pid)
   local cwd = exec("lsof -a -p " .. pid .. " -d cwd | tail -1 | awk '{print $NF}'")
-  cwd = (cwd or ""):match("^%s*(.-)%s*$") -- trim whitespace
   if cwd == "" then
     error("Couldn't determine opencode's CWD", 0)
   end
@@ -64,14 +63,17 @@ local function is_descendant_of_neovim(pid)
   -- Walk up because the way some shells launch processes,
   -- Neovim will not be the direct parent.
   for _ = 1, 10 do -- limit to 10 steps to avoid infinite loop
-    local output = exec("ps -e -o ppid= -p " .. current_pid)
-    local parent_pid = tonumber((output or ""):match("^%s*(.-)%s*$"))
-    if not parent_pid or parent_pid == 1 then
-      return false
+    local parent_pid = tonumber(exec("ps -o ppid= -p " .. current_pid))
+    if not parent_pid then
+      error("Couldn't determine parent PID for: " .. current_pid, 0)
     end
-    if parent_pid == neovim_pid then
+
+    if parent_pid == 1 then
+      return false
+    elseif parent_pid == neovim_pid then
       return true
     end
+
     current_pid = parent_pid
   end
 
