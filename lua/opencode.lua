@@ -111,17 +111,9 @@ end
 ---Input a prompt to send to opencode.
 ---@param default? string Text to prefill the input with.
 function M.ask(default)
-  -- snacks.input supports completion and normal mode movement, unlike the standard vim.ui.input.
-  require("snacks.input").input(
-    vim.tbl_deep_extend("force", require("opencode.config").options.input, {
-      default = default,
-    }),
-    function(value)
-      if value and value ~= "" then
-        M.prompt(value)
-      end
-    end
-  )
+  require("opencode.input").show(default, function(value)
+    M.prompt(value)
+  end)
 end
 
 ---Select a prompt to send to opencode.
