@@ -20,12 +20,22 @@ end
 
 ---@return Server[]
 local function find_servers()
-  -- Going straight to `lsof` relieves us of parsing the less portable `ps` command and all the 'opencode'-containing processes it might return.
+  -- Going straight to `lsof` relieves us of parsing `ps` and all the non-portable 'opencode'-containing processes it might return.
   -- With these flags, we'll only get processes that are listening on TCP ports and have 'opencode' in their command name.
   -- i.e. pretty much guaranteed to be just opencode server processes.
   local output = exec("lsof -iTCP -sTCP:LISTEN -P -n | grep opencode")
   if output == "" then
     error("Couldn't find any opencode processes", 0)
+  end
+
+  ---@param pid number
+  ---@return string
+  local function get_cwd(pid)
+    local cwd = exec("lsof -a -p " .. pid .. " -d cwd | tail -1 | awk '{print $NF}'")
+    if cwd == "" then
+      error("Couldn't determine CWD for PID: " .. pid, 0)
+    end
+    return cwd
   end
 
   local servers = {}
@@ -42,24 +52,15 @@ local function find_servers()
       ---@class Server
       ---@field pid number
       ---@field port number
+      ---@field cwd string
       {
         pid = pid,
         port = port,
+        cwd = get_cwd(pid),
       }
     )
   end
   return servers
-end
-
----@param pid number
----@return string
-local function get_cwd(pid)
-  -- TODO: Might be include-able in the find_servers's lsof?
-  local cwd = exec("lsof -a -p " .. pid .. " -d cwd | tail -1 | awk '{print $NF}'")
-  if cwd == "" then
-    error("Couldn't determine opencode's CWD", 0)
-  end
-  return cwd
 end
 
 local function is_descendant_of_neovim(pid)
@@ -87,14 +88,15 @@ local function is_descendant_of_neovim(pid)
 end
 
 ---@return Server
-local function find_server_inside_neovim_cwd()
+local function find_server_inside_nvim_cwd()
   local found_server
+  local nvim_cwd = vim.fn.getcwd()
   for _, server in ipairs(find_servers()) do
-    local opencode_cwd = get_cwd(server.pid)
     -- CWDs match exactly, or opencode's CWD is under neovim's CWD.
-    if opencode_cwd and opencode_cwd:find(vim.fn.getcwd(), 1, true) == 1 then
+    if server.cwd:find(nvim_cwd, 1, true) == 1 then
       found_server = server
       if is_descendant_of_neovim(server.pid) then
+        -- Stop searching to prioritize embedded
         break
       end
     end
@@ -110,7 +112,7 @@ end
 ---Find the port of an opencode server process running inside Neovim's CWD.
 ---@return number
 function M.find_port()
-  return find_server_inside_neovim_cwd().port
+  return find_server_inside_nvim_cwd().port
 end
 
 ---@param callback fun(ok: boolean, result: any) Called with eventually found port or error if not found after some time.
