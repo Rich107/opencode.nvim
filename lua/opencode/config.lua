@@ -22,10 +22,6 @@ local defaults = {
       description = "Explain code near cursor",
       prompt = "Explain @cursor and its context",
     },
-    review = {
-      description = "Review buffer",
-      prompt = "Review @buffer for correctness and readability",
-    },
     fix = {
       description = "Fix diagnostics",
       prompt = "Fix these @diagnostics",
@@ -41,6 +37,14 @@ local defaults = {
     test = {
       description = "Add tests for selection",
       prompt = "Add tests for @selection",
+    },
+    review_file = {
+      description = "Review buffer",
+      prompt = "Review @buffer for correctness and readability",
+    },
+    review_diff = {
+      description = "Review git diff",
+      prompt = "Review the following git diff for correctness and readability:\n@diff",
     },
   },
   contexts = {
