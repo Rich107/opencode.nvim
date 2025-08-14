@@ -6,7 +6,7 @@ local sse_listening_port = nil
 
 ---Get the opencode port. Checks, in order:
 ---1. `opts.port`.
----2. The port of any opencode server running inside Neovim's CWD.
+---2. The port of any opencode server running inside Neovim's CWD, prioritizing embedded terminals.
 ---3. If `auto_fallback_to_embedded` is enabled, opens an embedded opencode terminal and polls for the port.
 ---@param callback fun(ok: boolean, result: any)
 local function get_opencode_port(callback)
