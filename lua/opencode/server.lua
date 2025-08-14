@@ -18,37 +18,43 @@ local function exec(command)
   return output
 end
 
----@return table<number>
-local function get_all_pids()
-  local output = exec("ps -e -o pid,comm | awk '$2 == \"opencode\" {print $1}'")
+---@return Server[]
+local function find_servers()
+  -- Going straight to `lsof` relieves us of parsing the less portable `ps` command and all the 'opencode'-containing processes it might return.
+  -- With these flags, we'll only get processes that are listening on TCP ports and have 'opencode' in their command name.
+  -- i.e. pretty much guaranteed to be just opencode server processes.
+  local output = exec("lsof -iTCP -sTCP:LISTEN -P -n | grep opencode")
   if output == "" then
     error("Couldn't find any opencode processes", 0)
   end
 
-  local pids = {}
-  for pid_str in output:gmatch("[^\r\n]+") do
-    local pid = tonumber(pid_str)
-    if not pid then
-      error("Found opencode PID is not a number: " .. pid_str, 0)
+  local servers = {}
+  for line in output:gmatch("[^\r\n]+") do
+    -- lsof output: COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME
+    local parts = vim.split(line, "%s+")
+    local pid = tonumber(parts[2])
+    local port = tonumber(parts[9]:match(":(%d+)$")) -- Extract port from NAME field (which is e.g. "127.0.0.1:12345")
+    if not pid or not port then
+      error("Couldn't parse opencode PID and port from 'lsof' entry: " .. line, 0)
     end
-    table.insert(pids, pid)
+    table.insert(
+      servers,
+      ---@class Server
+      ---@field pid number
+      ---@field port number
+      {
+        pid = pid,
+        port = port,
+      }
+    )
   end
-  return pids
-end
-
----@param pid number
----@return number
-local function get_port(pid)
-  local port = tonumber(exec("lsof -P -p " .. pid .. " | grep LISTEN | grep TCP | awk '{print $9}' | cut -d: -f2"))
-  if not port then
-    error("Couldn't determine opencode's port", 0)
-  end
-  return port
+  return servers
 end
 
 ---@param pid number
 ---@return string
 local function get_cwd(pid)
+  -- TODO: Might be include-able in the find_servers's lsof?
   local cwd = exec("lsof -a -p " .. pid .. " -d cwd | tail -1 | awk '{print $NF}'")
   if cwd == "" then
     error("Couldn't determine opencode's CWD", 0)
@@ -80,41 +86,31 @@ local function is_descendant_of_neovim(pid)
   return false
 end
 
-local function find_pid_inside_neovim_cwd()
-  local server_pid
-  for _, pid in ipairs(get_all_pids() or {}) do
-    local opencode_cwd = get_cwd(pid)
+---@return Server
+local function find_server_inside_neovim_cwd()
+  local found_server
+  for _, server in ipairs(find_servers()) do
+    local opencode_cwd = get_cwd(server.pid)
     -- CWDs match exactly, or opencode's CWD is under neovim's CWD.
     if opencode_cwd and opencode_cwd:find(vim.fn.getcwd(), 1, true) == 1 then
-      server_pid = pid
-      if is_descendant_of_neovim(pid) then
-        -- Prioritize embedded
+      found_server = server
+      if is_descendant_of_neovim(server.pid) then
         break
       end
     end
   end
 
-  if not server_pid then
+  if not found_server then
     error("Couldn't find an opencode process running inside Neovim's CWD", 0)
   end
 
-  return server_pid
+  return found_server
 end
 
 ---Find the port of an opencode server process running inside Neovim's CWD.
 ---@return number
 function M.find_port()
-  local ok, server_pid = pcall(find_pid_inside_neovim_cwd)
-  if not ok then
-    error(server_pid, 0)
-  end
-
-  local ok2, port = pcall(get_port, server_pid)
-  if not ok2 then
-    error(port, 0)
-  end
-
-  return port
+  return find_server_inside_neovim_cwd().port
 end
 
 ---@param callback fun(ok: boolean, result: any) Called with eventually found port or error if not found after some time.
