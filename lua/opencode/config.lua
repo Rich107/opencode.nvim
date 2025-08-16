@@ -93,6 +93,7 @@ local defaults = {
         -- Wait as long as possible to check for blink.cmp loaded - many users lazy-load on `InsertEnter`.
         -- OptionSet :runtimepath didn't seem to fire for lazy.nvim.
         vim.api.nvim_create_autocmd("InsertEnter", {
+          once = true,
           buffer = win.buf,
           callback = function()
             if package.loaded["blink.cmp"] then
