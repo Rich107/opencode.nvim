@@ -122,14 +122,14 @@ function M.get_port(callback)
     return
   end
 
-  local ok, find_server_result = pcall(find_server_inside_nvim_cwd)
-  if ok then
+  local found_server, find_server_result = pcall(find_server_inside_nvim_cwd)
+  if found_server then
     callback(true, find_server_result.port)
     return
   end
 
-  local on_opencode_not_found = require("opencode.config").options.on_opencode_not_found
-  if on_opencode_not_found ~= nil and on_opencode_not_found() == true then
+  local ok, should_poll = pcall(require("opencode.config").options.on_opencode_not_found)
+  if ok and should_poll then
     poll_for_port(callback)
     return
   end

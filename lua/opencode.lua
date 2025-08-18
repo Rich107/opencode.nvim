@@ -43,7 +43,7 @@ function M.prompt(prompt)
       sse_listening_port = result
     end
 
-    require("opencode.terminal").show_if_exists()
+    pcall(require("opencode.config").options.on_send)
 
     require("opencode.client").tui_clear_prompt(result, function()
       require("opencode.client").tui_append_prompt(prompt, result, function()
@@ -68,7 +68,7 @@ function M.command(command)
     -- No need to register SSE or auto_reload here - commands trigger neither
     -- (except maybe the `input_*` commands? but no reason for user to use those).
 
-    require("opencode.terminal").show_if_exists()
+    pcall(require("opencode.config").options.on_send)
 
     require("opencode.client").tui_execute_command(command, result)
   end)
