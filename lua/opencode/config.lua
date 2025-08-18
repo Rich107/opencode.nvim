@@ -8,8 +8,8 @@ local M = {}
 ---@field on_send? fun() Called when a prompt or command is sent to opencode.
 ---@field prompts? table<string, opencode.Prompt> Prompts to select from.
 ---@field contexts? table<string, opencode.Context> Contexts to inject into prompts.
----@field input? snacks.input.Opts Input options for `ask` — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md).
----@field terminal? snacks.terminal.Opts Embedded terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md).
+---@field input? snacks.input.Opts Input options for `ask` — uses [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md) if enabled.
+---@field terminal? snacks.terminal.Opts Embedded terminal options — uses [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md).
 local defaults = {
   port = nil,
   auto_reload = true,
@@ -81,7 +81,7 @@ local defaults = {
     ["@diff"] = { description = "Git diff", value = require("opencode.context").git_diff },
   },
   input = {
-    prompt = "Ask opencode",
+    prompt = "Ask opencode: ",
     icon = "󱚣 ",
     -- Built-in completion as fallback.
     -- It's okay to enable simultaneously with blink.cmp because built-in completion
@@ -91,7 +91,7 @@ local defaults = {
       title_pos = "left",
       relative = "cursor",
       row = -3, -- Row above the cursor
-      col = -5, -- First input cell is directly above the cursor
+      col = -5, -- Position first input cell directly above the cursor
       b = {
         -- Enable blink completion
         completion = true,

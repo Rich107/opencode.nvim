@@ -2,10 +2,9 @@ local M = {}
 
 ---Highlights context placeholders in the input string.
 ---See `:help input()-highlight`.
----Public in case users want to use it in their own custom input UIs.
 ---@param input string
 ---@return table[]
-function M.highlight(input)
+local function highlight(input)
   local placeholders = vim.tbl_keys(require("opencode.config").options.contexts)
   local hls = {}
 
@@ -36,11 +35,13 @@ end
 
 ---@param default? string
 ---@param on_confirm fun(value: string|nil)
-function M.show(default, on_confirm)
-  -- snacks.input lets us provide completions, highlighting, and normal mode movement for better UX
-  require("snacks.input").input(
+function M.input(default, on_confirm)
+  -- Recommended configuration uses snacks.input (for completions and normal-mode movement),
+  -- so we pass options for it too, not just for vim.ui.input.
+  vim.ui.input(
     vim.tbl_deep_extend("force", require("opencode.config").options.input, {
       default = default,
+      highlight = highlight,
       win = {
         -- Do some setup. Not in default config object for brevity, and I don't expect users to modify this.
         on_buf = function(win)
@@ -56,13 +57,13 @@ function M.show(default, on_confirm)
             end,
           })
 
-          -- snacks.input doesn't seem to actually call `opts.highlight`... so highlight the buffer ourselves
+          -- snacks.input doesn't seem to actually call `opts.highlight`... so highlight its buffer ourselves
           vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufWinEnter" }, {
             group = vim.api.nvim_create_augroup("OpencodeAskHighlight", { clear = true }),
             buffer = win.buf,
             callback = function(args)
               local input = vim.api.nvim_buf_get_lines(args.buf, 0, 1, false)[1] or ""
-              local hls = M.highlight(input)
+              local hls = highlight(input)
 
               local ns_id = vim.api.nvim_create_namespace("opencode_placeholders")
               vim.api.nvim_buf_clear_namespace(args.buf, ns_id, 0, -1)

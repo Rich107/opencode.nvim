@@ -77,7 +77,7 @@ end
 ---Input a prompt to send to opencode.
 ---@param default? string Text to prefill the input with.
 function M.ask(default)
-  require("opencode.input").show(default, function(value)
+  require("opencode.input").input(default, function(value)
     if value and value ~= "" then
       M.prompt(value)
     end
