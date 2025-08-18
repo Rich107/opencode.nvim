@@ -86,22 +86,6 @@ local defaults = {
         -- Custom filetype to configure blink with
         filetype = "opencode_ask",
       },
-      ---@param win snacks.win
-      on_buf = function(win)
-        require("opencode.highlight").setup(win.buf)
-
-        -- Wait as long as possible to check for blink.cmp loaded - many users lazy-load on `InsertEnter`.
-        -- OptionSet :runtimepath didn't seem to fire for lazy.nvim.
-        vim.api.nvim_create_autocmd("InsertEnter", {
-          once = true,
-          buffer = win.buf,
-          callback = function()
-            if package.loaded["blink.cmp"] then
-              require("opencode.cmp.blink").setup(M.options.auto_register_cmp_sources)
-            end
-          end,
-        })
-      end,
     },
   },
   terminal = {

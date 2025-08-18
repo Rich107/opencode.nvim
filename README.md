@@ -173,12 +173,6 @@ vim.api.nvim_create_autocmd("User", {
 })
 ```
 
-## 🌈 Highlights
-
-| Name | Description |
-| - | - |
-| `OpencodePlaceholder` | Placeholders in `ask` input |
-
 ## 🙏 Acknowledgments
 
 - Inspired by (and partially based on) [nvim-aider](https://github.com/GeorgesAlkhouri/nvim-aider) and later [neopencode.nvim](https://github.com/loukotal/neopencode.nvim).
