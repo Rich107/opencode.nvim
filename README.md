@@ -42,7 +42,7 @@ When your prompt contains placeholders, `opencode.nvim` will replace them with c
 {
   'NickvanDyke/opencode.nvim',
   dependencies = {
-    -- Technically optional, but provides a better input and embedded terminal experience.
+    -- Recommended for a better input and embedded terminal experience.
     -- To bypass: use your own `toggle` (if any), and override `opts.on_send` and `opts.on_opencode_not_found`.
     { 'folke/snacks.nvim', opts = { input = { enabled = true } } },
   },
