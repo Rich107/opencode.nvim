@@ -33,14 +33,8 @@ local function highlight(input)
 end
 
 ---@param default? string
----@param callback fun(value: string)
-function M.show(default, callback)
-  local function on_submit(value)
-    if value and value ~= "" then
-      callback(value)
-    end
-  end
-
+---@param on_confirm fun(value: string|nil)
+function M.show(default, on_confirm)
   local is_snacks_available, snacks_input = pcall(require, "snacks.input")
   -- TODO: Should maybe make this configurable, rather than based on snacks availability?
   -- User may use snacks but still prefer vim.ui.input.
@@ -86,7 +80,7 @@ function M.show(default, callback)
           end,
         },
       }),
-      on_submit
+      on_confirm
     )
   else
     -- But we'll still fall back to vim.ui.input in case user prefers it (or any plugin that overrides it) or doesn't like dependencies.
@@ -101,7 +95,7 @@ function M.show(default, callback)
       -- We could use a command for this, and then possibly also add our blink.cmp source to cmdline
       -- (disabling it when cmdline doesn't contain our command?). Can we still highlight the cmdline input?
       -- However I also like that vim.ui.input cooperates with any plugins that override it.
-    }, on_submit)
+    }, on_confirm)
   end
 end
 

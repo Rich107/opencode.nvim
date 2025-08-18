@@ -78,7 +78,9 @@ end
 ---@param default? string Text to prefill the input with.
 function M.ask(default)
   require("opencode.input").show(default, function(value)
-    M.prompt(value)
+    if value and value ~= "" then
+      M.prompt(value)
+    end
   end)
 end
 
