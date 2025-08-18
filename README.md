@@ -82,7 +82,7 @@ programs.nixvim = {
 
 ## ⚙️ Configuration
 
-See all the available options and their defaults [here](./lua/opencode/config.lua#L12).
+See all the available options and their defaults [here](./lua/opencode/config.lua#L13).
 
 > [!TIP]
 > `opencode.nvim` offers a flexible [API](./lua/opencode.lua) — customize prompts, contexts, and keymaps to fit your workflow!
@@ -102,7 +102,7 @@ Add custom selectable prompts to `opts.prompts`:
 }
 ```
 
-Add keymaps for your favorite [built-in](./lua/opencode/config.lua#L17) or custom prompts:
+Add keymaps for your favorite [built-in](./lua/opencode/config.lua#L27) or custom prompts:
 
 ```lua
 local prompts = require('opencode.config').options.prompts or {}
