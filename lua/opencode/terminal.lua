@@ -5,14 +5,17 @@ local function opencode_cmd()
   return "opencode" .. (port and (" --port " .. port) or "")
 end
 
----@return snacks.win?, boolean?
 function M.toggle()
-  return require("snacks.terminal").toggle(opencode_cmd(), require("opencode.config").options.terminal)
+  require("snacks.terminal").toggle(opencode_cmd(), require("opencode.config").options.terminal)
 end
 
----@return snacks.win?, boolean?
-function M.get()
-  return require("snacks.terminal").get(opencode_cmd(), require("opencode.config").options.terminal)
+---Open an embedded opencode terminal.
+---Returns whether the terminal was successfully opened.
+---@return boolean
+function M.open()
+  -- We use `get`, not `open`, so `toggle` will reference the same terminal
+  local win = require("snacks.terminal").get(opencode_cmd(), require("opencode.config").options.terminal)
+  return win ~= nil
 end
 
 function M.show_if_exists()

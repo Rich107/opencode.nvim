@@ -3,17 +3,23 @@ local M = {}
 ---@class opencode.Config
 ---@field port? number The port opencode's server is running on. If `nil`, searches for an opencode process inside Neovim's CWD — usually you can leave this unset unless that fails. Embedded instances will automatically use this — launch external instances with `opencode --port <port>`.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode. Requires `vim.opt.autoread = true`.
----@field auto_fallback_to_embedded? boolean Automatically open an embedded opencode instance if none found when `prompt`ing.
 ---@field auto_register_cmp_sources? string[] Completion sources to automatically register with [blink.cmp](https://github.com/Saghen/blink.cmp) in the `ask` input.
+---@field on_opencode_not_found? fun(): boolean Called when no opencode instance is found. By default, opens an embedded opencode terminal (set to `nil` to disable). Return `true` if opencode was started and the plugin should try again to find it.
 ---@field prompts? table<string, opencode.Prompt> Prompts to select from.
 ---@field contexts? table<string, opencode.Context> Contexts to inject into prompts.
----@field input? snacks.input.Opts Input options — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md).
----@field terminal? snacks.terminal.Opts Terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md).
+---@field input? snacks.input.Opts Input options for `ask` — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md).
+---@field terminal? snacks.terminal.Opts Embedded terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md).
 local defaults = {
   port = nil,
   auto_reload = true,
-  auto_fallback_to_embedded = true,
   auto_register_cmp_sources = { "opencode", "buffer" },
+  on_opencode_not_found = function()
+    local opened = require("opencode.terminal").open()
+    if not opened then
+      vim.notify("Failed to auto-open embedded opencode terminal", vim.log.levels.ERROR, { title = "opencode" })
+    end
+    return opened
+  end,
   prompts = {
     ---@class opencode.Prompt
     ---@field description? string Description of the prompt, show in selection menu.
