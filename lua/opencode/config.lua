@@ -16,7 +16,7 @@ local defaults = {
   auto_register_cmp_sources = { "opencode", "buffer" },
   prompts = {
     ---@class opencode.Prompt
-    ---@field description? string Description of the prompt
+    ---@field description? string Description of the prompt, show in selection menu.
     ---@field prompt? string The prompt to send to opencode, with placeholders for context like `@cursor`, `@buffer`, etc.
     explain = {
       description = "Explain code near cursor",
@@ -49,22 +49,22 @@ local defaults = {
   },
   contexts = {
     ---@class opencode.Context
-    ---@field value fun(): string|nil Function that returns the context value for replacement
-    ---@field description? string
-    ["@buffer"] = { value = require("opencode.context").buffer, description = "Current buffer" },
-    ["@buffers"] = { value = require("opencode.context").buffers, description = "Open buffers" },
-    ["@cursor"] = { value = require("opencode.context").cursor_position, description = "Cursor position" },
-    ["@selection"] = { value = require("opencode.context").visual_selection, description = "Selected text" },
-    ["@visible"] = { value = require("opencode.context").visible_text, description = "Visible text" },
+    ---@field description? string Description of the context, shown in completion docs.
+    ---@field value fun(): string|nil Function that returns the context value for replacement.
+    ["@buffer"] = { description = "Current buffer", value = require("opencode.context").buffer },
+    ["@buffers"] = { description = "Open buffers", value = require("opencode.context").buffers },
+    ["@cursor"] = { description = "Cursor position", value = require("opencode.context").cursor_position },
+    ["@selection"] = { description = "Selected text", value = require("opencode.context").visual_selection },
+    ["@visible"] = { description = "Visible text", value = require("opencode.context").visible_text },
     ["@diagnostic"] = {
+      description = "Current line diagnostics",
       value = function()
         return require("opencode.context").diagnostics(true)
       end,
-      description = "Current line diagnostics",
     },
-    ["@diagnostics"] = { value = require("opencode.context").diagnostics, description = "Current buffer diagnostics" },
-    ["@quickfix"] = { value = require("opencode.context").quickfix, description = "Quickfix list" },
-    ["@diff"] = { value = require("opencode.context").git_diff, description = "Git diff" },
+    ["@diagnostics"] = { description = "Current buffer diagnostics", value = require("opencode.context").diagnostics },
+    ["@quickfix"] = { description = "Quickfix list", value = require("opencode.context").quickfix },
+    ["@diff"] = { description = "Git diff", value = require("opencode.context").git_diff },
   },
   input = {
     prompt = "Ask opencode",
