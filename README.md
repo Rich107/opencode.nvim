@@ -41,12 +41,15 @@ When your prompt contains placeholders, `opencode.nvim` will replace them with c
 ```lua
 {
   'NickvanDyke/opencode.nvim',
-  dependencies = { 'folke/snacks.nvim', },
+  dependencies = {
+    -- Technically optional, but provides a better input and embedded terminal experience.
+    -- To bypass: call `prompt` yourself, use your own `toggle` (if any), and override `opts.on_send` and `opts.on_opencode_not_found`.
+    'folke/snacks.nvim',
+  },
   ---@type opencode.Config
   opts = {
     -- Your configuration, if any
   },
-  -- stylua: ignore
   keys = {
     { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle embedded opencode', },
     { '<leader>oa', function() require('opencode').ask('@cursor: ') end, desc = 'Ask opencode', mode = 'n', },
@@ -82,10 +85,7 @@ programs.nixvim = {
 
 ## ⚙️ Configuration
 
-See all the available options and their defaults [here](./lua/opencode/config.lua#L13).
-
-> [!TIP]
-> `opencode.nvim` offers a flexible [API](./lua/opencode.lua) — customize prompts, contexts, and keymaps to fit your workflow!
+`opencode.nvim` prioritizes a rich and reliable OOTB experience, with a flexible [configuration](./lua/opencode/config.lua#L13) and [API](./lua/opencode.lua) for you to customize and compose according to your preferences.
 
 ### Prompts
 

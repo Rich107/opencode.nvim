@@ -4,8 +4,8 @@ local M = {}
 ---@field port? number The port opencode's server is running on. If `nil`, searches for an opencode process inside Neovim's CWD — usually you can leave this unset unless that fails. Embedded instances will automatically use this — launch external instances with `opencode --port <port>`.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode. Requires `vim.opt.autoread = true`.
 ---@field auto_register_cmp_sources? string[] Completion sources to automatically register with [blink.cmp](https://github.com/Saghen/blink.cmp) in the `ask` input.
+---@field on_opencode_not_found? fun(): boolean Called when no opencode process is found. Return `true` if opencode was started and the plugin should try again.
 ---@field on_send? fun() Called when a prompt or command is sent to opencode.
----@field on_opencode_not_found? fun(): boolean Called when no opencode instance is found. Return `true` if opencode was started and the plugin should try again to find it.
 ---@field prompts? table<string, opencode.Prompt> Prompts to select from.
 ---@field contexts? table<string, opencode.Context> Contexts to inject into prompts.
 ---@field input? snacks.input.Opts Input options for `ask` — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md).
@@ -14,15 +14,19 @@ local defaults = {
   port = nil,
   auto_reload = true,
   auto_register_cmp_sources = { "opencode", "buffer" },
-  on_send = function()
-    require("opencode.terminal").show_if_exists()
-  end,
   on_opencode_not_found = function()
+    -- OOTB experience prioritizes embedded snacks.terminal,
+    -- but you could also e.g. utilize a different terminal plugin, launch an external opencode, or no-op.
     local opened = require("opencode.terminal").open()
     if not opened then
       vim.notify("Failed to auto-open embedded opencode terminal", vim.log.levels.ERROR, { title = "opencode" })
     end
     return opened
+  end,
+  on_send = function()
+    -- "if exists" because user may alternate between embedded and external opencode.
+    -- `opts.on_opencode_not_found` comment also applies here.
+    require("opencode.terminal").show_if_exists()
   end,
   prompts = {
     ---@class opencode.Prompt
