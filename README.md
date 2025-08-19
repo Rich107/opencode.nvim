@@ -12,8 +12,8 @@ https://github.com/user-attachments/assets/4f074c86-6863-49b5-b1ff-dcd901a03e02
 ## ✨ Features
 
 - Auto-find any `opencode` process running inside Neovim's CWD, or open in an embedded terminal
-- Select and input customizable prompts
-- Inject customizable editor context
+- Select and input prompts
+- Inject editor context
 - Auto-reload edited buffers
 - Write and refine prompts quickly with completions, highlights, and normal-mode support
 
