@@ -140,7 +140,7 @@ Add custom contexts to `opts.contexts`. The below replaces `@grapple` with files
 
 ## ✍️ Completion
 
-`opencode.nvim` offers context placeholder completions in the `ask` input.
+`opencode.nvim` offers context placeholder completions in the `ask` input when using `snacks.input` (`vim.ui.input` does not support completion).
 
 <details>
 <summary><a href="https://github.com/Saghen/blink.cmp">blink.cmp</a></summary>
@@ -151,7 +151,7 @@ Add custom contexts to `opts.contexts`. The below replaces `@grapple` with files
 <details>
 <summary>Built-in</summary>
 
-Press `<Tab>` to trigger Neovim's built-in completion.
+Press `<Tab>` or `<C-x><C-o>` to trigger Neovim's built-in completion.
 </details>
 
 ## 👀 Events
