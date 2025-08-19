@@ -46,7 +46,7 @@ When your prompt contains placeholders, `opencode.nvim` will replace them with c
     -- To bypass: use your own `toggle` (if any), and override `opts.on_send` and `opts.on_opencode_not_found`.
     { 'folke/snacks.nvim', opts = { input = { enabled = true } } },
   },
-  ---@type opencode.Config
+  ---@type opencode.Opts
   opts = {
     -- Your configuration, if any
   },

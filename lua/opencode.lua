@@ -6,7 +6,7 @@ local sse_listening_port = nil
 
 ---Set up the plugin with your configuration.
 ---You don't need to call this if you use the default configuration - it does nothing else.
----@param opts opencode.Config
+---@param opts opencode.Opts
 function M.setup(opts)
   -- What if we just received the relevant opts in each function?
   -- But people have come to expect a `setup` function with global `opts`...
