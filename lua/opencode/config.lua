@@ -52,7 +52,7 @@ local defaults = {
       description = "Add tests for selection",
       prompt = "Add tests for @selection",
     },
-    review_file = {
+    review_buffer = {
       description = "Review buffer",
       prompt = "Review @buffer for correctness and readability",
     },
