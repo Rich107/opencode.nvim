@@ -15,23 +15,7 @@ https://github.com/user-attachments/assets/4f074c86-6863-49b5-b1ff-dcd901a03e02
 - Select and input customizable prompts
 - Inject customizable editor context
 - Auto-reload edited buffers
-- Write and refine prompts quickly with completion, highlight, and normal-mode support
-
-## 🕵️ Context
-
-When your prompt contains placeholders, `opencode.nvim` will replace them with context before sending:
-
-| Placeholder | Context |
-| - | - |
-| `@buffer` | Current buffer |
-| `@buffers` | Open buffers |
-| `@cursor` | Cursor position |
-| `@selection` | Selected text |
-| `@visible` | Visible text |
-| `@diagnostic` | Current line diagnostics |
-| `@diagnostics` | Current buffer diagnostics |
-| `@quickfix` | Quickfix list |
-| `@diff` | Git diff |
+- Write and refine prompts quickly with completions, highlights, and normal-mode support
 
 ## 📦 Setup
 
@@ -51,14 +35,17 @@ When your prompt contains placeholders, `opencode.nvim` will replace them with c
     -- Your configuration, if any
   },
   keys = {
-    { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle embedded opencode', },
+    -- Recommended keymaps
     { '<leader>oa', function() require('opencode').ask('@cursor: ') end, desc = 'Ask opencode', mode = 'n', },
     { '<leader>oa', function() require('opencode').ask('@selection: ') end, desc = 'Ask opencode about selection', mode = 'v', },
-    { '<leader>op', function() require('opencode').select_prompt() end, desc = 'Select prompt', mode = { 'n', 'v', }, },
+    { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle embedded opencode', },
     { '<leader>on', function() require('opencode').command('session_new') end, desc = 'New session', },
     { '<leader>oy', function() require('opencode').command('messages_copy') end, desc = 'Copy last message', },
     { '<S-C-u>',    function() require('opencode').command('messages_half_page_up') end, desc = 'Scroll messages up', },
     { '<S-C-d>',    function() require('opencode').command('messages_half_page_down') end, desc = 'Scroll messages down', },
+    { '<leader>op', function() require('opencode').select_prompt() end, desc = 'Select prompt', mode = { 'n', 'v', }, },
+    -- Example: keymap for custom prompt
+    { '<leader>oe', function() require('opencode').prompt("Explain @cursor and its context") end, desc = "Explain code near cursor", },
   },
 }
 ```
@@ -87,72 +74,24 @@ programs.nixvim = {
 
 `opencode.nvim` prioritizes a rich and reliable OOTB experience, with a flexible [configuration](./lua/opencode/config.lua#L13) and [API](./lua/opencode.lua) for you to customize and compose according to your preferences.
 
-### Prompts
+## 🕵️ Context
 
-Add custom selectable prompts to `opts.prompts`:
+When your prompt contains placeholders, `opencode.nvim` replaces them with context before sending:
 
-```lua
-{
-  prompts = {
-    joke = {
-      description = 'Tell me a cat joke',
-      prompt = 'Tell me a joke about cats. Make it funny, but not too funny.',
-    },
-  },
-}
-```
+| Placeholder | Context |
+| - | - |
+| `@buffer` | Current buffer |
+| `@buffers` | Open buffers |
+| `@cursor` | Cursor position |
+| `@selection` | Selected text |
+| `@visible` | Visible text |
+| `@diagnostic` | Current line diagnostics |
+| `@diagnostics` | Current buffer diagnostics |
+| `@quickfix` | Quickfix list |
+| `@diff` | Git diff |
+| `@grapple` | [grapple.nvim](https://github.com/cbochs/grapple.nvim) tags |
 
-Add keymaps for your favorite [built-in](./lua/opencode/config.lua#L27) or custom prompts:
-
-```lua
-local prompts = require('opencode.config').options.prompts or {}
-vim.keymap.set('n', '<leader>oj', function() require('opencode').prompt(prompts.joke.prompt) end, { desc = prompts.joke.description })
-
-vim.keymap.set('v', '<leader>os', function() require('opencode').prompt("Tell me a story about cats and @selection") end, { desc = "Tell me a story" })
-```
-
-### Contexts
-
-Add custom contexts to `opts.contexts`. The below replaces `@grapple` with files tagged by [grapple.nvim](https://github.com/cbochs/grapple.nvim):
-
-```lua
-{
-  contexts = {
-    ---@type opencode.Context
-    ['@grapple'] = {
-      description = 'Files tagged by grapple',
-      value = function()
-        local tags = require('grapple').tags()
-        if not tags or #tags == 0 then
-          return nil
-        end
-
-        local paths = {}
-        for _, tag in ipairs(tags) do
-          table.insert(paths, tag.path)
-        end
-        return table.concat(paths, ', ')
-      end,
-    },
-  }
-}
-```
-
-## ✍️ Completion
-
-`opencode.nvim` offers context placeholder completions in the `ask` input when using `snacks.input` (`vim.ui.input` does not support completion).
-
-<details>
-<summary><a href="https://github.com/Saghen/blink.cmp">blink.cmp</a></summary>
-
-`opencode.nvim` automatically registers `opts.auto_register_cmp_sources` (default: `{ "opencode", "buffer" }`) with `blink.cmp` (if loaded) at runtime.
-</details>
-
-<details>
-<summary>Built-in</summary>
-
-Press `<Tab>` or `<C-x><C-o>` to trigger Neovim's built-in completion.
-</details>
+Add custom contexts to `opts.context`.
 
 ## 👀 Events
 

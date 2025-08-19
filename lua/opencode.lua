@@ -1,23 +1,24 @@
 local M = {}
 
 -- Important to track the port, not just true/false,
--- because opencode may have restarted (usually on a new port) while the plugin is running
+-- because opencode may have restarted (usually on a new port) while the plugin is running.
 local sse_listening_port = nil
 
 ---Set up the plugin with your configuration.
 ---You don't need to call this if you use the default configuration - it does nothing else.
 ---@param opts opencode.Opts
 function M.setup(opts)
-  -- What if we just received the relevant opts in each function?
-  -- But people have come to expect a `setup` function with global `opts`...
   require("opencode.config").setup(opts)
 end
 
----Send a prompt to opencode after injecting contexts.
+---Send a prompt to opencode.
 ---
 ---As the entry point to prompting, this function also:
----1. Sets up `auto_reload` if enabled.
----2. Starts listening for SSEs from opencode to forward as `OpencodeEvent` autocmd.
+---1. Calls `opts.on_opencode_not_found` if no opencode process is found.
+---2. Injects `opts.contexts` into the prompt.
+---3. Sets up `opts.auto_reload` if enabled.
+---4. Calls `opts.on_send`.
+---5. Listens for SSEs from opencode to forward as `OpencodeEvent` autocmd.
 ---@param prompt string
 function M.prompt(prompt)
   require("opencode.server").get_port(function(ok, result)
@@ -75,6 +76,10 @@ function M.command(command)
 end
 
 ---Input a prompt to send to opencode.
+--- - Highlights `opts.contexts` placeholders in the input.
+--- - Offers completions for `opts.contexts` placeholders.
+---   - Press `<Tab>` or `<C-x><C-o>` to trigger built-in completion.
+---   - When using `snacks.input` and `blink.cmp`, auto-registers `opts.auto_register_cmp_sources`.
 ---@param default? string Text to prefill the input with.
 function M.ask(default)
   require("opencode.input").input(default, function(value)
@@ -84,7 +89,9 @@ function M.ask(default)
   end)
 end
 
----Select a prompt to send to opencode.
+---Select a prompt from `opts.prompts` to send to opencode.
+---
+---Filters prompts according to whether they use `@selection` and whether we're in visual mode.
 function M.select_prompt()
   ---@type opencode.Prompt[]
   local prompts = vim.tbl_filter(function(prompt)
@@ -117,7 +124,7 @@ function M.select_prompt()
   )
 end
 
----Toggle embedded opencode TUI.
+---Toggle embedded opencode using `snacks.terminal`.
 function M.toggle()
   require("opencode.terminal").toggle()
 end

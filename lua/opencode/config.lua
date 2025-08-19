@@ -3,13 +3,13 @@ local M = {}
 ---@class opencode.Opts
 ---@field port? number The port opencode's server is running on. If `nil`, searches for an opencode process inside Neovim's CWD — usually you can leave this unset unless that fails. Embedded instances will automatically use this — launch external instances with `opencode --port <port>`.
 ---@field auto_reload? boolean Automatically reload buffers edited by opencode. Requires `vim.opt.autoread = true`.
----@field auto_register_cmp_sources? string[] Completion sources to automatically register with [blink.cmp](https://github.com/Saghen/blink.cmp) in the `ask` input.
+---@field auto_register_cmp_sources? string[] Completion sources to automatically register with [blink.cmp](https://github.com/Saghen/blink.cmp) (if loaded) in the `ask` input.
 ---@field on_opencode_not_found? fun(): boolean Called when no opencode process is found. Return `true` if opencode was started and the plugin should try again.
 ---@field on_send? fun() Called when a prompt or command is sent to opencode.
 ---@field prompts? table<string, opencode.Prompt> Prompts to select from.
 ---@field contexts? table<string, opencode.Context> Contexts to inject into prompts.
----@field input? snacks.input.Opts Input options for `ask` — uses [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md) if enabled.
----@field terminal? snacks.terminal.Opts Embedded terminal options — uses [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md).
+---@field input? snacks.input.Opts Input options for `ask` — see [snacks.input](https://github.com/folke/snacks.nvim/blob/main/docs/input.md) (if enabled).
+---@field terminal? snacks.terminal.Opts Embedded terminal options — see [snacks.terminal](https://github.com/folke/snacks.nvim/blob/main/docs/terminal.md).
 local defaults = {
   port = nil,
   auto_reload = true,
@@ -79,6 +79,7 @@ local defaults = {
     ["@diagnostics"] = { description = "Current buffer diagnostics", value = require("opencode.context").diagnostics },
     ["@quickfix"] = { description = "Quickfix list", value = require("opencode.context").quickfix },
     ["@diff"] = { description = "Git diff", value = require("opencode.context").git_diff },
+    ["@grapple"] = { description = "Grapple tags", value = require("opencode.context").grapple_tags },
   },
   input = {
     prompt = "Ask opencode: ",

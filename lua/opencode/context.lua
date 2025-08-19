@@ -46,9 +46,9 @@ end
 function M.inject(prompt, contexts)
   for placeholder, context in pairs(contexts) do
     -- Only match whole-word placeholders using Lua frontier patterns.
-    -- TODO: Ideally we'd have one in front of the pattern too, but I can't find a pattern
-    -- that will match the start of the string OR a word boundary but not match
-    -- a special character like `@` or `#` at the start of the placeholder.
+    -- TODO: Shouldn't need to be whole-word... core issue/solution is to substitue the longest match.
+    -- e.g. prioritize @buffers over @buffer.
+    -- That will match the highlighting behavior.
     prompt = prompt:gsub(placeholder .. "%f[%W]", context.value() or placeholder)
   end
 
@@ -210,6 +210,25 @@ function M.git_diff()
     return result
   end
   return nil
+end
+
+---Tags from the `grapple.nvim` plugin.
+---@return string|nil
+function M.grapple_tags()
+  if not pcall(require, "grapple") then
+    error("grapple.nvim is not installed. Please install it to use this context.")
+  end
+
+  local tags = require("grapple").tags()
+  if not tags or #tags == 0 then
+    return nil
+  end
+
+  local paths = {}
+  for _, tag in ipairs(tags) do
+    table.insert(paths, tag.path)
+  end
+  return table.concat(paths, ", ")
 end
 
 return M
