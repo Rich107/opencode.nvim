@@ -70,29 +70,23 @@ end
 local function find_server_inside_nvim_cwd()
     local found_server
     local nvim_cwd = vim.fn.getcwd()
-    vim.notify("found_server: " .. found_server)
-    vim.notify("Searching for opencode server inside Neovim's CWD: " .. nvim_cwd)
+    vim.notify("Searching for opencode server inside Neovim's CWD: " .. tostring(nvim_cwd))
     for _, server in ipairs(find_servers()) do
-        vim.notify("Found opencode server: PID " .. server.pid .. ", Port " .. server.port .. ", CWD: " .. server.cwd)
+        vim.notify(string.format("Candidate opencode: PID %s, Port %s, CWD %s", tostring(server.pid), tostring(server.port), tostring(server.cwd)))
         -- CWDs match exactly, or opencode's CWD is under neovim's CWD.
-        if server.cwd:find(nvim_cwd, 1, true) == 1 then
-            vim.notify("Found opencode server running inside Neovim's CWD: " .. server.cwd)
+        if type(server.cwd) == "string" and server.cwd:find(nvim_cwd, 1, true) == 1 then
+            vim.notify("Matched CWD: " .. server.cwd)
             found_server = server
             if is_descendant_of_neovim(server.pid) then
-                vim.notify("Found opencode server running which is a Neovim parent: " ..
-                server.cwd .. ", PID: " .. server.pid)
+                vim.notify(string.format("Prioritizing embedded/descendant server (PID %s) in %s", tostring(server.pid), tostring(server.cwd)))
                 -- Stop searching to prioritize embedded
                 break
             end
         end
     end
-    vim.notify("Finished searching for opencode server inside Neovim's CWD")
-    vim.notify("Found server: " .. vim.inspect(found_server))
+    vim.notify("Finished search. Found server: " .. (found_server and vim.inspect(found_server) or "nil"))
     if not found_server then
-        vim.notify(
-            "not found opencode server last server was: " ..
-            server.pid .. ", Port " .. server.port .. ", CWD: " .. server.cwd
-        )
+        vim.notify("No opencode server found inside Neovim's CWD", vim.log.levels.WARN, { title = "opencode" })
         error("Couldn't find an opencode process running inside Neovim's CWD", 0)
     end
 
